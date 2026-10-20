@@ -1,0 +1,21 @@
+{
+  "routes": [
+    {
+      "routePath": "/api/rank",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/rank.js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/rank",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/rank.js:onRequestPost"
+      ]
+    }
+  ],
+  "baseURL": "/"
+}
