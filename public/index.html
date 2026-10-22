@@ -548,10 +548,12 @@ function zone(z,l,x,y){
  else if(z=='c'){if(l<=2){const h=l==1?14:20;R('#e6d5b8',x+7,y+30-h,22,h);for(let i=0;i<5;i++)R(i%2?'#fff':'#c0392b',x+6+i*5,y+27-h,5,4);R('#4a3a2a',x+16,y+24,5,6)}else{const h=[0,0,0,26,32,40,50][l],w=l>=5?26:22,bx=x+(T-w)/2;R(l>=5?'#a98fd0':'#c7b7e0',bx,y+32-h,w,h);R('#6a4a9a',bx-1,y+30-h,w+2,3);for(let a=0;a<Math.floor((h-6)/6);a++)for(let c=0;c<3;c++)R('#e9f4ff',bx+3+c*((w-10)/2),y+32-h+4+a*6,4,3);R('#4a3a2a',bx+w/2-3,y+27,6,5);if(l>=6){R('#888',x+T/2-.5,y+22-h,1,8);O('#e5533d',x+T/2,y+22-h,1.6)}}}
  else{if(l<=2){const h=l==1?12:18;R('#7a6a58',x+6,y+30-h,24,h);R('#5a4c3d',x+23,y+30-h-8,4,8+4);if(l==2){R('#5a4c3d',x+10,y+30-h-6,4,6);O('#ccc',x+25,y+30-h-11,3,.6)}}else{const h=14+l*3,bx=x+3;R('#7a6a58',bx,y+32-h,30,h);R('#5a4c3d',bx,y+30-h,30,3);for(let k=0;k<Math.min(4,l-1);k++){R('#5a4c3d',bx+3+k*7,y+23-h,4,9);O('#ccc',bx+5+k*7+Math.sin(aT()/600+k)*1.5,y+20-h,3,.5)}for(let k=0;k<3;k++)R('#d9c9a8',bx+4+k*9,y+32-h+5,6,3)}}
 }
-function draw(){
+let _dEC=0;function dErr(e){if(_dEC++<5)console.error('draw error:',e)}
+function draw(){try{draw0()}catch(e){dErr(e);try{cv.width=cv.width;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='hsl(204,62%,40%)';ctx.fillRect(0,0,VW,VH)}catch(_){}}}
+function draw0(){
  const tm=aT()/700;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='hsl(204,62%,40%)';ctx.fillRect(0,0,VW,VH);ctx.save();if(shk>aT()){const a=(shk-aT())/50;ctx.translate((Math.random()-.5)*a,(Math.random()-.5)*a)}
  ctx.translate(cam.x,cam.y);ctx.scale(cam.z,cam.z);const VX0=Math.max(0,Math.floor(-cam.x/cam.z/T)),VX1=Math.min(W-1,Math.ceil((VW-cam.x)/cam.z/T)),VY0=Math.max(0,Math.floor(-cam.y/cam.z/T)),VY1=Math.min(H-1,Math.ceil((VH-cam.y)/cam.z/T));
- for(let y=VY0;y<=VY1;y++)for(let x=VX0;x<=VX1;x++){const t=S.g[y][x],px=x*T,py=y*T;
+ for(let y=VY0;y<=VY1;y++)for(let x=VX0;x<=VX1;x++){try{const t=S.g[y][x],px=x*T,py=y*T;
   if(t.t=='s'){R(`hsl(204,62%,${40+(Math.sin(tm+x*.9+y*.6)*.5+.5)*7}%)`,px,py,T+.6,T+.6);ctx.strokeStyle='rgba(255,255,255,.22)';ctx.lineWidth=1.5;const o=Math.sin(tm+x+y)*3;ctx.beginPath();ctx.moveTo(px+6,py+14+o);ctx.quadraticCurveTo(px+12,py+10+o,px+18,py+14+o);ctx.quadraticCurveTo(px+24,py+18+o,px+30,py+14+o);ctx.stroke();{const lv=(S.pol&&S.pol[y*W+x])||0;if(lv>.1){const f=Math.min(1,lv);ctx.globalAlpha=(.68+.07*Math.sin(tm*2+x+y))*f;R('#6a6420',px,py,T+.6,T+.6);if(lv>=.5){ctx.globalAlpha=.5*f;R('#3d3a10',px+4,py+8+Math.sin(tm+x)*2,T-8,7);ctx.globalAlpha=.65*f;O('#2e2c0a',px+10,py+22,4);O('#2e2c0a',px+26,py+10,3);O('#8a7a2a',px+22,py+26,2.5);ctx.strokeStyle='rgba(60,50,10,.7)';ctx.lineWidth=2;ctx.strokeRect(px+1,py+1,T-2,T-2)}ctx.globalAlpha=1}}}
   else{R(t.t=='m'||t.t=='v'?'#6f6a60':(x+y)%2?'#6fb36a':'#68ab63',px,py,T+.6,T+.6);
    if(t.t=='m'){P('#8a8378',px+3,py+32,px+16,py+6,px+33,py+32);P('#a49d90',px+16,py+6,px+22,py+17,px+12,py+17)}
@@ -567,8 +569,8 @@ function draw(){
   if(t.r){roadDraw(x,y,t,px,py);trafOv(x,y,px,py,tm)}
   if(t.b){bld(t.b,px,py);if(t.b=='intake'&&nearPoll(x,y,1))drawWarn(px,py);if(gr(t)>1){O('#ffd24a',px+29,py+7,7);ctx.fillStyle='#5a3a00';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(gr(t),px+29,py+7.5)}}
   if(t.lava>0){ctx.globalAlpha=.9;R(`hsl(${12+Math.sin(tm*3+x)*6},90%,52%)`,px,py,T,T);R('#7a2a10',px+8,py+10,10,6);ctx.globalAlpha=1}
-  if(S.warn&&S.warn.p.has(x+','+y)){R('rgba(255,110,0,.5)',px,py,T,T);ctx.fillStyle='#fff';ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',px+T/2,py+T/2)}}
- roadPrev();if(MV){ctx.strokeStyle='#ffd24a';ctx.lineWidth=3;ctx.setLineDash([5,4]);ctx.strokeRect(MV.x*T+2,MV.y*T+2,T-4,T-4);ctx.setLineDash([])}if(hv){const k=D[S.sel];ctx.strokeStyle='#fff';ctx.lineWidth=2;if(k.r)ctx.strokeRect((hv.x-k.r)*T,(hv.y-k.r)*T,(2*k.r+1)*T,(2*k.r+1)*T);ctx.lineWidth=3;ctx.strokeRect(hv.x*T+2,hv.y*T+2,T-4,T-4)}
+  if(S.warn&&S.warn.p.has(x+','+y)){R('rgba(255,110,0,.5)',px,py,T,T);ctx.fillStyle='#fff';ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',px+T/2,py+T/2)}}catch(e){ctx.globalAlpha=1;ctx.setLineDash([]);dErr(e)}}
+ try{roadPrev()}catch(e){dErr(e)};if(MV){ctx.strokeStyle='#ffd24a';ctx.lineWidth=3;ctx.setLineDash([5,4]);ctx.strokeRect(MV.x*T+2,MV.y*T+2,T-4,T-4);ctx.setLineDash([])}if(hv){const k=D[S.sel];ctx.strokeStyle='#fff';ctx.lineWidth=2;if(k.r)ctx.strokeRect((hv.x-k.r)*T,(hv.y-k.r)*T,(2*k.r+1)*T,(2*k.r+1)*T);ctx.lineWidth=3;ctx.strokeRect(hv.x*T+2,hv.y*T+2,T-4,T-4)}
  if(GP&&aT()<GP.e){const p=.5+.5*Math.sin(aT()/120),cx=GP.x*T+T/2,cy=GP.y*T+T/2;O('#ffd24a',cx,cy,14+p*4,.35);O('#ffd24a',cx,cy,9);{const sp=[];for(let q=0;q<10;q++){const r=(q%2?3.6:8.4),a=-Math.PI/2+q*Math.PI/5;sp.push(cx+Math.cos(a)*r,cy+Math.sin(a)*r)}P('#7a4a00',...sp)}}else{if(GP)gc=0;GP=null}
  if(LVV)for(let y=VY0;y<=VY1;y++)for(let x=VX0;x<=VX1;x++){const t=S.g[y][x];if(t.t!='g'&&t.t!='v')continue;ctx.globalAlpha=.4;R(`hsl(${lvv(x,y)*1.2},80%,45%)`,x*T,y*T,T,T);ctx.globalAlpha=1}
  carsFx(VX0,VX1,VY0,VY1);invDraw();peopleFx();fxDraw();paradeFx();ctx.restore();
@@ -1173,7 +1175,7 @@ function end(t,p){if(tutOn()){if(t=='国家破産')S.money=0;if(t=='敵軍の占
  const gain=Math.round(sc/40),LG=leg();LG.pts=(LG.pts|0)+gain;try{localStorage.setItem(KEY+'_leg',JSON.stringify(LG))}catch(e){}
  p+=`\n\n最大人口 ${fmt(pk)}\nスコア ${sc}${sc>best?'（自己ベスト更新！）':'（自己ベスト '+best+'）'} ／ ランク ${rkOf(sc)} ／ 威信+${gain}`;
  const rs=()=>modal(t,p,[['もう一度',()=>startMenu()]].concat([['結果をコピー',()=>{copyRes(t,sc);rs()}],['Xでシェア',()=>{shareX(t,sc);rs()}],['ランキング登録',()=>submitRank()]]));RES={assets:Math.max(0,Math.round(S.money)),score:sc,years:Math.floor(S.m/12)+1,pop:pk,daily:S.daily||null};rs();S.over=true;draw();hud()}
-fixS();(function lp(){draw();requestAnimationFrame(lp)})();
+fixS();(function lp(){try{draw()}catch(e){dErr(e)}requestAnimationFrame(lp)})();
 let acc=0;setInterval(()=>{if(!S.modal)acc+=S.spd*250;if(acc>=15000){acc=0;tick()}},250);
 tools();info(D.road);draw();hud();if(!loaded)startMenu(false);log('就任おめでとうございます、閣下。まず道路を引き、区画を指定して島を育てましょう。人口が増えるほど統治は難しくなります。どこまで大きな国にできるか挑戦しましょう。');
 const TK=KEY+'_tut',cnt=f=>tiles().filter(f).length;
@@ -1230,5 +1232,5 @@ function intro2(){modal('基本説明 2/2','・建物や区画は、道路に面
 document.addEventListener('gesturestart',e=>e.preventDefault());
 addEventListener('orientationchange',()=>setTimeout(()=>{fit();clampCam();draw()},250));
 addEventListener('pointerdown',()=>{try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume()}catch(e){}},{once:true});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});addEventListener('pagehide',save);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)save();else{try{fit();clampCam()}catch(_){}}});addEventListener('pageshow',()=>{try{fit();clampCam()}catch(_){}});addEventListener('pagehide',save);
 </script></body></html>
