@@ -918,7 +918,7 @@ const Q=[
 {t:'健やかな暮らし',d:'診療所と学校を建てる',ok:()=>['clinic','school'].every(k=>tiles().some(t=>t.b==k)),rw:120},
 {t:'初めての信任',d:'選挙に勝つ（全派閥+5）',ok:()=>(S.won|0)>=1,rw:150,fn:()=>{for(const k in S.f)adj(k,5)}},
 {t:'産業の芽',d:'商業区と工房区をLv2に育てる',ok:()=>['c','i'].every(z=>tiles().some(t=>t.z==z&&t.lv>=2)),rw:200},
-{t:'山と生きる',d:'見張り台を建て、噴火を1回しのぐ',ok:()=>(S.eru|0)>=1&&tiles().some(t=>t.b=='tower'),rw:150},
+{t:'山と生きる',d:'見張り台を建てる',ok:()=>tiles().some(t=>t.b=='tower'),rw:150},
 {t:'人口80',d:'人口を80人にする',ok:()=>S.pop>=80,pr:()=>[S.pop,80],rw:250},
 {t:'権威の象徴',d:'大統領宮殿を建てる',ok:()=>tiles().some(t=>t.b=='palace'),rw:200},
 {t:'個人崇拝',d:'大統領像を建てる',ok:()=>tiles().some(t=>t.b=='statue'),rw:150},
