@@ -2,13 +2,16 @@
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="description" content="Isle of Embers — 火山の島の大統領になって国を育てる街づくりゲーム">
+<link rel="canonical" href="https://honoo-no-shima.pages.dev/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8C%8B%3C/text%3E%3C/svg%3E">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Isle of Embers">
 <meta property="og:description" content="火山の島の大統領になって国を育てる街づくりゲーム。毎日変わるデイリー島とランキングにも挑戦できます。">
-<meta property="og:url" content="https://example.com/">
+<meta property="og:url" content="https://honoo-no-shima.pages.dev/">
 <meta property="og:site_name" content="Isle of Embers">
 <meta property="og:locale" content="ja_JP">
-<meta property="og:image" content="https://example.com/ogp.png">
+<meta property="og:image" content="https://honoo-no-shima.pages.dev/ogp.png">
+<meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="噴火する火山島を背景にした Isle of Embers のタイトル画像">
@@ -18,7 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Isle of Embers">
 <meta name="twitter:description" content="火山の島の大統領になって国を育てる街づくりゲーム。毎日変わるデイリー島に挑戦しよう。">
-<meta name="twitter:image" content="https://example.com/ogp.png">
+<meta name="twitter:image" content="https://honoo-no-shima.pages.dev/ogp.png">
 <title>Isle of Embers</title>
 <style>
 html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;touch-action:manipulation}button,.tab{user-select:none;-webkit-user-select:none}
@@ -1042,13 +1045,15 @@ function ask(msg,yes,yl){let o=$('ask');if(!o){o=document.createElement('div');o
  const prev=S.modal,y=o.querySelector('.y');S.modal=true;o.querySelector('p').textContent=msg;o.querySelector('p').style.whiteSpace='pre-line';y.textContent=yl||'はい';o.style.display='flex';
  y.onclick=()=>{o.style.display='none';S.modal=prev;yes()};o.querySelector('.n').onclick=()=>{o.style.display='none';S.modal=prev}}
 function startMenu(sh=true,daily){fresh(2,daily);homeCam();save();tools();draw();hud();if(sh)setTimeout(showIsland,0);log(daily?'本日のデイリーチャレンジを開始しました。全員が同じ島、同じ就任時の状況で挑戦します。':'新しい島で最初から始めました。')}
-let RES=null;const API='/api/rank',TSKEY='';
+let RES=null;const API='/api/rank',TSKEY='',SITE='https://honoo-no-shima.pages.dev/';
+const EPI={'国家破産':'💸 国庫が空になり、政権は崩壊した','軍事クーデター':'🪖 軍に宮殿を包囲され、退陣した','選挙敗北':'🗳️ 選挙に敗れ、大統領の座を追われた','敵軍の占領':'⚔️ 敵軍に島を奪われた','無人島化':'🏝️ 国民が消え、島は無人になった'},epi=t=>EPI[t]||t;
+function shareText(t,sc,rk){const yr=Math.floor(S.m/12)+1,pk=Math.max(S.peak|0,S.pop),er=S.eru|0;return `🌋 Isle of Embers${S.daily?'（デイリー '+S.daily+'）':''}\n${epi(t)}\n👑 ${yr}年間統治｜最大人口${fmt(pk)}｜スコア${sc}｜ランク${rk}${er?'\n🔥 噴火を'+er+'回しのいだ':''}\n${S.daily?'同じ島であなたも挑戦！':'あなたは何年もつ？'}\n#IsleOfEmbers #ブラウザゲーム #個人開発`}
 let tsP=null;function tsToken(){if(!TSKEY)return Promise.resolve('');return new Promise(res=>{const go=()=>{let d=document.getElementById('ts');if(!d){d=document.createElement('div');d.id='ts';d.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:99';document.body.appendChild(d)}d.innerHTML='';turnstile.render(d,{sitekey:TSKEY,callback:t=>{d.remove();res(t)},'error-callback':()=>{d.remove();res('')}})};if(window.turnstile)return go();const sc=document.createElement('script');sc.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';sc.onload=go;sc.onerror=()=>res('');document.head.appendChild(sc)})}
 async function showRank(s='score',dy){let L;const q=dy?'?daily='+jstDay()+'&sort='+s:'?sort='+s;try{const r=await fetch(API+q);if(!r.ok)throw 0;L=await r.json()}catch(e){return modal('ランキング','ランキングを取得できませんでした。通信状況を確認して、もう一度お試しください。',[['閉じる']])}
  const t=L.map((e,i)=>`${i+1}. ${e.name}　${s=='assets'?'$'+e.assets:e.score+'点'}（${e.years}年・最大人口${e.pop}）`).join('\n')||'まだ記録がありません';
  modal((dy?'デイリー '+jstDay()+'　':'')+(s=='assets'?'総資産ランキング':'スコアランキング'),t,[[s=='assets'?'スコア順へ':'総資産順へ',()=>showRank(s=='assets'?'score':'assets',dy)],[dy?'通算ランキングへ':'今日のデイリーへ',()=>showRank(s,!dy)]].concat(RES&&!RES.sent?[['この結果を登録',submitRank]]:[]).concat([['閉じる']]))}
-async function submitRank(){if(!RES||RES.sent)return;let n=prompt('ランキング登録名（12文字まで）',(()=>{try{return localStorage.getItem(KEY+'_nm')||''}catch(e){return ''}})());if(!n)return;n=n.trim().slice(0,12);if(!n)return;try{localStorage.setItem(KEY+'_nm',n)}catch(e){}
- try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,...RES,token:await tsToken()})});if(!r.ok)throw 0;const j=await r.json();RES.sent=1;modal('登録完了',`総資産 $${RES.assets}${j.rank?'で'+j.rank+'位でした。':'で、100位圏外でした。'}`,[['ランキングを見る',()=>showRank('score')]])}catch(e){modal('登録失敗','登録できませんでした。通信状況を確認するか、時間をおいてからもう一度お試しください。',[['閉じる']])}}
+async function submitRank(){if(!RES)return;if(RES.sent)return RES.back&&RES.back();let n=prompt('ランキング登録名（12文字まで）',(()=>{try{return localStorage.getItem(KEY+'_nm')||''}catch(e){return ''}})());if(!n)return RES.back&&RES.back();n=n.trim().slice(0,12);if(!n)return RES.back&&RES.back();try{localStorage.setItem(KEY+'_nm',n)}catch(e){}
+ try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,...RES,token:await tsToken()})});if(!r.ok)throw 0;const j=await r.json();RES.sent=1;modal('登録完了',`総資産 $${RES.assets}${j.rank?'で'+j.rank+'位でした。':'で、100位圏外でした。'}`,[['ランキングを見る',()=>showRank('score')],['戻る',()=>RES.back&&RES.back()]])}catch(e){modal('登録失敗','登録できませんでした。通信状況を確認するか、時間をおいてからもう一度お試しください。',[['もう一度',()=>submitRank()],['戻る',()=>RES.back&&RES.back()]])}}
 function shareCard(t,sc,rk){return new Promise(res=>{const W=1200,H=630,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
  g.fillStyle='#120a26';g.fillRect(0,0,W,H);
  try{let sw=cv.width,sh=sw*H/W;if(sh>cv.height){sh=cv.height;sw=sh*W/H}g.drawImage(cv,(cv.width-sw)/2,(cv.height-sh)/2,sw,sh,0,0,W,H)}catch(e){}
@@ -1056,7 +1061,7 @@ function shareCard(t,sc,rk){return new Promise(res=>{const W=1200,H=630,c=docume
  const F='system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif',yr=Math.floor(S.m/12)+1;let tt='';try{tt=ttl()}catch(e){}
  g.shadowColor='rgba(0,0,0,.65)';g.shadowBlur=14;g.textBaseline='alphabetic';g.textAlign='left';
  g.fillStyle='#ffb347';g.font='800 32px '+F;g.fillText('ISLE OF EMBERS'+(S.daily?'   DAILY '+S.daily:''),48,66);
- g.fillStyle='#fff';g.font='800 68px '+F;g.fillText(t,48,H-205);
+ g.fillStyle='#ffd9a8';g.font='700 30px '+F;g.fillText(epi(t)==t?'':epi(t),48,H-270);g.fillStyle='#fff';g.font='800 68px '+F;g.fillText(t,48,H-205);
  g.fillStyle='#ffd9a8';g.font='700 30px '+F;g.fillText('SCORE',48,H-128);
  g.fillStyle='#fff';g.font='800 112px '+F;g.fillText(String(sc),176,H-120);
  g.fillStyle='#ece7dc';g.font='600 30px '+F;g.fillText(yr+'年目　最大人口 '+fmt(Math.max(S.peak|0,S.pop))+(tt?'　'+tt:''),48,H-44);
@@ -1065,13 +1070,16 @@ function shareCard(t,sc,rk){return new Promise(res=>{const W=1200,H=630,c=docume
  g.shadowBlur=0;g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.font='800 104px '+F;g.fillText(rk,W-140,H-205);
  g.textBaseline='alphabetic';g.font='700 26px '+F;g.fillStyle='#ffd9a8';g.fillText('#IsleOfEmbers',W-140,H-44);
  c.toBlob(b=>res(b),'image/png')})}
-async function shareX(t,sc){const rk=rkOf(sc),url=location.origin+location.pathname,tx=`Isle of Embers\n${S.daily?'デイリー '+S.daily+'\n':''}${t}｜${Math.floor(S.m/12)+1}年｜最大人口${Math.max(S.peak|0,S.pop)}｜スコア${sc}｜ランク${rk}\n#IsleOfEmbers`;
+async function shareX(t,sc){const rk=rkOf(sc),url=SITE,tx=shareText(t,sc,rk);
+ let canF=false;try{canF=!!(navigator.canShare&&navigator.canShare({files:[new File([''],'a.png',{type:'image/png'})]}))}catch(e){}
+ let w=null;if(!canF){try{w=window.open('about:blank','_blank')}catch(e){}}
  let blob=null;try{blob=await shareCard(t,sc,rk)}catch(e){}
  if(blob){const f=new File([blob],'isle-of-embers.png',{type:'image/png'});
-  try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],text:tx+'\n'+url});return}}catch(e){if(e&&e.name=='AbortError')return}
+  try{if(canF&&navigator.canShare({files:[f]})){await navigator.share({files:[f],text:tx+'\n'+url});return}}catch(e){if(e&&e.name=='AbortError'){if(w)try{w.close()}catch(_){}return}}
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='isle-of-embers.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);log('結果画像を保存しました。投稿に添付してください')}
- window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(tx)+'&url='+encodeURIComponent(url),'_blank')}
-function copyRes(t,sc){const s=`Isle of Embers\n${t}｜${Math.floor(S.m/12)+1}年｜最大人口${Math.max(S.peak|0,S.pop)}｜スコア${sc}｜ランク${rkOf(sc)}｜称号：${ttl()}｜実績${Object.keys(gA()).length}/${Object.keys(AN).length}`;try{navigator.clipboard.writeText(s)}catch(e){}log('結果をコピーしました')}
+ const u='https://twitter.com/intent/tweet?text='+encodeURIComponent(tx)+'&url='+encodeURIComponent(url);
+ if(w&&!w.closed)w.location.href=u;else window.open(u,'_blank')}
+async function copyRes(t,sc){const s2=shareText(t,sc,rkOf(sc))+`\n称号：${ttl()}｜実績${Object.keys(gA()).length}/${Object.keys(AN).length}\n`+SITE;let ok=false;try{await navigator.clipboard.writeText(s2);ok=true}catch(e){try{const a=document.createElement('textarea');a.value=s2;a.style.cssText='position:fixed;opacity:0;left:-999px';document.body.appendChild(a);a.select();ok=document.execCommand('copy');a.remove()}catch(e2){}}log(ok?'結果をコピーしました':'コピーできませんでした')}
 function quake(){const g=[];for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=S.g[y][x];if(t.t=='g'&&(t.r||t.z||t.b))g.push([x,y])}
  if(!g.length)return;S.lastQk=S.m;const[ex,ey]=g[Math.floor(Math.random()*g.length)],M=+(5+Math.random()*2.5).toFixed(1),Rr=Math.round(2+(M-5)*2),ew=tiles().some(t=>t.b=='eew');let lost=0;
  for(let y=ey-Rr;y<=ey+Rr;y++)for(let x=ex-Rr;x<=ex+Rr;x++){const t=at(x,y);if(!t||!(t.r||t.z||t.b))continue;const d=Math.hypot(x-ex,y-ey);if(d>Rr)continue;if(Math.random()<(covered('eew',x,y)?.05:.28)*(S.ed.seismic?.5:1)*(S.ed.drill?.75:1)*(1-d/(Rr+1))){t.r=0;t.z=null;t.lv=0;t.b=null;lost++}}
@@ -1263,7 +1271,7 @@ function end(t,p){if(tutOn()){if(t=='国家破産')S.money=0;if(t=='敵軍の占
  const pk=Math.max(S.peak|0,S.pop),sc=Math.round((Math.max(0,S.money/2)+pk*5+S.m*2)*[.8,1,2][S.dif]*(1+.25*Object.values(S.ch||{}).filter(Boolean).length));let best=0;try{best=+localStorage.getItem(KEY+'_best')||0;if(sc>best)localStorage.setItem(KEY+'_best',sc)}catch(e){}
  const gain=Math.round(sc/40),LG=leg();LG.pts=(LG.pts|0)+gain;try{localStorage.setItem(KEY+'_leg',JSON.stringify(LG))}catch(e){}
  p+=`\n\n最大人口 ${fmt(pk)}\nスコア ${sc}${sc>best?'（自己ベスト更新！）':'（自己ベスト '+best+'）'} ／ ランク ${rkOf(sc)} ／ 威信+${gain}`;
- const rs=()=>modal(t,p,[['もう一度',()=>startMenu()]].concat([['結果をコピー',()=>{copyRes(t,sc);rs()}],['Xでシェア',()=>{shareX(t,sc);rs()}],['ランキング登録',()=>submitRank()]]));RES={assets:Math.max(0,Math.round(S.money)),score:sc,years:Math.floor(S.m/12)+1,pop:pk,daily:S.daily||null};rs();S.over=true;draw();hud()}
+ const rs=()=>modal(t,p,[['もう一度',()=>startMenu()]].concat([['結果をコピー',()=>{copyRes(t,sc);rs()}],['Xでシェア',()=>{shareX(t,sc);rs()}],['ランキング登録',()=>submitRank()]]));RES={assets:Math.max(0,Math.round(S.money)),score:sc,years:Math.floor(S.m/12)+1,pop:pk,daily:S.daily||null};RES.back=rs;rs();S.over=true;draw();hud()}
 fixS();(function lp(){try{draw()}catch(e){dErr(e)}requestAnimationFrame(lp)})();
 let acc=0;setInterval(()=>{if(!S.modal)acc+=S.spd*250;if(acc>=15000){acc=0;tick()}},250);
 tools();info(D.road);draw();hud();if(!loaded)startMenu(false);log('就任おめでとうございます、閣下。まず道路を引き、区画を指定して島を育てましょう。人口が増えるほど統治は難しくなります。どこまで大きな国にできるか挑戦しましょう。');
