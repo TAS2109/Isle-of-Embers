@@ -116,16 +116,84 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden}body{max-width:none;pad
 button{touch-action:manipulation}
 @media (min-width:820px){#top,#dock{max-width:1000px}#hud .st b{font-size:20px}#hud .st small{font-size:12px}#tabs button{min-height:60px;font-size:12px}#tabs button .ti{width:30px;height:30px}#tools button{min-width:96px;min-height:86px;font-size:13.5px}#tools button .ic{width:42px;height:42px}#modes button{min-height:42px;font-size:15px}#dock button{font-size:15px}#info{font-size:14px}#ov>div{max-width:480px;padding:26px}#ov button{min-height:50px;font-size:15px}#ctl button{width:52px;height:52px}#quest{font-size:14px}#sub{font-size:13px}#toast{font-size:13px}#xp{font-size:12.5px}}
 @media (orientation:landscape) and (max-height:520px){#tabs button{min-height:38px;flex-direction:row;gap:4px;font-size:10px}#tabs button .ti{width:18px;height:18px}#tools button{min-height:52px;min-width:70px}#tools button .ic{width:24px;height:24px}#modes button{min-height:28px;padding:2px}#dock button{min-height:34px}#info{min-height:0;font-size:11px;margin:0 0 2px}#xp,#dem{display:none}#ov>div{max-width:520px}#dock.sat:not(.min) #tools{max-height:40vh}}
+
+/* ===== LAYOUT v2: 上部HUD / マップ / 下部ドック の3段構成（マップはUIの裏に隠れない） ===== */
+:root{padding:0!important}
+html,body{height:100%;margin:0;overflow:hidden;position:fixed;inset:0;width:100%}
+body{display:flex;flex-direction:column;height:100%;height:100dvh;max-width:none!important;padding:0 env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px)!important}
+#stage{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:#0d2238}
+#c{position:absolute!important;inset:0;width:100%;height:100%;border:0;border-radius:0}
+#top{position:relative!important;flex:0 0 auto;top:auto;left:auto;right:auto;max-width:none!important;width:100%;margin:0;z-index:5;pointer-events:auto;background:var(--bg);border-bottom:1px solid var(--bd);padding:calc(4px + env(safe-area-inset-top,0px)) max(8px,calc((100% - 1000px)/2)) 4px!important}
+#top>*{background:none;margin:0 0 3px;border-radius:8px}
+#top>#hud{gap:4px;margin-bottom:3px}
+#top .st{padding:2px 4px}
+#sub{cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px;padding:1px 6px}
+#sub::after{content:" ▾";opacity:.6}#top.more #sub::after{content:" ▴"}
+#dem,#xp{display:none}#top.more #dem{display:grid}#top.more #xp{display:block}
+#quest{cursor:pointer;padding:3px 7px;font-size:11.5px;line-height:1.3;margin-bottom:0;box-shadow:none;border-width:1px;border-left-width:5px}
+#quest .qh{font-size:10.5px}#quest .qt{font-size:1em}
+#quest .qd{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:0}
+#top.more #quest .qd{white-space:normal}
+#quest i{height:5px;margin-top:3px}
+#toast{position:absolute;left:8px;right:60px;top:6px;z-index:4;width:fit-content;max-width:calc(100% - 68px);margin:0;pointer-events:none;opacity:0;transition:opacity .3s;background:color-mix(in srgb,var(--card) 92%,transparent);border:1px solid var(--bd);border-radius:8px;padding:4px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;min-height:0}
+#toast.show{opacity:1}
+#ctl{position:absolute!important;right:8px;top:50%;transform:translateY(-50%);z-index:5}
+#dock{position:relative!important;flex:0 0 auto;left:auto;right:auto;bottom:auto;max-width:none!important;width:100%;margin:0;z-index:6;padding:5px max(10px,calc((100% - 1000px)/2)) calc(6px + env(safe-area-inset-bottom,0px))!important;max-height:56dvh;overflow:hidden;display:flex;flex-direction:column}
+#d1{display:flex;gap:6px;align-items:center;margin:0 0 4px}
+#tools2{flex:1;min-width:0;margin:0!important;flex-wrap:nowrap;gap:3px;overflow-x:auto;scrollbar-width:none}#tools2::-webkit-scrollbar{display:none}
+#tools2 button{flex:0 0 auto;min-height:34px!important;padding:0 7px;font-size:12.5px!important}
+#tools2 span{flex:0 0 auto;white-space:nowrap;font-size:12px!important}
+#bmin{flex:0 0 auto;min-height:34px!important;width:36px;padding:0;font-size:14px!important}
+#modes{margin:0 0 4px}#modes button{min-height:32px;font-size:12.5px;padding:2px}
+#tabs{grid-template-columns:repeat(7,1fr);gap:2px;margin:0 0 4px}
+#tabs button{min-height:44px!important;padding:2px 0;font-size:9.5px;gap:0;letter-spacing:-.02em;min-width:0}
+#tabs button .ti{width:22px;height:22px}
+#tools{flex:0 1 auto;min-height:0;gap:5px;padding:1px 0 4px}
+#tools button{min-width:68px;min-height:60px;font-size:11px;padding:3px 5px}
+#tools button .ic{width:28px;height:28px}#tools button small{font-size:9.5px}
+#dock.sat:not(.min) #tools{max-height:min(34dvh,260px)}
+#info{font-size:11.5px;min-height:0;margin:2px 0 0;line-height:1.35;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;cursor:pointer}
+#info:empty{display:none}
+#info.x{display:block;max-height:24dvh;overflow-y:auto}
+#dock.min{padding-bottom:calc(4px + env(safe-area-inset-bottom,0px))!important}
+#dock.min #d1{margin-bottom:0}
+@media (min-width:820px){
+ #tabs button{min-height:54px!important;font-size:12px}#tabs button .ti{width:28px;height:28px}
+ #tools button{min-width:92px;min-height:80px;font-size:13px}#tools button .ic{width:40px;height:40px}
+ #info{font-size:13.5px}#modes button{min-height:38px;font-size:14px}#tools2 button,#bmin{min-height:40px!important;font-size:14px!important}
+ #quest{font-size:13px}#sub{font-size:12.5px}
+}
+/* 横向きスマホ：左=ステータス、中央=マップ、右=操作パネル */
+@media (orientation:landscape) and (max-height:520px){
+ html,body{overflow:hidden}
+ body{display:grid;grid-template-columns:clamp(150px,23vw,210px) minmax(0,1fr) clamp(240px,38vw,340px);grid-template-rows:100%}
+ body:has(#dock.min){grid-template-columns:clamp(150px,23vw,210px) minmax(0,1fr) auto}
+ #top{overflow-y:auto;border-bottom:0;border-right:1px solid var(--bd);padding:calc(4px + env(safe-area-inset-top,0px)) 6px 4px!important;min-height:0}
+ #top>#hud{grid-template-columns:1fr 1fr}
+ #dem,#xp{display:block}#dem{display:grid;grid-template-columns:1fr 1fr}
+ #sub{white-space:normal}#sub::after{content:""!important}
+ #quest .qd{white-space:normal}
+ #dock{border-top:0;border-left:1px solid var(--bd);max-height:none;height:100%;padding:4px 8px calc(4px + env(safe-area-inset-bottom,0px))!important;overflow-y:auto}
+ #tabs{grid-template-columns:repeat(4,1fr)}#tabs button{min-height:40px!important;flex-direction:row;gap:3px;font-size:9.5px;padding:2px}#tabs button .ti{width:18px;height:18px}
+ #tools{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));overflow-y:auto;overflow-x:hidden;flex:1 1 auto;min-height:60px}
+ #tools button{min-width:0;min-height:56px}
+ #dock.sat:not(.min) #tools{display:block!important;max-height:none}
+ #dock.min{width:auto}
+ #dock.min #tools2{display:none}
+ #info{-webkit-line-clamp:3;line-clamp:3}
+ #ctl{right:6px}
+ #toast{left:6px;max-width:calc(100% - 60px)}
+}
+@media (max-width:360px){#tools2 button{padding:0 6px;font-size:12px!important}#tabs button{font-size:8.5px}}
 </style></head><body>
-<canvas id="c"></canvas>
-<div id="top"><div id="hud"></div><div id="sub"></div><div id="dem"></div><div id="xp" class="fb"></div><div id="quest"></div><div id="toast"></div></div>
-<div id="ctl"><button id="bz1">＋</button><button id="bz2">－</button><button id="bpan"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg></button><button id="bdel">撤去</button><button id="bmin">▼</button></div>
+<div id="top"><div id="hud"></div><div id="sub"></div><div id="dem"></div><div id="xp" class="fb"></div><div id="quest"></div></div>
+<div id="stage"><canvas id="c"></canvas><div id="toast"></div><div id="ctl"><button id="bz1">＋</button><button id="bz2">－</button><button id="bpan"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg></button><button id="bdel">撤去</button></div></div>
 <div id="log" hidden></div>
-<div id="dock"><div id="info"></div><div id="modes"></div><div id="tabs" class="row"></div><div id="tools"></div><div class="row" id="tools2"></div></div>
+<div id="dock"><div id="d1"><div class="row" id="tools2"></div><button id="bmin" aria-label="パネルの開閉">▼</button></div><div id="modes"></div><div id="tabs" class="row"></div><div id="tools"></div><div id="info" title="タップで全文表示"></div></div>
 <div id="title"><canvas id="tcv"></canvas><div id="tbox"><div class="tsub">火山島の街づくり</div><h1>Isle of Embers</h1><div class="tjp">炎の島　―　終身大統領</div><div id="tbtns"><button id="tCont">続きから</button><button id="tNew">はじめから</button><button id="tLoad">セーブデータ</button></div><small id="tInfo"></small></div></div>
 <div id="ov"><div><h2 id="ovt"></h2><p id="ovp"></p><div id="ovb"></div></div></div>
 <script>
-let MV=null,lastCt=0,lastB='road',CX=23,CY=11;const W=40,H=28,T=36,cv=document.getElementById('c'),$=i=>document.getElementById(i),KEY='ember_dictator';let ctx=cv.getContext('2d');
+let MV=null,lastCt=0,lastB='road',CX=23,CY=11;let W=40,H=28;const NW=64,NH=45,T=36,cv=document.getElementById('c'),$=i=>document.getElementById(i),KEY='ember_dictator';let ctx=cv.getContext('2d');
 const D={
 road:{n:'道路',c:5,road:1,d:'建物は道路に面していないと機能しません'},
 zr:{n:'戸建住宅区',c:10,z:'r',d:'小規模な戸建て住宅（最大Lv3）。安価で、需要があれば自動で成長します'},
@@ -180,9 +248,17 @@ tree:{n:'並木',c:15,r:2,lv:4,d:'範囲2。地価+4（安価）'},
 lookout:{n:'展望台',c:130,up:2,pop:15,r:4,lv:8,hp:1,d:'範囲4。地価+8・支持率+1'},
 garden:{n:'庭園',c:90,up:2,pop:20,r:3,lv:12,d:'範囲3。地価+12'},
 lighthouse:{n:'灯台',c:100,up:2,pop:12,port:1,max:2,mo:30,hp:1,d:'海に隣接。収益$30・支持率+1（最大2）'},
-water:{n:'浄水場',c:130,up:4,pop:15,r:5,d:'範囲5。人口25以上になると、範囲外の住宅は育たず、支持率も下がる'},
+intake:{n:'取水場',c:160,up:5,pop:15,port:1,cap:120,d:'海に隣接。人口25以上で必要。取水場と排水場がそれぞれ人口に見合う数（1基で約120人分）あれば、住宅から遠くてもOK。排水場の汚濁範囲内だと市民が病気になる'},
+outfall:{n:'排水場',c:160,up:5,pop:15,port:1,cap:120,d:'海に隣接。1基で約120人分の排水を処理する。ただし排水場から水質汚濁が海にゆっくり広がり、撤去しても一定期間残ります。また、、近くの住宅は不満を持つ（グレードを上げるほど広がる）'},
+well:{n:'井戸',c:140,up:3,pop:15,cap:60,d:'内陸に建てられる取水施設。1基で約60人分の取水。海岸に置けず、汚濁の影響も受けません。改築の上限なし（費用は上がり続けます）'},
+purify:{n:'浄水場',c:220,up:6,pop:30,cap:100,d:'内陸に建てられる取水側の施設。1基で約100人分の取水。海岸に置けず、汚濁の影響も受けません。改築の上限なし（費用は上がり続けます）'},
+sewage:{n:'下水処理場',c:650,up:14,pop:100,cap:200,d:'内陸に建てられる排水処理施設。1基で約200人分を処理し、水質汚濁は出ません。高価。改築の上限なし（費用は上がり続けます）'},
+conf:{n:'国際会議場',c:4000,up:20,pop:3000,max:3,hp:3,cp:3,d:'支持率+3・資本家+3（最大3）。改築の上限なし（費用は上がり続けます）'},
+lab:{n:'国立研究所',c:9000,up:40,pop:8000,max:4,hp:2,cp:4,fd:30,d:'資本家+4・支持率+2・食料+30（最大4）。改築の上限なし（費用は上がり続けます）'},
+dsc:{n:'防災センター',c:6000,up:30,pop:5000,max:2,sh:4,ang:-2,hp:1,d:'周囲4マスを溶岩流から守る・火山の怒り-2/月・支持率+1（最大2）。改築の上限なし（費用は上がり続けます）'},
+megapark:{n:'大規模公園',c:2500,up:12,pop:2000,max:6,r:6,lv:15,hp:1,d:'範囲6。地価+15・支持率+1（最大6）。改築の上限なし（費用は上がり続けます）'},
 waste:{n:'ごみ処理場',c:150,up:5,pop:25,r:5,lv:-4,hp:0,d:'範囲5。ごみを収集する（収集されない住宅があると支持率が下がる）。周囲の地価-4'},
-eew:{n:'地震速報局',c:220,up:6,pop:30,max:3,r:6,hp:1,d:'範囲6。地震の被害を大きく減らし、緊急地震速報も出る'},
+eew:{n:'地震速報局',c:220,up:6,pop:30,r:6,hp:1,d:'範囲6。地震の被害を大きく減らし、緊急地震速報も出る'},
 avenue:{n:'大通り',c:18,road:2,d:'渋滞への強さは道路の2.4倍。維持費$1.4/月。既存の道路の上に引くと、差額だけでアップグレードできる。海には橋として架けられる'},
 hwy:{n:'高速道路',c:45,road:3,d:'渋滞への強さは道路の5倍。維持費$3/月。沿道の建物とは接続しない（道路か大通りにつないで使う）'},
 gas:{n:'ガス火力発電所',c:500,up:20,pop:300,pwr:80,r:3,lv:-6,d:'電力+80。周囲の地価-6'},
@@ -191,7 +267,10 @@ subway:{n:'地下鉄駅',c:600,up:12,pop:1500,tr:30,r:4,lv:4,d:'渋滞を大幅�
 monu:{n:'大統領記念塔',c:6000,up:80,pop:10000,max:1,post:1,hp:8,ml:8,rl:4,d:'【10万人到達後】支持率+8・軍+8・教会+4。島のシンボル（1つだけ）'},
 space:{n:'宇宙港',c:12000,up:150,pop:20000,max:1,post:1,mo:8000,cp:8,d:'【10万人到達後】収益$8000/月（要電力）・資本家+8（1つだけ）'},
 sun:{n:'人工太陽',c:9000,up:100,pop:15000,max:1,post:1,pwr:4000,ang:-3,d:'【10万人到達後】電力+4000・火山の怒り-3/月（1つだけ）'},
-bull:{n:'撤去',c:0,d:'道路・区画・建物を撤去（返金なし）'},upg:{n:'改築',c:0,note:'建物を選択',d:'建物をタップしてグレードアップ（最大Lv3）。効果が大きくなる代わりに、維持費も増える'},mov:{n:'移設',c:0,note:'建物を選択',d:'移したい建物をタップし、次に空き地をタップして移す。費用は建設費の30%で、グレードは引き継ぐ'}};
+land:{n:'埋め立て',c:4500,pop:5000,ter:1,d:'【高額】陸に隣接した海マスを陸地にする。道路・橋・建物のない海のみ'},
+dig:{n:'掘削',c:3600,pop:5000,ter:1,d:'【高額】何もない平地を海に変える（海に隣接する場所のみ）。資源マスは失われる'},
+raze:{n:'山の破壊',c:5400,pop:5000,ter:1,d:'【高額】山を平地にする。火口は壊せない。山に隣接する採掘場・温泉・観測所が機能を失う場合は実行できない'},
+bull:{n:'撤去',c:0,d:'道路・区画・建物を撤去（返金なし）'},upg:{n:'改築',c:0,note:'建物を選択',d:'建物をタップしてグレードアップ（Lv3まで。人口10万人到達後は上限なし、費用は上がり続けます）。効果が大きくなる代わりに、維持費も増える'},mov:{n:'移設',c:0,note:'建物を選択',d:'移したい建物をタップし、次に空き地をタップして移す。費用は建設費の30%で、グレードは引き継ぐ'}};
 const ZC={r:'#4a90d9',q:'#3fb0a8',h:'#e0546e',l:'#e67ab0',a:'#d4b02a',c:'#a35cc9',i:'#8a6d4b'},DN={r:'住宅',a:'農地',c:'商業',i:'工房'},F={farm:'農民',cap:'資本家',mil:'軍',rel:'教会'};
 const ED={ration:{n:'食料配給',cost:30,d:'食料消費-20%・農民の支持が上がる・月$30'},martial:{n:'戒厳令',cost:40,d:'軍と資本家の支持が上がり、農民と教会の支持が下がる・月$40'},police:{n:'秘密警察',cost:35,d:'軍の支持が上がり、クーデターを防ぐ。農民と資本家の支持が下がる・月$35'},seismic:{n:'耐震基準',cost:35,d:'地震の被害が半減・月$35'},drill:{n:'防災訓練',cost:25,d:'火山の怒り-0.8/月・噴火予告の猶予+1か月・地震被害-25%・月$25'}};
 const LM=[0,1,2,5,14,40,100],TW=[0,1,1.4,2,3,4.5,6],PWW=[0,1,1,2,2,4,4],PG=[0,0,0,40,200,1500,10000];
@@ -200,8 +279,9 @@ const LVR={r:[0,0,0,30],q:[0,0,0,35,45],h:[0,0,0,40,50,60,70],l:[0,0,50,55,60,65
 const isR=z=>z=='r'||z=='q'||z=='h'||z=='l';
 const fmt=n=>{n=Math.round(n);const a=Math.abs(n);return a>=1e8?(n/1e8).toFixed(1)+'億':a>=1e4?(n/1e4).toFixed(1)+'万':String(n)};
 const cm=()=>1+Math.max(0,S.pop-100)/4000;
+function syncDim(){if(S&&S.g&&S.g[0]){H=S.g.length;W=S.g[0].length}}
 function tutOn(){return ti>=0}
-let RS=null,RE=null,RF=false;let S,hv=null,pd=false,GP=null,gc=0,LVV=false,VW=innerWidth,VH=innerHeight,dpr=1,cam={x:0,y:0,z:1};
+let RS=null,RE=null,RF=false;let S,hv=null,pd=false,GP=null,gc=0,LVV=false,VW=innerWidth,VH=innerHeight,OX=0,OY=0,dpr=1,cam={x:0,y:0,z:1};
 const cl=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 
 let RNG=Math.random,SHF=null;
@@ -209,7 +289,7 @@ const mulb=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.
 const jstDay=()=>new Date(Date.now()+9*36e5).toISOString().slice(0,10);
 let aTo=0,aTl=Date.now();const isPaused=()=>{try{return !S||S.over||S.modal||S.spd==0||ct==7}catch(e){return false}},aT=()=>{const n=Date.now();if(isPaused())aTo+=n-aTl;aTl=n;return n-aTo};
 const seedOf=d=>{let h=2166136261;for(const c of d){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
-function genMap(){const R=RNG,N4=[[1,0],[-1,0],[0,1],[0,-1]];
+function genMap(){const R=RNG,N4=[[1,0],[-1,0],[0,1],[0,-1]],SC=NW/40;W=NW;H=NH;
  for(let tr=0;tr<80;tr++){
   const SH=['normal','normal','normal','normal','ring','crescent','chain','cross','twin'],shape=SHF||SH[Math.floor(R()*SH.length)],Hs=[];let nl=1,Ls=[];
   if(shape=='normal'){nl=R()<.45?1:R()<.6?2:3;for(let i=0;i<nl;i++)Ls.push(i?{x:6+R()*28,y:6+R()*16,rx:6+R()*5,ry:5+R()*4,a:R()*3.14}:{x:18+R()*5,y:12+R()*5,rx:(nl==1?16:11)+R()*4,ry:(nl==1?10:8)+R()*3,a:(R()-.5)*1.2})}
@@ -218,34 +298,35 @@ function genMap(){const R=RNG,N4=[[1,0],[-1,0],[0,1],[0,-1]];
   else if(shape=='chain'){nl=3;const f=R()<.5?1:-1,sy=f>0?8:20;for(let i=0;i<3;i++)Ls.push({x:8+i*12+R()*2,y:sy+f*i*5.5+(R()-.5)*2,rx:10.5+R()*1.5,ry:7+R()*1,a:f*.3+(R()-.5)*.3});Ls.sort(()=>R()-.5)}
   else if(shape=='cross'){const a0=R()*3.14,cx0=20+R()*2,cy0=14+R()*2;Ls=[{x:cx0,y:cy0,rx:19,ry:7.5,a:a0},{x:cx0,y:cy0,rx:15,ry:7.5,a:a0+1.57+(R()-.5)*.5}]}
   else{nl=2;Ls=[{x:11+R()*3,y:13+R()*3,rx:9+R()*2,ry:8+R()*2,a:R()*3},{x:29+R()*3,y:13+R()*4,rx:9+R()*2,ry:8+R()*2,a:R()*3}]}
+  for(const l of Ls.concat(Hs)){l.x*=SC;l.y*=SC;l.rx*=SC;l.ry*=SC}
   let land=[];for(let y=0;y<H;y++){land[y]=[];for(let x=0;x<W;x++){let e=9;for(const l of Ls){const dx=x-l.x,dy=y-l.y,c=Math.cos(l.a),sn=Math.sin(l.a),u=(dx*c+dy*sn)/l.rx,v=(-dx*sn+dy*c)/l.ry;e=Math.min(e,u*u+v*v)}let hh=9;for(const l of Hs){const dx=x-l.x,dy=y-l.y,c=Math.cos(l.a),sn=Math.sin(l.a),u=(dx*c+dy*sn)/l.rx,v=(-dx*sn+dy*c)/l.ry;hh=Math.min(hh,u*u+v*v)}land[y][x]=e<1-R()*.3&&hh>1+R()*.25&&x>0&&y>0&&x<W-1&&y<H-1}}
   for(let p=0;p<2;p++){const n=land.map(q=>q.slice());for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){let c=0;for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++)if(land[y+j][x+i])c++;n[y][x]=c>=5}land=n}
   const lab=land.map(q=>q.map(()=>0)),comps=[];
   for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(land[y][x]&&!lab[y][x]){const q=[[x,y]],cp=[];lab[y][x]=comps.length+1;while(q.length){const[a,b]=q.pop();cp.push([a,b]);for(const[i,j]of N4){const u=a+i,v=b+j;if(land[v]&&land[v][u]&&!lab[v][u]){lab[v][u]=comps.length+1;q.push([u,v])}}}comps.push(cp)}
   comps.sort((a,b)=>b.length-a.length);const big=comps[0];if(!big)continue;
   comps.forEach(cp=>{if(cp.length<10)cp.forEach(([x,y])=>land[y][x]=false)});
-  const keep=comps.filter(cp=>cp.length>=10),total=keep.reduce((a,c)=>a+c.length,0);if(shape=='normal'||shape=='twin'?(total<520||big.length<320):(total<420||big.length<300))continue;
+  const keep=comps.filter(cp=>cp.length>=10),total=keep.reduce((a,c)=>a+c.length,0);if(shape=='normal'||shape=='twin'?(total<520*SC*SC||big.length<320*SC*SC):(total<420*SC*SC||big.length<300*SC*SC))continue;
   const g=[];for(let y=0;y<H;y++){g[y]=[];for(let x=0;x<W;x++)g[y][x]={t:land[y][x]?'g':'s',r:0,z:null,lv:0,b:null,lava:0}}
   const bigSet=new Set(big.map(([x,y])=>x+','+y)),inner=(x,y,r)=>{for(let j=-r;j<=r;j++)for(let i=-r;i<=r;i++){const t=g[y+j]&&g[y+j][x+i];if(!t||t.t!='g')return false}return true};
   const cand=big.filter(([x,y])=>inner(x,y,3));if(!cand.length)continue;
   const[cx,cy]=cand[Math.floor(R()*cand.length)];g[cy][cx].t='v';
   for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const t=g[cy+j]&&g[cy+j][cx+i];if(t&&t.t=='g'&&R()<.75)t.t='m'}
-  const rg=2+Math.floor(R()*3);for(let k=0;k<rg;k++){let x=cx+Math.round((R()-.5)*14),y=cy+Math.round((R()-.5)*10);const dir=N4[Math.floor(R()*4)],len=5+Math.floor(R()*6);for(let i=0;i<len;i++){const t=g[y]&&g[y][x];if(t&&t.t=='g')t.t='m';if(R()<.35){const d2=N4[Math.floor(R()*4)];x+=d2[0];y+=d2[1]}else{x+=dir[0];y+=dir[1]}}}
+  const rg=Math.round((2+Math.floor(R()*3))*SC);for(let k=0;k<rg;k++){let x=cx+Math.round((R()-.5)*14*SC),y=cy+Math.round((R()-.5)*10*SC);const dir=N4[Math.floor(R()*4)],len=Math.round((5+Math.floor(R()*6))*SC);for(let i=0;i<len;i++){const t=g[y]&&g[y][x];if(t&&t.t=='g')t.t='m';if(R()<.35){const d2=N4[Math.floor(R()*4)];x+=d2[0];y+=d2[1]}else{x+=dir[0];y+=dir[1]}}}
   for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(g[y][x].t=='g'&&R()<.03)g[y][x].t='m';
-  const st=[];for(const[x,y]of big){let ok=true;for(let j=-1;j<=2&&ok;j++)for(let i=-1;i<=5;i++){const t=g[y+j]&&g[y+j][x+i];if(!t||t.t!='g'||!bigSet.has((x+i)+','+(y+j))){ok=false;break}}if(!ok)continue;const d=Math.max(Math.abs(x+2-cx),Math.abs(y-cy));if(d>=6&&d<=15)st.push([x,y])}
+  const st=[];for(const[x,y]of big){let ok=true;for(let j=-1;j<=2&&ok;j++)for(let i=-1;i<=5;i++){const t=g[y+j]&&g[y+j][x+i];if(!t||t.t!='g'||!bigSet.has((x+i)+','+(y+j))){ok=false;break}}if(!ok)continue;const d=Math.max(Math.abs(x+2-cx),Math.abs(y-cy));if(d>=6&&d<=Math.round(15*(1+(SC-1)*.6)))st.push([x,y])}
   if(!st.length)continue;const[ox,oy]=st[Math.floor(R()*st.length)];
   const nearStart=(x,y,r)=>x>=ox-1-r&&x<=ox+5+r&&y>=oy-1-r&&y<=oy+2+r;
-  let lakes=0;const nk=Math.floor(R()*3);for(let k=0;k<nk;k++){const c2=big.filter(([x,y])=>inner(x,y,3)&&!nearStart(x,y,3)&&Math.max(Math.abs(x-cx),Math.abs(y-cy))>4);if(!c2.length)break;const[lx,ly]=c2[Math.floor(R()*c2.length)],rr=R()<.5?1:1.5;for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++)if(Math.hypot(i,j)<=rr&&g[ly+j][lx+i].t=='g')g[ly+j][lx+i].t='s';lakes++}
-  let fb=0;const nf=3+Math.floor(R()*3);for(let k=0;k<nf;k++){const c3=big.filter(([x,y])=>g[y][x].t=='g'&&!nearStart(x,y,-1));if(!c3.length)break;const[fx,fy]=c3[Math.floor(R()*c3.length)];for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const t=g[fy+j]&&g[fy+j][fx+i];if(t&&t.t=='g'&&Math.hypot(i,j)<=1.6)t.fert=1}fb++}
+  let lakes=0;const nk=Math.floor(R()*3*SC);for(let k=0;k<nk;k++){const c2=big.filter(([x,y])=>inner(x,y,3)&&!nearStart(x,y,3)&&Math.max(Math.abs(x-cx),Math.abs(y-cy))>4);if(!c2.length)break;const[lx,ly]=c2[Math.floor(R()*c2.length)],rr=R()<.5?1:1.5;for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++)if(Math.hypot(i,j)<=rr&&g[ly+j][lx+i].t=='g')g[ly+j][lx+i].t='s';lakes++}
+  let fb=0;const nf=Math.round((3+Math.floor(R()*3))*SC);for(let k=0;k<nf;k++){const c3=big.filter(([x,y])=>g[y][x].t=='g'&&!nearStart(x,y,-1));if(!c3.length)break;const[fx,fy]=c3[Math.floor(R()*c3.length)];for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const t=g[fy+j]&&g[fy+j][fx+i];if(t&&t.t=='g'&&Math.hypot(i,j)<=1.6)t.fert=1}fb++}
   for(let j=-1;j<=2;j++)for(let i=-1;i<=5;i++){g[oy+j][ox+i].t='g'}
   const free=([x,y])=>g[y][x].t=='g'&&!g[y][x].fert&&!g[y][x].ore&&!g[y][x].spa&&!g[y][x].fish&&!nearStart(x,y,0),pick=a=>a[Math.floor(R()*a.length)];
   let no=0,ns=0,nfs=0,nw=0,nd=0;
-  {const k2=Math.floor(R()*3);for(let k=0;k<k2;k++){const c=big.filter(free);if(!c.length)break;const[ax,ay]=pick(c);for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const t=g[ay+j]&&g[ay+j][ax+i];if(t&&t.t=='g'&&!t.fert&&!t.ore&&!t.spa&&!t.fish&&!t.dune&&!nearStart(ax+i,ay+j,0)&&Math.hypot(i,j)<=1.5+R()*.8){t.wet=1;nw++}}}}
-  {const k2=Math.floor(R()*3);for(let k=0;k<k2;k++){const c=big.filter(free);if(!c.length)break;const[ax,ay]=pick(c);for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const t=g[ay+j]&&g[ay+j][ax+i];if(t&&t.t=='g'&&!t.fert&&!t.ore&&!t.spa&&!t.fish&&!t.wet&&!nearStart(ax+i,ay+j,0)&&Math.hypot(i,j)<=1.5+R()*.8){t.dune=1;nd++}}}}
+  {const k2=Math.floor(R()*3*SC);for(let k=0;k<k2;k++){const c=big.filter(free);if(!c.length)break;const[ax,ay]=pick(c);for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const t=g[ay+j]&&g[ay+j][ax+i];if(t&&t.t=='g'&&!t.fert&&!t.ore&&!t.spa&&!t.fish&&!t.dune&&!nearStart(ax+i,ay+j,0)&&Math.hypot(i,j)<=1.5+R()*.8){t.wet=1;nw++}}}}
+  {const k2=Math.floor(R()*3*SC);for(let k=0;k<k2;k++){const c=big.filter(free);if(!c.length)break;const[ax,ay]=pick(c);for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const t=g[ay+j]&&g[ay+j][ax+i];if(t&&t.t=='g'&&!t.fert&&!t.ore&&!t.spa&&!t.fish&&!t.wet&&!nearStart(ax+i,ay+j,0)&&Math.hypot(i,j)<=1.5+R()*.8){t.dune=1;nd++}}}}
 
-  {const k2=Math.floor(R()*4);for(let k=0;k<k2;k++){const c=big.filter(free);if(!c.length)break;const[ax,ay]=pick(c);for(const[i,j]of[[0,0],...N4.filter(()=>R()<.45)]){const t=g[ay+j]&&g[ay+j][ax+i];if(t&&t.t=='g'&&!t.fert){t.ore=1;no++}}}}
-  {const k2=Math.floor(R()*3);for(let k=0;k<k2;k++){const c=big.filter(([x,y])=>free([x,y])&&N4.some(([i,j])=>g[y+j]&&g[y+j][x+i]&&(g[y+j][x+i].t=='m'||g[y+j][x+i].t=='v')));if(!c.length)break;const[ax,ay]=pick(c);g[ay][ax].spa=1;ns++}}
-  {const k2=Math.floor(R()*5);for(let k=0;k<k2;k++){const c=big.filter(([x,y])=>free([x,y])&&N4.some(([i,j])=>g[y+j]&&g[y+j][x+i]&&g[y+j][x+i].t=='s'));if(!c.length)break;const[ax,ay]=pick(c);g[ay][ax].fish=1;nfs++}}
+  {const k2=Math.floor(R()*4*SC);for(let k=0;k<k2;k++){const c=big.filter(free);if(!c.length)break;const[ax,ay]=pick(c);for(const[i,j]of[[0,0],...N4.filter(()=>R()<.45)]){const t=g[ay+j]&&g[ay+j][ax+i];if(t&&t.t=='g'&&!t.fert){t.ore=1;no++}}}}
+  {const k2=Math.floor(R()*3*SC);for(let k=0;k<k2;k++){const c=big.filter(([x,y])=>free([x,y])&&N4.some(([i,j])=>g[y+j]&&g[y+j][x+i]&&(g[y+j][x+i].t=='m'||g[y+j][x+i].t=='v')));if(!c.length)break;const[ax,ay]=pick(c);g[ay][ax].spa=1;ns++}}
+  {const k2=Math.floor(R()*5*SC);for(let k=0;k<k2;k++){const c=big.filter(([x,y])=>free([x,y])&&N4.some(([i,j])=>g[y+j]&&g[y+j][x+i]&&g[y+j][x+i].t=='s'));if(!c.length)break;const[ax,ay]=pick(c);g[ay][ax].fish=1;nfs++}}
   const dx=cx-(ox+2),dy=cy-oy,dir=Math.abs(dx)>=Math.abs(dy)?(dx>0?'東':'西'):(dy>0?'南':'北');
   const nm=['炎','灰','黒','紅','翠','嵐','金','霧','雷','蒼'][Math.floor(R()*10)]+(nl>1||shape=='chain'?'諸島':shape=='ring'?'環礁':R()<.5?'の島':'島');
   const lines=['地形：'+({ring:'中央に内海を抱く環状島',crescent:'湾を抱える三日月型の島',chain:'連なる群島（道路で橋を架けて結べます）',cross:'十字に伸びた細長い島',twin:'二つの島が並ぶ地形（道路で橋を架けて結べます）'}[shape]||(nl==1?'一つの大きな島':nl==2?'二つの島が並ぶ地形（道路で橋を架けて結べます）':'三つの島が点在する諸島（道路で橋を架けて結べます）')),'火山は拠点の'+dir+'側にあります',lakes?'内陸に湖が'+lakes+'つあります':'内陸に湖はありません',fb?'肥沃な土地が'+fb+'か所あります（黄緑の斑点）：農地の食料が50%増えます':'',no?'鉱脈が'+no+'か所あります：工房を置くと収益が増えます':'',ns?'温泉が'+ns+'か所あります：区画を置くと観光収入が入ります':'',nfs?'好漁場が'+nfs+'か所あります：農地を置くと食料が増えます':'',nw?'湿地が'+nw+'マス：農地の食料が増えます':'',nd?'砂丘が'+nd+'マス：商業の収益が増えます（農地には不向きです）':''].filter(Boolean);
@@ -266,19 +347,105 @@ function fresh(d=1,daily){
  RNG=daily?mulb(seedOf(daily)):Math.random;
  S={dif:d,m:0,money:[800,600,300][d],pop:8,food:40,hap:50,anger:30,tax:9,sel:'road',spd:1,over:false,modal:false,warn:null,dem:{r:0,a:0,c:0,i:0},g:[],f:{farm:50,cap:50,mil:50,rel:50},ed:{ration:0,martial:0,police:0},ppl:[],lastPt:-9};
  let MP=null;for(let q=0;q<20&&!MP;q++)MP=genMap();if(!MP)throw new Error('map');S.g=MP.g;CX=MP.cx;CY=MP.cy;S.cx=CX;S.cy=CY;S.home={x:MP.ox+2,y:MP.oy+1};S.isl=MP.info;for(let i=0;i<5;i++)S.g[MP.oy+1][MP.ox+i].r=1;[[0,'r'],[1,'r'],[2,'a']].forEach(([i,z])=>{const t=S.g[MP.oy][MP.ox+i];t.z=z;t.lv=1});const L=leg();S.money+=100*(L.cash|0);for(const k in S.f)S.f[k]+=3*(L.loyal|0);S.pk={tax:L.tax|0,cheap:L.cheap|0,calm:L.calm|0};S.v=3;if(daily)S.daily=daily;randStart(MP);applySc();S.sc=(S.past||[]).concat(S.sc);RNG=Math.random}
-try{const j=localStorage.getItem(KEY);if(j){const o=JSON.parse(j);if(o&&!o.over&&o.g&&o.v==3){S=o;S.modal=false}}}catch(e){}
+try{const j=localStorage.getItem(KEY);if(j){const o=JSON.parse(j);if(o&&!o.over&&o.g&&o.v==3){S=o;S.modal=false;syncDim()}}}catch(e){}
 if(S&&S.cx!=null){CX=S.cx;CY=S.cy}let loaded=!!S;if(!S)fresh(2);
 const ser=()=>JSON.stringify(S,(k,v)=>v instanceof Set?[...v]:v);const save=()=>{try{if(!S.over)localStorage.setItem(KEY,ser())}catch(e){}};
 const tiles=()=>S.g.flat();
-function log(s){const tt=$('toast');if(tt)tt.textContent=s;$('log').innerHTML=`<div>${Math.floor(S.m/12)+1}年${S.m%12+1}月：${s}</div>`+$('log').innerHTML}
+function log(s){const tt=$('toast');if(tt){tt.textContent=s;tt.classList.add('show');clearTimeout(tt._t);tt._t=setTimeout(()=>tt.classList.remove('show'),6000)}$('log').innerHTML=`<div>${Math.floor(S.m/12)+1}年${S.m%12+1}月：${s}</div>`+$('log').innerHTML}
 const NB=[[1,0],[-1,0],[0,1],[0,-1]],at=(x,y)=>S.g[y]&&S.g[y][x];
 const conn=(x,y)=>NB.some(([a,b])=>{const t=at(x+a,y+b);return t&&t.r&&t.r<3});
 const LVK=Object.keys(D).filter(k=>D[k].lv);
+let PO=new Set();
+const wOK=(x,y)=>{const r=S.ws==null?1:S.ws;if(r>=1)return true;return ((((x*73856093)^(y*19349663))>>>0)%100)/100<r};
+let PTG=new Set(),SRC=new Set();
+function buildPO(){PO=new Set();const p=S.pol;if(p)for(const k in p)if(p[k]>=.5)PO.add(+k)}
+function polStep(){S.pol=S.pol||{};const p=S.pol,nb=k=>{const x=k%W,y=(k/W)|0;return NB.some(([i,j])=>{const n=at(x+i,y+j);return n&&n.t=='s'&&(p[(y+j)*W+x+i]||0)>=.5})};const up=[];for(const k of PTG){if(SRC.has(k)||nb(k))up.push(k)}for(const k in p){if(!PTG.has(+k)){p[k]-=.04;if(p[k]<=0)delete p[k]}}for(const k of up)p[k]=Math.min(1,(p[k]||0)+.2);buildPO()}
+function recalcWater(){recalcWater0();buildPO()}
+function recalcWater0(){let a=0,b=0;const G=S.g;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=G[y][x];if(t.b=='intake'||t.b=='well'||t.b=='purify')a+=D[t.b].cap*gm(t);else if(t.b=='outfall'||t.b=='sewage')b+=D[t.b].cap*gm(t)}
+ S.wcap=[Math.round(a),Math.round(b)];S.ws=Math.min(1,Math.min(a,b)/Math.max(1,S.pop));
+ PTG=new Set();SRC=new Set();const q=[],dist={};for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=G[y][x];if(t.b!='outfall')continue;const rad=3+Math.min(3,gr(t));for(const[i,j]of NB){const n=at(x+i,y+j);if(n&&n.t=='s'){const k=(y+j)*W+x+i;if(!(k in dist)||dist[k]<rad){dist[k]=rad;q.push([x+i,y+j,rad]);SRC.add(k)}}}}
+ while(q.length){const[x,y,r]=q.shift();if(dist[y*W+x]>r)continue;PTG.add(y*W+x);if(r<=1)continue;for(const[i,j]of NB){const n=at(x+i,y+j);if(n&&n.t=='s'){const k=(y+j)*W+x+i;if(!(k in dist)||dist[k]<r-1){dist[k]=r-1;q.push([x+i,y+j,r-1])}}}}}
+const nearPoll=(x,y,r)=>{for(let j=-r;j<=r;j++)for(let i=-r;i<=r;i++){const t=at(x+i,y+j);if(t&&t.t=='s'&&PO.has((y+j)*W+x+i))return true}return false};
+function migW(){if(!(S&&S.g))return;let cv=0;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=S.g[y][x];if(t&&t.b=='water'){const sea=NB.some(([i,j])=>{const n=at(x+i,y+j);return n&&n.t=='s'});if(sea)t.b='intake';else{t.b=null;t.bl=0;S.money+=130}cv++}}
+ if(cv)setTimeout(()=>{try{log('浄水場は廃止されました。取水場に置き換え（海に隣接しない分は撤去・返金）。排水場も建設してください')}catch(e){}},500);recalcWater()}
+// ===== 交通シミュレーション：通勤・買い物の移動を道路網に流して渋滞を計算 =====
+let TL=new Float32Array(W*H),TLc=new Float32Array(W*H),TRT=[],TRC=[],CARS=[],TD=1,TOV=false,TLAST=0,TG=null,CT0=0,TKF=3.4;
+const RSPD=[0,1,1.6,2.6],RCAP=[0,1,2.4,5];
+function hpush(h,k,v){h.k.push(k);h.v.push(v);let i=h.k.length-1;while(i>0){const p=(i-1)>>1;if(h.k[p]<=h.k[i])break;[h.k[p],h.k[i]]=[h.k[i],h.k[p]];[h.v[p],h.v[i]]=[h.v[i],h.v[p]];i=p}}
+function hpop(h){const k=h.k[0],v=h.v[0],lk=h.k.pop(),lv=h.v.pop();if(h.k.length){h.k[0]=lk;h.v[0]=lv;let i=0;const n=h.k.length;for(;;){let l=2*i+1,r=l+1,m=i;if(l<n&&h.k[l]<h.k[m])m=l;if(r<n&&h.k[r]<h.k[m])m=r;if(m==i)break;[h.k[m],h.k[i]]=[h.k[i],h.k[m]];[h.v[m],h.v[i]]=[h.v[i],h.v[m]];i=m}}return[k,v]}
+function recalcTraffic(){TD=0;TLAST=Date.now();const G=S.g,M=W*H,rdv=new Uint8Array(M);let rdsum=0,tu=0;
+ if(TG!==S.g){TG=S.g;TL=new Float32Array(M);TLc=new Float32Array(M);CARS=[]}
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=G[y][x],r=t.r|0;if(r){rdv[y*W+x]=r;rdsum+=RCAP[r]}if(t.b){const d=D[t.b];if(t.b=='depot')tu+=10*gm(t);else if(d&&d.tr)tu+=d.tr*gm(t)}}
+ const acc=(x,y)=>{let best=-1,br=0;for(const[a,b]of NB){const n=at(x+a,y+b);if(n&&n.r&&n.r<3&&n.r>br){br=n.r;best=(y+b)*W+x+a}}return best};
+ const O=new Map(),dW=new Map(),dS=new Map(),add=(m,k,v)=>m.set(k,(m.get(k)||0)+v);let homeTW=0;
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=G[y][x];if(t.b=='mkt'){const nd=acc(x,y);if(nd>=0)add(dS,nd,3*gm(t))}
+  if(!t.z||!(t.lv>0)||t.ab)continue;const nd=acc(x,y);if(nd<0)continue;const z=t.z,l=t.lv;
+  if(isR(z)){const o=O.get(nd)||{c:0,s:0};o.c+=TW[l]*.6;o.s+=TW[l]*.3;O.set(nd,o);homeTW+=TW[l]}
+  else{if(z=='a')add(dW,nd,LM[l]*3);else if(z=='c'){add(dW,nd,LM[l]*4);add(dS,nd,LM[l]*4)}else if(z=='i')add(dW,nd,LM[l]*5)}}
+ const cost=new Float32Array(M);for(let i=0;i<M;i++)if(rdv[i])cost[i]=(1/RSPD[rdv[i]])*(1+1.5*cl(TLc[i]-.8,0,2));
+ const dist=new Float32Array(M),par=new Int32Array(M),load=new Float32Array(M),routes=[];let unmet=0,totC=0,totS=0,okC=0,okS=0;
+ for(const[src,o]of O){dist.fill(Infinity);par.fill(-1);dist[src]=cost[src];const h={k:[],v:[]};hpush(h,dist[src],src);
+  while(h.k.length){const[d,i]=hpop(h);if(d>dist[i])continue;const x=i%W,y=(i/W)|0;for(const[a,b]of NB){const nx=x+a,ny=y+b;if(nx<0||ny<0||nx>=W||ny>=H)continue;const j=ny*W+nx;if(!rdv[j])continue;const nd=d+cost[j];if(nd<dist[j]){dist[j]=nd;par[j]=i;hpush(h,nd,j)}}}
+  for(const[kind,mp,amt]of[[0,dW,o.c],[1,dS,o.s]]){if(kind==0)totC+=amt;else totS+=amt;const c=[];for(const[nd,w]of mp){const d=dist[nd];if(d===Infinity)continue;c.push([nd,w/Math.pow(1+d/3,2)])}
+   if(!c.length){unmet+=amt;continue}c.sort((p,q)=>q[1]-p[1]);const top=c.slice(0,4),tot=top.reduce((s,q)=>s+q[1],0);if(kind==0)okC+=amt;else okS+=amt;
+   for(const[nd,sc]of top){const f=amt*sc/tot,p=[];for(let i=nd;i!=-1;i=par[i])p.push(i);p.reverse();for(const i of p)load[i]+=f;routes.push({p,w:f,k:kind})}}}
+ const scl=1/(1+tu/(rdsum*.9+4));let sumL=0,del=0,jam=0,mx=0;
+ for(let i=0;i<M;i++){if(!rdv[i]){TL[i]=0;continue}const L=load[i]*scl,ra=L/(RCAP[rdv[i]]*TKF);TL[i]=ra;TLc[i]=.5*TLc[i]+.5*ra;sumL+=L;del+=L*cl((ra-.7)/.9,0,1);if(ra>1)jam++;if(ra>mx)mx=ra}
+ S.tcg=sumL>0?cl(del/sumL,0,1):0;S.tjam=jam;S.tmax=mx;S.tun=unmet;
+ const f=S.pop/Math.max(1,homeTW*.9);S.tcm=Math.round(okC*f);S.tsh=Math.round(okS*f);S.ttr=totC+totS;
+ TRT=routes;TRC=[];let a=0;for(const r of routes){a+=r.w;TRC.push(a)}}
+function pickRoute(){if(!TRT.length)return null;const x=Math.random()*TRC[TRC.length-1];let lo=0,hi=TRC.length-1;while(lo<hi){const m=(lo+hi)>>1;if(TRC[m]<x)lo=m+1;else hi=m}return TRT[lo]}
+const CCOL=[['#3498db','#ecf0f1','#2c3e50','#95a5a6','#1abc9c'],['#f39c12','#e74c3c','#f1c40f','#2ecc71','#e67e22']];
+function carsFx(x0,x1,y0,y1){const now=aT(),dt=Math.min(.1,Math.max(0,(now-CT0)/1000));CT0=now;
+ if(TG!==S.g||(TD&&Date.now()-TLAST>400))recalcTraffic();
+ if(!TRT.length){CARS.length=0;return}
+ const tt=S.ttr||0,n=Math.min(170,Math.ceil(Math.pow(tt,.75)*1.4));
+ while(CARS.length<n){const r=pickRoute();CARS.push({r,pos:Math.random()*(r.p.length-1),dir:Math.random()<.5?1:-1,v:.85+Math.random()*.5,c:Math.floor(Math.random()*5),w:0})}
+ if(CARS.length>n)CARS.length=n;
+ for(const c of CARS){const P=c.r.p;if(!c.r||P.length<2&&0){}
+  if(c.w>0){c.w-=dt;continue}
+  const i=Math.max(0,Math.min(P.length-1,Math.floor(c.pos))),nd=P[i],ra=TL[nd]||0,rt=rdOf(nd),vm=c.v*RSPD[rt]*1.6,v=vm/(1+1.8*cl(ra-.6,0,3));
+  if(P.length>1)c.pos+=c.dir*v*dt;
+  if(c.pos>=P.length-1&&c.dir>0){c.pos=P.length-1;c.dir=-1;c.w=.5}
+  else if(c.pos<=0&&c.dir<0){const r=pickRoute();if(r){c.r=r;c.pos=0;c.dir=1;c.c=Math.floor(Math.random()*5);c.v=.85+Math.random()*.5}else c.pos=0;c.w=.3}
+  const PP=c.r.p,j=Math.max(0,Math.min(PP.length-2,Math.floor(c.pos)));if(PP.length<2)continue;const f=c.pos-j,a=PP[j],b=PP[j+1],ax=a%W,ay=(a/W)|0,bx=b%W,by=(b/W)|0;
+  if(ax<x0-1||ax>x1+1||ay<y0-1||ay>y1+1)continue;
+  const dx=(bx-ax)*c.dir,dy=(by-ay)*c.dir,cx=(ax+(bx-ax)*f+.5)*T,cy=(ay+(by-ay)*f+.5)*T,off=[0,3.5,5.5,7][rdOf(PP[j])]||3.5,col=CCOL[c.r.k][c.c],slow=(TL[PP[j]]||0)>1;
+  if(dx){const oy=dx>0?off:-off;R(col,cx-4,cy+oy-2,8,4);R('rgba(255,255,255,.55)',cx+(dx>0?1.5:-3.5),cy+oy-1.5,2,3);if(slow)R('#ff3b30',cx+(dx>0?-4:3),cy+oy-1.5,1.2,3)}
+  else{const ox=dy>0?-off:off;R(col,cx+ox-2,cy-4,4,8);R('rgba(255,255,255,.55)',cx+ox-1.5,cy+(dy>0?1.5:-3.5),3,2);if(slow)R('#ff3b30',cx+ox-1.5,cy+(dy>0?-4:3),3,1.2)}}}
+const rdOf=i=>{const t=S.g[(i/W)|0][i%W];return t.r|0};
+function trafOv(x,y,px,py,tm){const ra=TL[y*W+x]||0;if(!TOV&&ra<1.3)return;const col=ra<.6?'#3fbf5f':ra<1?'#e6c229':ra<1.5?'#f08a24':'#d93a2e';ctx.globalAlpha=TOV?.6:Math.min(.45,(ra-1.2)*.4)*(.8+.2*Math.sin(tm*4));R(col,px+T*.18,py+T*.18,T*.64,T*.64);ctx.globalAlpha=1}
+function tileTraf(x,y){const t=at(x,y);if(!t||!t.r)return '';const ra=TL[y*W+x]||0;return ['','道路','大通り','高速道路'][t.r]+'：交通量は容量の'+Math.round(ra*100)+'%（'+(ra<.6?'空いている':ra<1?'やや混雑':ra<1.5?'渋滞':'深刻な渋滞')+'）'}
+function trafficInfo(){return '渋滞度'+Math.round((S.tcg||0)*100)+'%｜通勤'+fmt(S.tcm|0)+'人・買い物'+fmt(S.tsh|0)+'人が移動｜走行中の車'+CARS.length+'台｜渋滞区間'+(S.tjam|0)+'マス（最大'+Math.round((S.tmax||0)*100)+'%）'+((S.tcg||0)>.25?'。大通り・高速道路への格上げ、バス車庫や地下鉄、職場と住宅の近接で緩和できます':'')+((S.tun||0)>0?'。道路でつながっていない住宅・職場があります':'')}
+function drawIll(px,py,tm,ab,sick){
+ if(ab){ctx.globalAlpha=.62;R('#1a1a1c',px,py,T,T);ctx.globalAlpha=.9;ctx.strokeStyle='#050505';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(px+7,py+6);ctx.lineTo(px+15,py+17);ctx.lineTo(px+11,py+25);ctx.moveTo(px+27,py+10);ctx.lineTo(px+21,py+22);ctx.lineTo(px+28,py+31);ctx.stroke();
+  ctx.globalAlpha=.95;R('#6b4a2b',px+3,py+13,30,3.4);R('#6b4a2b',px+4,py+22,28,3.4);ctx.strokeStyle='#3a2a18';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(px+3,py+9);ctx.lineTo(px+33,py+29);ctx.moveTo(px+33,py+9);ctx.lineTo(px+3,py+29);ctx.stroke();
+  ctx.globalAlpha=.35;O('#555',px+11+Math.sin(tm*.8+px)*2,py+5-((tm*8)%6),4);ctx.globalAlpha=1;
+  O('#7a1f1f',px+28,py+8,8);ctx.fillStyle='#fff';ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('廃',px+28,py+8.5)}
+ else if(sick){ctx.globalAlpha=.22+.14*Math.sin(tm*3+px*.1);R('#7bc043',px,py,T,T);ctx.globalAlpha=1;
+  for(let q=0;q<3;q++){ctx.globalAlpha=.8*(1-((tm*14+q*7)%20)/20);O('#8fd13f',px+9+q*9+Math.sin(tm*2+q)*2,py+30-((tm*14+q*7)%20),2.2)}ctx.globalAlpha=1;
+  O('#5fa82a',px+28,py+8,8);R('#fff',px+27,py+3.5,2,9);R('#fff',px+23.5,py+7,9,2)}}
+function drawWarn(px,py){O('#c0392b',px+29,py+7,7);ctx.fillStyle='#fff';ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',px+29,py+7.5)}
+function terEdit(x,y,t,d){
+ if(x<1||y<1||x>=W-1||y>=H-1)return say('島の端のマスは変えられません');
+ if(t.lava>0)return say('溶岩が冷えるまで待ちましょう');
+ if(d.pop&&S.pop<d.pop)return say('人口'+d.pop+'人から実行できます');
+ const k=S.sel,sea=NB.some(([a,b])=>{const n=at(x+a,y+b);return n&&n.t=='s'}),land=NB.some(([a,b])=>{const n=at(x+a,y+b);return n&&n.t=='g'});
+ if(t.r||t.b||t.z)return say('道路・区画・建物を先に撤去してください');
+ if(k=='land'){if(t.t!='s')return say('埋め立てできるのは海のマスだけです');if(!land)return say('陸地に隣接した海だけ埋め立てできます')}
+ else if(k=='dig'){if(t.t!='g')return say('掘削できるのは平地だけです');if(!sea)return say('海に隣接した平地だけ掘削できます');if(t.ore||t.spa||t.fish)return say('資源のあるマスは掘削できません')}
+ else if(k=='raze'){if(t.t=='v')return say('火口は壊せません');if(t.t!='m')return say('壊せるのは山だけです');
+  for(const[a,b]of NB){const n=at(x+a,y+b);if(n&&n.b&&D[n.b].geo&&!NB.some(([i,j])=>{if(a+i==0&&b+j==0)return false;const m=at(x+a+i,y+b+j);return m&&(m.t=='m'||m.t=='v')}))return say(D[n.b].n+'が山に隣接できなくなるため壊せません')}}
+ const cc=Math.round(d.c*(1-.15*Math.min(3,(S.pk||{}).cheap|0))*cm());if(S.money<cc)return say('資金が足りません！');
+ S.money-=cc;sfx('build');burst(x*T+T/2,y*T+T/2,k=='land'?'#9ad1ff':'#cfc3a0',14);fx(x*T+T/2,y*T,'-$'+fmt(cc),'#ffd24a');xp(4);
+ t.t=k=='dig'?'s':'g';delete t.fert;delete t.wet;delete t.dune;delete t.ash;delete t.ore;delete t.spa;delete t.fish;
+ log(k=='land'?'海を埋め立てた':k=='dig'?'土地を掘削して海にした':'山を切り崩して平地にした')}
 function lvv(x,y){let v=50;for(const k of['clinic','school','shrine'])if(covered(k,x,y))v+=8;for(const k of LVK)if(covered(k,x,y))v+=D[k].lv;const pk=covered('park',x,y);if(pk)v+=18;
  const d=Math.max(Math.abs(x-CX),Math.abs(y-CY));if(d<=4)v-=(5-d)*5;
  let p=0;for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const t=at(x+i,y+j);if(t&&t.z=='i'&&t.lv>0)p++}v-=Math.min(3,p)*(pk?4:8);
  if(NB.some(([a,b])=>{const t=at(x+a,y+b);return t&&t.t=='s'}))v+=8;return cl(v,0,100)}
-const gr=t=>(t.bl|0)||1,gm=t=>[1,1.5,2][gr(t)-1]||1,um=t=>[1,1.3,1.6][gr(t)-1]||1;
+const UNL=new Set(['intake','well','purify','sewage','conf','lab','dsc','megapark']);
+const gr=t=>(t.bl|0)||1,gm=t=>UNL.has(t.b)?1+.5*(gr(t)-1):([1,1.5,2][gr(t)-1]||1),um=t=>UNL.has(t.b)?1+.3*(gr(t)-1):([1,1.3,1.6][gr(t)-1]||1);migW();
 function covered(k,x,y){const r=D[k].r;for(let j=-r-1;j<=r+1;j++)for(let i=-r-1;i<=r+1;i++){const t=at(x+i,y+j);if(t&&t.b==k&&((Math.abs(i)<=r&&Math.abs(j)<=r)||gr(t)>=3))return true}return false}
 const R=(c,x,y,w,h)=>{ctx.fillStyle=c;ctx.fillRect(x,y,w,h)};
 const P=(c,...p)=>{ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(p[0],p[1]);for(let i=2;i<p.length;i+=2)ctx.lineTo(p[i],p[i+1]);ctx.fill()};
@@ -294,7 +461,18 @@ hwy(x,y){R('#8a8f96',x+4,y+24,3,8);R('#8a8f96',x+29,y+24,3,8);R('#2d3040',x+2,y+
 bull(x,y){R('#3a3a3a',x+3,y+24,22,6);for(let i=0;i<4;i++)O('#777',x+8+i*5,y+27,1.8);R('#e6a42a',x+4,y+17,18,8);R('#e6a42a',x+8,y+9,11,9);R('#cfe8f7',x+10,y+11,7,5);R('#8a8f96',x+25,y+10,3,20);R('#b0b4ba',x+28,y+10,2,20);R('#555',x+22,y+19,3,3)},
 tram(x,y){LN('#555',1,x+8,y+5,x+28,y+5);LN('#555',1,x+18,y+5,x+18,y+12);R('#d9622b',x+4,y+12,28,15);R('#f5f5f0',x+4,y+19,28,3);for(let i=0;i<4;i++)R('#cfe8f7',x+7+i*6.5,y+14,5,5);R('#555',x+2,y+28,32,2);O('#222',x+10,y+28,2.6);O('#222',x+26,y+28,2.6)},
 subway(x,y){R('#2b4f8a',x+4,y+10,28,20);R('#1a2a4a',x+4,y+10,28,3);R('#10141f',x+11,y+16,14,14);for(let i=0;i<4;i++)R('#8a93a6',x+11+i*3.5,y+27-i*2.6,3.5,3+i*2.6);O('#e0546e',x+18,y+6,4);O('#fff',x+18,y+6,2)},
-water(x,y){R('#7a828b',x+11,y+20,3,10);R('#7a828b',x+22,y+20,3,10);E('#aab4bf',x+18,y+13,10,5);R('#aab4bf',x+8,y+13,20,8);E('#8d98a4',x+18,y+21,10,4);E('#c9d3dc',x+18,y+12,10,4);R('#4a90d9',x+8,y+16,20,2.5);P('#4a90d9',x+18,y+22,x+21,y+27,x+15,y+27);O('#4a90d9',x+18,y+27,3)},
+intake(x,y){R('#7a828b',x+6,y+14,18,14);P('#4a6a8a',x+4,y+14,x+15,y+7,x+26,y+14);R('#4a90d9',x+11,y+19,5,9);R('#cfe6ff',x+11,y+17,5,2);R('#4a90d9',x+24,y+24,10,3);R('#7fb8f0',x+30,y+27,4,6);O('#fff',x+17,y+11,2)},
+well(x,y){R('#7a828b',x+8,y+16,18,12);R('#5a4a3a',x+10,y+10,2,8);R('#5a4a3a',x+22,y+10,2,8);R('#8a6a4a',x+8,y+8,18,3);R('#2a4a7a',x+13,y+19,8,6);R('#4a90d9',x+14,y+20,6,3);R('#cfe6ff',x+16,y+11,2,6)},
+purify(x,y){R('#7a828b',x+4,y+18,28,10);O('#4a90d9',x+11,y+16,6);O('#7fb8f0',x+25,y+16,6);R('#cfe6ff',x+9,y+14,4,2);R('#cfe6ff',x+23,y+14,4,2);R('#4a6a8a',x+6,y+10,24,3);R('#2e8b57',x+15,y+22,6,6);O('#fff',x+18,y+25,1.6)},
+sewage(x,y){R('#7a828b',x+3,y+18,30,10);O('#6b8a9a',x+11,y+15,7);O('#6b8a9a',x+25,y+15,7);R('#4a6a8a',x+5,y+9,26,3);R('#2e8b57',x+14,y+21,8,7);R('#cfe6ff',x+9,y+12,4,2);R('#cfe6ff',x+23,y+12,4,2);O('#fff',x+18,y+24,1.8)},
+conf(x,y){R('#b8b2a2',x+3,y+16,30,12);P('#6a7a8a',x+3,y+16,x+18,y+6,x+33,y+16);R('#4a90d9',x+8,y+19,4,6);R('#4a90d9',x+16,y+19,4,6);R('#4a90d9',x+24,y+19,4,6);R('#fff',x+3,y+14,30,2)},
+lab(x,y){R('#e8e4d8',x+6,y+10,24,18);R('#4a6a8a',x+6,y+8,24,3);O('#8fd3ff',x+18,y+18,6);R('#2e8b57',x+16,y+22,4,6);R('#d9622b',x+9,y+13,3,3);R('#d9622b',x+24,y+13,3,3)},
+dsc(x,y){R('#c9553a',x+5,y+12,26,16);R('#fff',x+5,y+10,26,3);R('#fff',x+16,y+15,4,10);R('#fff',x+11,y+19,14,4);R('#7a828b',x+3,y+28,30,3)},
+megapark(x,y){R('#4f9d4a',x+2,y+8,32,22);O('#2e7a34',x+10,y+16,6);O('#2e7a34',x+26,y+22,6);R('#cfe6ff',x+14,y+22,10,5);R('#8a6a4a',x+8,y+25,12,2)},
+outfall(x,y){R('#7a828b',x+6,y+14,18,14);P('#6b5a3a',x+4,y+14,x+15,y+7,x+26,y+14);R('#4a4a4a',x+11,y+19,5,9);R('#6b7d2a',x+24,y+24,10,3);O('#8a9a3a',x+31,y+29,3);O('#8a9a3a',x+27,y+32,2)},
+land(x,y){R('#4a90d9',x+3,y+20,30,12);R('#6fb36a',x+3,y+8,30,12);R('#8a6d4b',x+3,y+20,30,2);P('#ffd24a',x+18,y+26,x+24,y+30,x+12,y+30)},
+dig(x,y){R('#6fb36a',x+3,y+8,30,12);R('#4a90d9',x+9,y+14,18,14);R('#fff',x+12,y+18,8,1.5);P('#c0392b',x+18,y+30,x+24,y+25,x+12,y+25)},
+raze(x,y){P('#8a8378',x+3,y+32,x+16,y+6,x+33,y+32);P('#a49d90',x+16,y+6,x+22,y+17,x+12,y+17);R('#c0392b',x+15,y+14,3,14);R('#c0392b',x+9,y+20,15,3)},
 waste(x,y){R('#6f7d6c',x+9,y+14,18,17);R('#8fa08b',x+9,y+14,18,2);R('#566453',x+7,y+10,22,4);R('#566453',x+15,y+7,6,4);for(let i=0;i<3;i++)R('#566453',x+13+i*5,y+18,1.5,10);P('#4caf50',x+18,y+20,x+21,y+25,x+15,y+25)},
 hosp(x,y){R('#f5f5f0',x+4,y+9,28,22);R('#d5dbe1',x+4,y+9,28,3);R('#c0392b',x+16,y+13,4,12);R('#c0392b',x+12,y+17,12,4);for(let i=0;i<3;i++){WN(x+7+i*0,y+13+i*6,'#9ecbea');WN(x+26,y+13+i*6,'#9ecbea')}R('#4a90d9',x+15,y+26,6,5)},
 lib(x,y){R('#d9c7a8',x+4,y+14,28,17);P('#8a5a2b',x+2,y+14,x+18,y+6,x+34,y+14);for(let i=0;i<4;i++)R('#fff',x+7+i*7,y+16,3,13);R('#8a6d4b',x+3,y+29,30,3);R('#4a90d9',x+14,y+9,8,3);R('#c0392b',x+15,y+9,2,3)},
@@ -366,7 +544,7 @@ function draw(){
  const tm=aT()/700;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='hsl(204,62%,40%)';ctx.fillRect(0,0,VW,VH);ctx.save();if(shk>aT()){const a=(shk-aT())/50;ctx.translate((Math.random()-.5)*a,(Math.random()-.5)*a)}
  ctx.translate(cam.x,cam.y);ctx.scale(cam.z,cam.z);const VX0=Math.max(0,Math.floor(-cam.x/cam.z/T)),VX1=Math.min(W-1,Math.ceil((VW-cam.x)/cam.z/T)),VY0=Math.max(0,Math.floor(-cam.y/cam.z/T)),VY1=Math.min(H-1,Math.ceil((VH-cam.y)/cam.z/T));
  for(let y=VY0;y<=VY1;y++)for(let x=VX0;x<=VX1;x++){const t=S.g[y][x],px=x*T,py=y*T;
-  if(t.t=='s'){R(`hsl(204,62%,${40+(Math.sin(tm+x*.9+y*.6)*.5+.5)*7}%)`,px,py,T+.6,T+.6);ctx.strokeStyle='rgba(255,255,255,.22)';ctx.lineWidth=1.5;const o=Math.sin(tm+x+y)*3;ctx.beginPath();ctx.moveTo(px+6,py+14+o);ctx.quadraticCurveTo(px+12,py+10+o,px+18,py+14+o);ctx.quadraticCurveTo(px+24,py+18+o,px+30,py+14+o);ctx.stroke()}
+  if(t.t=='s'){R(`hsl(204,62%,${40+(Math.sin(tm+x*.9+y*.6)*.5+.5)*7}%)`,px,py,T+.6,T+.6);ctx.strokeStyle='rgba(255,255,255,.22)';ctx.lineWidth=1.5;const o=Math.sin(tm+x+y)*3;ctx.beginPath();ctx.moveTo(px+6,py+14+o);ctx.quadraticCurveTo(px+12,py+10+o,px+18,py+14+o);ctx.quadraticCurveTo(px+24,py+18+o,px+30,py+14+o);ctx.stroke();{const lv=(S.pol&&S.pol[y*W+x])||0;if(lv>.1){const f=Math.min(1,lv);ctx.globalAlpha=(.68+.07*Math.sin(tm*2+x+y))*f;R('#6a6420',px,py,T+.6,T+.6);if(lv>=.5){ctx.globalAlpha=.5*f;R('#3d3a10',px+4,py+8+Math.sin(tm+x)*2,T-8,7);ctx.globalAlpha=.65*f;O('#2e2c0a',px+10,py+22,4);O('#2e2c0a',px+26,py+10,3);O('#8a7a2a',px+22,py+26,2.5);ctx.strokeStyle='rgba(60,50,10,.7)';ctx.lineWidth=2;ctx.strokeRect(px+1,py+1,T-2,T-2)}ctx.globalAlpha=1}}}
   else{R(t.t=='m'||t.t=='v'?'#6f6a60':(x+y)%2?'#6fb36a':'#68ab63',px,py,T+.6,T+.6);
    if(t.t=='m'){P('#8a8378',px+3,py+32,px+16,py+6,px+33,py+32);P('#a49d90',px+16,py+6,px+22,py+17,px+12,py+17)}
    if(t.t=='v'){P('#4a3a35',px+1,py+33,px+12,py+8,px+24,py+8,px+35,py+33);R(S.anger>=60?'#ff7a1a':'#c0451e',px+12,py+6,12,4);if(S.anger>=50)O('#999',px+18+Math.sin(tm*2)*3,py+1,5,.5)}}
@@ -377,9 +555,9 @@ function draw(){
   if(t.ash&&!t.z&&!t.r&&!t.b&&t.lava<=0){ctx.globalAlpha=.25;R('#2b2b2b',px,py,T,T);ctx.globalAlpha=1}
   if(t.z){ctx.globalAlpha=.3;R(ZC[t.z],px,py,T,T);ctx.globalAlpha=1;
    if(t.lv==0){ctx.strokeStyle=ZC[t.z];ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.strokeRect(px+3,py+3,T-6,T-6);ctx.setLineDash([]);if(!conn(x,y)){ctx.strokeStyle='#c0392b';ctx.beginPath();ctx.moveTo(px+8,py+8);ctx.lineTo(px+T-8,py+T-8);ctx.moveTo(px+T-8,py+8);ctx.lineTo(px+8,py+T-8);ctx.stroke()}}
-   else{zone(t.z,t.lv,px,py);if(isR(t.z)&&S.pop>=25&&!covered('water',x,y)){O('rgba(192,57,43,.88)',px+27,py+9,8);P('#fff',px+27,py+3.5,px+30.5,py+9,px+23.5,py+9);O('#fff',px+27,py+10,3.4)}}}
-  if(t.r)roadDraw(x,y,t,px,py);
-  if(t.b){bld(t.b,px,py);if(gr(t)>1){O('#ffd24a',px+29,py+7,7);ctx.fillStyle='#5a3a00';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(gr(t),px+29,py+7.5)}}
+   else{zone(t.z,t.lv,px,py);if(t.ab||t.sick)drawIll(px,py,tm,t.ab,t.sick);if(!t.ab&&isR(t.z)&&S.pop>=25&&!wOK(x,y)){O('rgba(192,57,43,.88)',px+27,py+9,8);P('#fff',px+27,py+3.5,px+30.5,py+9,px+23.5,py+9);O('#fff',px+27,py+10,3.4)}}}
+  if(t.r){roadDraw(x,y,t,px,py);trafOv(x,y,px,py,tm)}
+  if(t.b){bld(t.b,px,py);if(t.b=='intake'&&nearPoll(x,y,1))drawWarn(px,py);if(gr(t)>1){O('#ffd24a',px+29,py+7,7);ctx.fillStyle='#5a3a00';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(gr(t),px+29,py+7.5)}}
   if(t.lava>0){ctx.globalAlpha=.9;R(`hsl(${12+Math.sin(tm*3+x)*6},90%,52%)`,px,py,T,T);R('#7a2a10',px+8,py+10,10,6);ctx.globalAlpha=1}
   if(S.warn&&S.warn.p.has(x+','+y)){R('rgba(255,110,0,.5)',px,py,T,T);ctx.fillStyle='#fff';ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',px+T/2,py+T/2)}}
  roadPrev();if(MV){ctx.strokeStyle='#ffd24a';ctx.lineWidth=3;ctx.setLineDash([5,4]);ctx.strokeRect(MV.x*T+2,MV.y*T+2,T-4,T-4);ctx.setLineDash([])}if(hv){const k=D[S.sel];ctx.strokeStyle='#fff';ctx.lineWidth=2;if(k.r)ctx.strokeRect((hv.x-k.r)*T,(hv.y-k.r)*T,(2*k.r+1)*T,(2*k.r+1)*T);ctx.lineWidth=3;ctx.strokeRect(hv.x*T+2,hv.y*T+2,T-4,T-4)}
@@ -393,9 +571,6 @@ function roadDraw(x,y,t,px,py){const k=t.r,w=[0,14,22,28][k],c=['','#6b6b6b','#4
  const lc=k==3?'#c9ccd6':k==2?'#e0c44a':'rgba(220,220,200,.55)',lw=k==2?3:k==3?4:1.5,v=n[0]||n[2],hz=n[1]||n[3];
  if(v||!hz)R(lc,cx-lw/2,n[0]?py:cy,lw,(n[0]&&n[2])?T:h);if(hz)R(lc,n[3]?px:cx,cy-lw/2,(n[1]&&n[3])?T:h,lw);
  if(t.t=='s'){ctx.fillStyle='#e8e0c8';if(v||!hz){R('#e8e0c8',cx-w/2-1.5,py,1.5,T);R('#e8e0c8',cx+w/2,py,1.5,T)}if(hz){R('#e8e0c8',px,cy-w/2-1.5,T,1.5);R('#e8e0c8',px,cy+w/2,T,1.5)}}}
-function carsFx(x0,x1,y0,y1){const tm=aT()/1000,sp=1-.7*(S.cg||0),C=['#e74c3c','#f1c40f','#ecf0f1','#3498db','#2ecc71'];
- for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const t=S.g[y][x];if(!t.r||(x*7+y*13)%(t.r>1?2:3))continue;const h=(x*31+y*17)%5,a=at(x+1,y),b=at(x-1,y),hz=(a&&a.r)||(b&&b.r),o=((tm*(.5+h*.1)*sp*(t.r==3?2.2:1)+x*.37+y*.61)%1)*T,s=(h%2?3:-6)*(t.r>1?1.6:1);
-  if(hz)R(C[h],x*T+o-4,y*T+T/2+s,8,4);else R(C[h],x*T+T/2+s,y*T+o-4,4,8)}}
 function hud(){qui();satSync();
  $('dem').innerHTML=['r','a','c','i'].map(k=>{const v=Math.round(((S.dem||{})[k]||0)*100);return `<div>${DN[k]} ${v}%<i><b style="width:${v}%;background:${ZC[k]}"></b></i></div>`}).join('');$('xp').innerHTML=`国力Lv${S.lv|0} ${S.xp|0}/${lvN(S.lv|0)} ｜ 統治難度${prs().toFixed(1)} ｜ 建設費×${cm().toFixed(1)} ｜ 黒字${S.streak|0}月 ｜ 渋滞${Math.round((S.cg||0)*100)}% ｜ 地価${Math.round(S.lvA||50)} ｜ 水道${Math.round((S.wc??1)*100)}% ｜ ごみ${Math.round((S.gc??1)*100)}%<i><s style="width:${cl((S.xp|0)/lvN(S.lv|0))*100}%"></s></i>`;
  const col=S.hap>=50?'var(--ok)':'var(--bad)',ac=S.anger>=60?'var(--bad)':'inherit';
@@ -407,7 +582,7 @@ function hud(){qui();satSync();
  mk('税−',()=>{S.tax=Math.max(0,S.tax-1);hud()});
  const sp=document.createElement('span');sp.textContent=`税${S.tax}%`;sp.style.cssText='align-self:center;font-size:13px';t2.appendChild(sp);
  mk('＋',()=>{S.tax=Math.min(20,S.tax+1);hud()});
- mk('満足度',showSat);mk('メニュー',menu)}
+ mk('メニュー',menu)}
 function showInfo(){const L=[...$('log').children].slice(0,8).map(e=>e.textContent).join('\n');modal('派閥・需要',Object.keys(F).map(k=>`${F[k]} ${Math.round(S.f[k])}`).join('　')+'\n'+Object.keys(DN).map(k=>`${DN[k]}需要 ${Math.round(S.dem[k]*100)}%`).join('　')+'\n\n'+L,[['閉じる']])}
 const fv=v=>(v>=0?'+':'−')+Math.abs(v).toFixed(1).replace(/\.0$/,'');
 const satCol=v=>v>=60?'var(--ok)':v>=42?'#d9a21b':'var(--bad)';
@@ -429,7 +604,7 @@ function slInfo(i){try{const j=localStorage.getItem(slK(i));return j?JSON.parse(
 function saveSlot(i){if(S.over)return;try{const d=new Date(),pd2=n=>String(n).padStart(2,'0');localStorage.setItem(slK(i),JSON.stringify({t:(d.getMonth()+1)+'/'+d.getDate()+' '+pd2(d.getHours())+':'+pd2(d.getMinutes()),y:Math.floor(S.m/12)+1,mo:S.m%12+1,pop:Math.round(S.pop),money:Math.round(S.money),data:ser()}));sfx('quest');log('スロット'+i+'にセーブしました')}catch(e){sfx('err');log('セーブに失敗しました（保存容量が足りない可能性があります）')}}
 function loadData(str){let o;try{o=JSON.parse(str)}catch(e){return false}
  if(!o||!o.g||o.v!=3||o.over)return false;
- S=o;fixS();INVA=null;GP=null;MV=null;roadCancel();RES=null;FXL=[];AW=[];acc=0;const tu=$('tut');if(tu)tu.remove();ti=-1;
+ S=o;syncDim();fixS();INVA=null;GP=null;MV=null;roadCancel();RES=null;FXL=[];AW=[];acc=0;const tu=$('tut');if(tu)tu.remove();ti=-1;
  homeCam();save();tools();draw();hud();sfx('quest');return true}
 function loadSlot(i){const d=slInfo(i);if(!d||!d.data)return;if(!loadData(d.data)){sfx('err');modal('読み込み失敗','このセーブデータは読み込めませんでした。',[['閉じる']]);return}log('スロット'+i+'をロードしました')}
 function exportSave(){try{const b=new Blob([ser()],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='isle-of-embers-save.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);log('セーブファイルを書き出しました')}catch(e){log('書き出しに失敗しました')}}
@@ -448,7 +623,7 @@ function menu(){const o=[['セーブ／ロード',showSL]],A=!S.over;
  
  if(S.cleared)o.push(['試練モード',chal]);if(S.inv)o.push(['敵艦隊の状況・対応',()=>invModal(S.inv)]);o.push(['住民の満足度（内訳）',showSat]);o.push(['この島の特徴・就任時の状況',showIsland]);o.push(['遊び方・チュートリアル',()=>intro(true)],['派閥・需要・ログ',showInfo],['拠点に視点を戻す',()=>homeCam()],['遺産ショップ',()=>showLeg(false)],['島の名士たち',showPpl],['統計グラフ',showStats],['実績',showAch],['ランキング',()=>showRank()],[LVV?'地価の表示をOFFにする':'地価の表示をONにする',()=>{LVV=!LVV;hud()}],[snd?'効果音をOFFにする':'効果音をONにする',()=>{snd=!snd;try{localStorage.setItem(KEY+'_snd',snd?'1':'0')}catch(e){}if(snd)sfx('coin');hud()}],['デイリーチャレンジ（毎日同じ島・専用ランキング）',()=>ask('今日のデイリーチャレンジを始めますか？\n（現在の島は失われます）',()=>startMenu(true,jstDay()),'始める')],['新しい島で最初から',()=>ask('いまの島を手放して、新しい島で最初から始めますか？',()=>startMenu(),'新しい島で始める')],['閉じる']);
  modal('メニュー','',o)}
-const HARD={admin:.004,sat:1.6,elect:3,anger:.15,quake:.01,inv:18,food:.05,early:.3};
+const HARD={admin:.016,sat:1.6,elect:3,anger:.15,quake:.01,inv:18,food:.05,early:.3};
 const prs=()=>Math.max(0,Math.log10(Math.max(1,S.pop)/100));
 const rkOf=sc=>sc>=500000?'S':sc>=150000?'A':sc>=30000?'B':'C';
 const ET=()=>[45,52,65][S.dif]+(S.ch&&S.ch.iron?10:0)+Math.round(prs()*HARD.elect);
@@ -458,9 +633,9 @@ ART.vent=(x,y)=>{R('#7a828b',x+15,y+12,6,19);R('#5d6269',x+12,y+28,12,4);R('#9aa
 ART.upg=(x,y)=>{R('#d9a441',x+4,y+17,20,13);P('#8a5a2b',x+2,y+17,x+14,y+8,x+26,y+17);R('#5a3a1b',x+11,y+23,6,7);P('#2e8b57',x+29,y+3,x+35,y+11,x+23,y+11);R('#2e8b57',x+26.5,y+11,5,10)};
 ART.mov=(x,y)=>{R('#d9a441',x+2,y+19,12,11);P('#8a5a2b',x+1,y+19,x+8,y+12,x+15,y+19);ctx.globalAlpha=.45;R('#d9a441',x+22,y+19,12,11);P('#8a5a2b',x+21,y+19,x+28,y+12,x+35,y+19);ctx.globalAlpha=1;R('#d9622b',x+10,y+6,12,3);P('#d9622b',x+21,y+2,x+28,y+7.5,x+21,y+13)};
 const pkc=()=>1-.15*Math.min(3,(S.pk||{}).cheap|0),mvCost=k=>Math.max(10,Math.round(D[k].c*.3*pkc()*cm()));
-function upgTap(x,y,t){const k=t.b,d=k&&D[k];if(!d||k=='wall')return say('改築できる建物をタップしてください');const g=gr(t);if(g>=3)return say(d.n+'は、すでに最高のLv3です');
- const cc=Math.round(d.c*(g==1?.8:1.5)*pkc()*cm()),E=[1,1.5,2],U=[1,1.3,1.6];
- modal(`${d.n}　Lv${g} → Lv${g+1}`,`費用　$${fmt(cc)}\n効果　×${E[g-1]} → ×${E[g]}\n維持費　×${U[g-1]} → ×${U[g]}`+(g==2&&d.r?'\n効果範囲が1マス広がります':''),[[`$${fmt(cc)}で改築する`,()=>{if(t.b!=k)return;if(S.money<cc)return say('資金が足りません！');S.money-=cc;t.bl=g+1;sfx('build');burst(x*T+T/2,y*T+T/2,'#ffd24a',14);fx(x*T+T/2,y*T,'-$'+cc,'#ffd24a');xp(3);log(`${d.n}をLv${g+1}に改築した`)}],['やめる']])}
+function upgTap(x,y,t){const k=t.b,d=k&&D[k];if(!d||k=='wall')return say('改築できる建物をタップしてください');const g=gr(t);const ul=UNL.has(k)||!!S.cleared;if(g>=3&&!ul)return say(d.n+'は、Lv3が上限です。人口10万人に到達すると、Lv4以降に改築できます');
+ const cc=Math.round(d.c*(ul?(g==1?.8:1.5*Math.pow(1.4,g-2)):(g==1?.8:1.5))*pkc()*cm()),E=ul?[1+.5*(g-1),1+.5*g]:[1,1.5,2],U=ul?[1+.3*(g-1),1+.3*g]:[1,1.3,1.6],ei=ul?0:g-1;
+ modal(`${d.n}　Lv${g} → Lv${g+1}`,`費用　$${fmt(cc)}\n効果　×${E[ei]} → ×${E[ei+1]}\n維持費　×${U[ei]} → ×${U[ei+1]}`+(g==2&&d.r?'\n効果範囲が1マス広がります':''),[[`$${fmt(cc)}で改築する`,()=>{if(t.b!=k)return;if(S.money<cc)return say('資金が足りません！');S.money-=cc;t.bl=g+1;sfx('build');burst(x*T+T/2,y*T+T/2,'#ffd24a',14);fx(x*T+T/2,y*T,'-$'+cc,'#ffd24a');xp(3);log(`${d.n}をLv${g+1}に改築した`)}],['やめる']])}
 function movTap(x,y,t){
  if(t.b){if(MV&&MV.x==x&&MV.y==y){MV=null;$('info').textContent='移設をやめました';return}if(D[t.b]&&t.b!='wall'){MV={x,y};sfx('tick');$('info').textContent=`${D[t.b].n}を選びました。移設先の空き地をタップしてください（費用 $${fmt(mvCost(t.b))}）。やめるときは、同じ建物をもう一度タップします`;return}return say('その建物は移設できません')}
  if(!MV)return say('先に、移設する建物をタップしてください');
@@ -479,28 +654,29 @@ function rebel(){S.lastRb=S.m;sfx('warn');const p=cl(.25+S.f.mil/200+Math.min(cn
  modal('反乱軍が蜂起しました','支持を失った民衆と一部の兵士が武装し、街の外れで決起しました。\n\n放っておくと施設が襲撃されます。どう対処しますか？\n\n軍の支持、衛兵詰所、軍司令部があると、鎮圧しやすくなります。',o)}
 const CT=[['road','交通',['road','avenue','hwy','tram','depot','subway'],'交通：道路、大通り、高速道路、路面電車、バス車庫、地下鉄'],
 ['zr','区画',['zr','zq','zh','zl','zc','zi','za'],'区画：住宅・商業・工業・農業の区画を、道路沿いに塗って作ります'],
-['pw','インフラ',['pw','solar','wind','gas','fusion','water','waste'],'インフラ：電力を作る施設と、浄水場・ごみ処理場'],
-['hosp','公共',['clinic','hosp','school','univ','lib','mkt','theater','museum'],'公共：医療・教育・文化・市場など、住民の暮らしを支える施設'],
+['pw','インフラ',['pw','solar','wind','gas','fusion','intake','outfall','well','purify','sewage','waste'],'インフラ：電力を作る施設と、取水場・排水場（海に隣接）・井戸・浄水場・下水処理場（内陸OK）・ごみ処理場'],
+['hosp','公共',['clinic','hosp','school','univ','lib','mkt','theater','museum','conf','lab'],'公共：医療・教育・文化・市場など、住民の暮らしを支える施設'],
 ['port','産業',['farmc','fish','port','mine','spa','bank','hotel','themepark','casino','airport'],'産業：農業・漁業・資源・金融・観光でお金を稼ぐ施設'],
-['fire','防災軍事',['eew','tower','wall','fire','obs','vent','guard','barracks','battery','hq','radio'],'防災軍事：溶岩・噴火・地震への備えと、軍・治安・放送の施設'],
-['palace','名所',['palace','statue','shrine','temple','arena','stadium','monu','space','sun','park','fount','tree','lookout','garden','lighthouse'],'名所：宮殿・像・神殿などの象徴と、公園・噴水・庭園などの景観']],MT=['upg','mov','bull'];let ct=0;
+['fire','防災軍事',['eew','tower','wall','fire','obs','vent','dsc','guard','barracks','battery','hq','radio'],'防災軍事：溶岩・噴火・地震への備えと、軍・治安・放送の施設'],
+['palace','名所',['palace','statue','shrine','temple','arena','stadium','monu','space','sun','park','megapark','fount','tree','lookout','garden','lighthouse'],'名所：宮殿・像・神殿などの象徴と、公園・噴水・庭園などの景観']],MT=['upg','mov','land','dig','raze','bull'];let ct=0;
 function catInfo(){if(ct<7)$('info').textContent=CT[ct][3]}
 function tools(){const bd=$('bdel');if(bd)bd.className=S.sel=='bull'?'on':'';const t=$('tools'),tb=$('tabs'),md=$('modes'),sl=t.scrollLeft,st=t.scrollTop;tb.innerHTML='';t.innerHTML='';md.innerHTML='';
  const sv=Math.round(S.sat??50);
  [['建設',ct<7,()=>{if(MT.includes(S.sel))S.sel=lastB;ct=lastCt;roadCancel();tools();$('tools').scrollLeft=0;catInfo()}],
   ['改築・移設・撤去',ct==8,()=>{if(!MT.includes(S.sel)){lastB=S.sel;S.sel='upg'}ct=8;roadCancel();tools();info(D[S.sel])}],
-  [`満足度 <b id="satB" style="color:${satCol(sv)}">${sv}</b>`,ct==7,showSat]].forEach(([l,on,f])=>{const b=document.createElement('button');b.innerHTML=l;if(on)b.className='on';b.onclick=f;md.appendChild(b)});
+  [`満足度 <b id="satB" style="color:${satCol(sv)}">${sv}</b>`,ct==7,showSat],['渋滞図',TOV,()=>{TOV=!TOV;TD=1;recalcTraffic();$('info').textContent=trafficInfo();draw();tools()}]].forEach(([l,on,f])=>{const b=document.createElement('button');b.innerHTML=l;if(on)b.className='on';b.onclick=f;md.appendChild(b)});
  tb.style.display=ct<7?'':'none';
  CT.forEach(([ic,nm],i)=>{const b=document.createElement('button');b.innerHTML=`<img class="ti" alt="" src="${iconURL(ic)}">${nm}`;if(i==ct)b.className='on';b.onclick=()=>{ct=i;lastCt=i;roadCancel();tools();$('tools').scrollLeft=0;catInfo()};tb.appendChild(b)});
  $('dock').classList.toggle('sat',ct==7);if(ct==7){satPanel(st);return}
  (ct==8?MT:CT[ct][2]).forEach(k=>{const d=D[k],b=document.createElement('button'),lk=(d.pop&&S.pop<d.pop)||(d.post&&!S.cleared);b.innerHTML=`<img class="ic" alt="" src="${iconURL(k)}">${d.n}<small>${lk?(d.post&&!S.cleared?'10万人で解禁':'人口'+fmt(d.pop)+'〜'):d.c?'$'+fmt(d.c*cm()):(d.note||'無料')}</small>`;b.className=(S.sel==k?'on ':'')+(lk?'lk':'');b.onclick=()=>{S.sel=k;roadCancel();tools();info(d)};t.appendChild(b)});t.scrollLeft=sl}
 function info(d){$('info').textContent=`${d.n}：${d.up?'維持費$'+d.up+'/月。':''}${d.d}`}
-const pos=e=>({x:Math.floor((e.clientX-cam.x)/cam.z/T),y:Math.floor((e.clientY-cam.y)/cam.z/T)});
+const pos=e=>({x:Math.floor((e.clientX-OX-cam.x)/cam.z/T),y:Math.floor((e.clientY-OY-cam.y)/cam.z/T)});
 let said=0;const say=s=>{if(Date.now()-said>800){said=Date.now();sfx('err');log(s)}};
-function apply(x,y){
+function apply(x,y){TD=1;
  const t=at(x,y),d=D[S.sel];if(!t||S.over||S.modal)return;
  if(S.sel=='upg')return upgTap(x,y,t);if(S.sel=='mov')return movTap(x,y,t);
- if(S.sel=='bull'){if(t.r||t.z||t.b){sfx('tick');burst(x*T+T/2,y*T+T/2,'#cfcfcf',6)}t.r=0;t.z=null;t.lv=0;t.b=null;t.bl=0;return}
+ if(S.sel=='bull'){if(t.r||t.z||t.b){sfx('tick');burst(x*T+T/2,y*T+T/2,'#cfcfcf',6)}t.r=0;t.z=null;t.lv=0;t.b=null;t.bl=0;t.ab=0;t.sick=0;return}
+ if(d.ter)return terEdit(x,y,t,d);
  if(t.t!='g'&&!(t.t=='s'&&d.road&&NB.some(([a,b])=>{const n=at(x+a,y+b);return n&&n.r})))return say(d.road?'橋は、既存の道路から延ばして架けます':'そこには建てられません');
  if(t.lava>0)return say('溶岩が冷えるまで待ちましょう');
  if(d.road&&t.r&&!t.b){if(d.road<=t.r)return;const uc=Math.round((d.c-D[t.r==2?'avenue':'road'].c)*(1-.15*Math.min(3,(S.pk||{}).cheap|0))*cm());if(S.money<uc)return say('資金が足りません！');S.money-=uc;t.r=d.road;sfx('build');burst(x*T+T/2,y*T+T/2,'#9ad1ff',8);fx(x*T+T/2,y*T,'-$'+uc,'#ffd24a');xp(2);return}
@@ -511,11 +687,11 @@ function apply(x,y){
  if(d.post&&!S.cleared)return say('人口10万人に到達すると建設できます');if(d.pop&&S.pop<d.pop)return say('人口'+d.pop+'人から建設できます');const cc=Math.round((d.c+(t.t=='s'?30:0))*(1-.15*Math.min(3,(S.pk||{}).cheap|0))*cm());if(S.money<cc)return say('資金が足りません！');
  S.money-=cc;sfx(d.road?'tick':'build');if(!d.road){burst(x*T+T/2,y*T+T/2,'#ffd24a',8);fx(x*T+T/2,y*T,'-$'+cc,'#ffd24a');xp(2)}
  if(d.road)t.r=d.road;else if(d.z){t.z=d.z;t.lv=0}else{t.b=S.sel;t.bl=1}}
-function act(e){const p=pos(e);hv=at(p.x,p.y)?p:null;
+function act(e){const p=pos(e);hv=at(p.x,p.y)?p:null;if(TOV){const tt=tileTraf(p.x,p.y);if(tt)$('info').textContent=tt}
  if(GP&&!S.modal&&!S.over&&p.x==GP.x&&p.y==GP.y&&aT()<GP.e){gold();GP=null;checkQ();draw();hud();return}
 if(ct==7)return;if(D[S.sel].road&&S.sel!='bull'){if(at(p.x,p.y))roadTap(p);return}
 {const q=at(p.x,p.y);if(q&&q.z&&D[S.sel].z)$('info').textContent=whyZone(p.x,p.y)}
-apply(p.x,p.y);checkQ();draw();hud()}
+apply(p.x,p.y);recalcWater();checkQ();draw();hud()}
 
 // ===== 道路：シティーズ風の「始点→終点」敷設 =====
 function roadPath(a,b,flip){const P=[],sx=Math.sign(b.x-a.x)||1,sy=Math.sign(b.y-a.y)||1,hf=(Math.abs(b.x-a.x)>=Math.abs(b.y-a.y))!==!flip;
@@ -537,8 +713,8 @@ function roadPrev(){if(!RS||!RE||!D[S.sel].road||S.sel=='bull')return;const E=ro
  ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.strokeRect(RS.x*T+1,RS.y*T+1,T-2,T-2);ctx.setLineDash([5,4]);ctx.strokeRect(RE.x*T+1,RE.y*T+1,T-2,T-2);ctx.setLineDash([]);
  if(!E.len)return;const tx=RE.x*T+T/2,ty=RE.y*T-12,tt=`${E.len}マス  $${fmt(E.cost)}`;ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';const w=ctx.measureText(tt).width+14;ctx.fillStyle='rgba(20,20,20,.82)';ctx.fillRect(tx-w/2,ty-11,w,22);ctx.fillStyle=E.okAll?'#fff':'#ffb0a8';ctx.fillText(tt,tx,ty)}
 function roadUI(){let b=$('rb');if(!RS){if(b)b.style.display='none';return}
- if(!b){b=document.createElement('div');b.id='rb';b.style.cssText='position:fixed;left:0;right:0;z-index:7;display:flex;justify-content:center;gap:6px;pointer-events:none';b.innerHTML='<button id="rok">確定</button><button id="rfl">曲がり方を切替</button><button id="rcn">終了</button>';document.body.appendChild(b);b.querySelectorAll('button').forEach(x=>x.style.cssText='pointer-events:auto;font-size:14px;font-weight:700;padding:10px 14px;border-radius:10px;border:2px solid var(--ac);background:var(--card);color:var(--fg);box-shadow:0 2px 8px rgba(0,0,0,.3)');$('rok').onclick=roadConfirm;$('rfl').onclick=()=>{RF=!RF;draw()};$('rcn').onclick=()=>{roadCancel();draw()}}
- b.style.display='flex';b.style.bottom=($('dock').offsetHeight+10)+'px'}
+ if(!b){b=document.createElement('div');b.id='rb';b.style.cssText='position:absolute;left:0;right:0;bottom:10px;z-index:7;display:flex;justify-content:center;gap:6px;pointer-events:none';b.innerHTML='<button id="rok">確定</button><button id="rfl">曲がり方を切替</button><button id="rcn">終了</button>';$('stage').appendChild(b);b.querySelectorAll('button').forEach(x=>x.style.cssText='pointer-events:auto;font-size:14px;font-weight:700;padding:10px 14px;border-radius:10px;border:2px solid var(--ac);background:var(--card);color:var(--fg);box-shadow:0 2px 8px rgba(0,0,0,.3)');$('rok').onclick=roadConfirm;$('rfl').onclick=()=>{RF=!RF;draw()};$('rcn').onclick=()=>{roadCancel();draw()}}
+ b.style.display='flex'}
 function roadCancel(){RS=null;RE=null;MV=null;roadUI()}
 function roadTap(p){if(S.over||S.modal)return;
  if(!RS){RS={x:p.x,y:p.y};RE={x:p.x,y:p.y};RF=false;roadUI();$('info').textContent='始点を決めました。終点をタップするとルートが表示されます。同じ場所をもう一度タップすると道路を敷設します。続けて次の終点も選べます。終わるときは「終了」かEscキーを押してください。';draw();return}
@@ -548,7 +724,7 @@ function roadConfirm(){if(!RS||!RE)return;const E=roadEval();if(!E.tiles.some(t=
  const msg=[];const sv=window.say;let n=0;for(const t of E.tiles){if(!t.ok)continue;const b=at(t.x,t.y),before=b.r;apply(t.x,t.y);if(b.r!=before)n++}
  sfx('tick');RS={x:RE.x,y:RE.y};RF=false;checkQ();draw();hud();roadUI()}
 addEventListener('keydown',e=>{if(!RS)return;if(e.key=='Escape'){roadCancel();draw()}else if(e.key=='Enter')roadConfirm();else if(e.key=='r'||e.key=='R'){RF=!RF;draw()}});
-function fit(){VW=innerWidth;VH=innerHeight;dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(VW*dpr);cv.height=Math.round(VH*dpr)}
+function fit(){const r=$('stage').getBoundingClientRect();VW=Math.max(1,Math.round(r.width));VH=Math.max(1,Math.round(r.height));OX=r.left;OY=r.top;dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(VW*dpr);cv.height=Math.round(VH*dpr)}
 function clampCam(){const mw=W*T*cam.z,mh=H*T*cam.z;cam.x=Math.min(VW*.6,Math.max(VW*.4-mw,cam.x));cam.y=Math.min(VH*.6,Math.max(VH*.4-mh,cam.y))}
 function zoomAt(px,py,f){const nz=Math.min(3,Math.max(.35,cam.z*f)),k=nz/cam.z;cam.x=px-(px-cam.x)*k;cam.y=py-(py-cam.y)*k;cam.z=nz}
 function homeCam(){const hx=S&&S.home?S.home.x+.5:17.5,hy=S&&S.home?S.home.y+.5:14.5;cam.z=Math.min(1.4,Math.max(.6,VW/(16*T)));cam.x=VW/2-hx*T*cam.z;cam.y=VH*.45-hy*T*cam.z;clampCam()}
@@ -564,20 +740,24 @@ cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId)}catc
   else{tdown.mode='paint';pd=true;nearP(tdown.e);act(tdown.e)}}},300);return}
  pd=true;nearP(e);act(e)});
 cv.addEventListener('pointermove',e=>{const p0=PS.get(e.pointerId);if(p0)PS.set(e.pointerId,{x:e.clientX,y:e.clientY});
- if(p0&&PS.size>=2&&gst){const[a,b]=[...PS.values()],d=Math.hypot(a.x-b.x,a.y-b.y)||1,mx=(a.x+b.x)/2,my=(a.y+b.y)/2;zoomAt(mx,my,d/gst.d);cam.x+=mx-gst.mx;cam.y+=my-gst.my;gst={d,mx,my};clampCam();return}
+ if(p0&&PS.size>=2&&gst){const[a,b]=[...PS.values()],d=Math.hypot(a.x-b.x,a.y-b.y)||1,mx=(a.x+b.x)/2,my=(a.y+b.y)/2;zoomAt(mx-OX,my-OY,d/gst.d);cam.x+=mx-gst.mx;cam.y+=my-gst.my;gst={d,mx,my};clampCam();return}
  if(p0&&tdown&&tdown.mode=='mrd'&&Math.hypot(e.clientX-tdown.x,e.clientY-tdown.y)>8){const q=pos(tdown.e);if(at(q.x,q.y)){tdown.mode='rdrag';RS={x:q.x,y:q.y};RE={x:q.x,y:q.y};RF=false;roadUI();$('info').textContent='ドラッグして終点へ。指を離すと道路を敷設します'}else{tdown.mode='pan';tdown.moved=true}}
  if(p0&&tdown&&tdown.mode=='rdrag'){const q=pos(e);if(at(q.x,q.y)&&(!RE||RE.x!=q.x||RE.y!=q.y)){RE={x:q.x,y:q.y};draw()}return}
  if(p0&&tdown&&tdown.mode!='paint'){if(!tdown.moved&&Math.hypot(e.clientX-tdown.x,e.clientY-tdown.y)>8){tdown.moved=true;clearTimeout(LPT)}if(tdown.moved){cam.x+=e.clientX-p0.x;cam.y+=e.clientY-p0.y;clampCam()}return}
  nearP(e);const p=pos(e);hv=at(p.x,p.y)?p:null;if(RS&&hv&&e.pointerType=='mouse'&&!(tdown&&tdown.moved))RE={x:hv.x,y:hv.y};if(pd&&isPt())act(e)});
 const up=e=>{clearTimeout(LPT);PS.delete(e.pointerId);if(PS.size<2)gst=null;pd=false;if(tdown&&PS.size==0){if(tdown.mode=='rdrag'){roadConfirm();roadCancel();draw();hud()}else if(!tdown.moved&&(tdown.mode=='tap'||tdown.mode=='mrd')){nearP(tdown.e);act(tdown.e)}tdown=null}};
 addEventListener('pointerup',up);addEventListener('pointercancel',e=>{if(tdown&&tdown.mode=='rdrag'){roadCancel();draw();tdown.mode='none';tdown.moved=true}up(e)});
-cv.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,e.deltaY<0?1.12:1/1.12);clampCam()},{passive:false});
+cv.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.clientX-OX,e.clientY-OY,e.deltaY<0?1.12:1/1.12);clampCam()},{passive:false});
 cv.addEventListener('contextmenu',e=>e.preventDefault());
 $('bz1').onclick=()=>{zoomAt(VW/2,VH/2,1.25);clampCam()};$('bz2').onclick=()=>{zoomAt(VW/2,VH/2,.8);clampCam()};
 $('bpan').onclick=()=>{pan=!pan;$('bpan').className=pan?'on':''};
 let prevSel='road';$('bdel').onclick=()=>{roadCancel();if(S.sel=='bull'){S.sel=prevSel&&prevSel!='bull'?prevSel:'road';const c=CT.findIndex(q=>q[2].includes(S.sel));ct=MT.includes(S.sel)?8:c>=0?c:lastCt;info(D[S.sel])}else{prevSel=S.sel;if(!MT.includes(S.sel))lastB=S.sel;S.sel='bull';ct=8;info(D.bull);$('info').textContent+='　タップで1か所、長押ししてドラッグでまとめて撤去できます。もう一度「撤去」を押すと元の建設に戻ります'}tools();draw()};
 $('bmin').onclick=()=>{const d=$('dock');d.classList.toggle('min');$('bmin').textContent=d.classList.contains('min')?'▲':'▼'};
-fit();homeCam();addEventListener('resize',()=>{fit();clampCam()});
+fit();homeCam();addEventListener('resize',()=>{fit();clampCam();tplace()});
+try{const ro=new ResizeObserver(()=>{fit();clampCam();tplace()});['top','stage','dock'].forEach(i=>ro.observe($(i)))}catch(_){}
+if(window.visualViewport)visualViewport.addEventListener('resize',()=>{fit();clampCam()});
+$('sub').onclick=$('quest').onclick=()=>$('top').classList.toggle('more');
+$('info').onclick=()=>$('info').classList.toggle('x');
 const adj=(k,v)=>{S.f[k]=cl(S.f[k]+v,0,100)};
 function modal(t,p,opts){S.modal=true;$('ovt').textContent=t;$('ovp').textContent=p;const o=$('ovb');o.innerHTML='';
  opts.forEach(([l,fn])=>{const b=document.createElement('button');b.textContent=l;b.onclick=()=>{$('ov').style.display='none';S.modal=false;fn&&fn();draw();hud()};o.appendChild(b)});
@@ -736,7 +916,7 @@ function peopleFx(){const now=aT(),dt=Math.min(.1,(now-lt)/1000);lt=now;
   R(FC[c.f],c.px-3,c.py-7,6,8);O('#d9b48a',c.px,c.py-10,3);
   O(c.mood>=65?'#4caf50':c.mood>=40?'#e6c84a':'#e5533d',c.px,c.py-15,2.4);
   ctx.font='10px sans-serif';ctx.textAlign='center';ctx.textBaseline='alphabetic';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';ctx.strokeText(c.n,c.px,c.py+10);ctx.fillStyle='#fff';ctx.fillText(c.n,c.px,c.py+10)})}
-function nearP(e){const x=(e.clientX-cam.x)/cam.z,y=(e.clientY-cam.y)/cam.z;
+function nearP(e){const x=(e.clientX-OX-cam.x)/cam.z,y=(e.clientY-OY-cam.y)/cam.z;
  const c=(S.ppl||[]).find(c=>c.px!=null&&Math.hypot(c.px-x,c.py-8-y)<18);if(c)$('info').textContent=`${c.n}（${JB[c.f]}・${F[c.f]}）機嫌 ${Math.round(c.mood)} — ${c.mood>=65?'閣下に満足している':c.mood>=40?'まあまあの様子':'不満を抱えている'}`}
 let FXL=[],shk=0,flt=aT();
 const SCR=-7777,fx=(x,y,t,c)=>{const sc=x==SCR;FXL.push({x:sc?VW/2:x,y:sc?y+130:y,t,c,l:1.6,vy:-26,s:sc})};
@@ -806,24 +986,24 @@ function erupt(){
   if(tw.some(([a,b,q])=>Math.abs(a-x)<=q&&Math.abs(b-y)<=q)){if(t.r||t.z||t.b)safe++;return}
   if(t.r||t.z||t.b)lost++;t.r=0;t.z=null;t.lv=0;t.b=null;if(t.t=='g')t.lava=10});
  sfx('erupt');shk=aT()+900;log(`噴火！溶岩流で${lost}マスが飲み込まれた。見張り台が${safe}マスを守った。`);S.warn=null;S.anger=25;S.lastEru=S.m;adj('rel',-4);S.hap=cl(S.hap-6,0,100);S.eru=(S.eru|0)+1;if(S.eru>=3)ach('survivor')}
-function canUp(o,pw){const t=o.t,z=t.z,nl=t.lv+1,x=o.x,y=o.y,res=isR(z);
+function canUp(o,pw){const t=o.t,z=t.z,nl=t.lv+1,x=o.x,y=o.y,res=isR(z);if(t.ab)return false;
  if(nl>MAXL[z]||!conn(x,y)||pw<.8||S.dem[res?'r':z]<.15||S.pop<PG[nl])return false;
  if(nl==2&&res&&!(covered('clinic',x,y)||covered('school',x,y)||covered('hosp',x,y)))return false;
- if(res){if(nl>=2&&S.pop>=25&&!covered('water',x,y))return false;
+ if(res){if(nl>=2&&S.pop>=25&&!wOK(x,y))return false;
   if(nl>=4&&S.pop>=40&&!covered('waste',x,y))return false;
   if(nl>=4&&!(covered('clinic',x,y)||covered('hosp',x,y)))return false;
   if(nl>=5&&!(covered('hosp',x,y)&&(covered('lib',x,y)||covered('univ',x,y))))return false;
   if(nl>=6&&!covered('univ',x,y))return false}
  const need=(LVR[z]||[])[nl]||0;if(need&&lvv(x,y)<need)return false;
  return true}
-function whyZone(x,y){const t=at(x,y),z=t.z,nl=t.lv+1,res=isR(z),n=(res?'住宅':DN[z])+'区',r=[],cv=k=>covered(k,x,y);
+function whyZone(x,y){{const t0=at(x,y);if(t0&&t0.ab)return'廃墟：汚染された水の病気で住民が去りました。取水場を汚濁域の外へ移すと、時間とともに復旧します（撤去も可）';if(t0&&t0.sick)return'病気の住民が出ています。放置すると廃墟になります。取水場が汚濁域に入っていないか確認してください'}const t=at(x,y),z=t.z,nl=t.lv+1,res=isR(z),n=(res?'住宅':DN[z])+'区',r=[],cv=k=>covered(k,x,y);
  if(t.lv>=MAXL[z])return n+' Lv'+t.lv+'（最大レベル）';
  if(!conn(x,y))r.push('道路に接していない');
  const pw=S.pw==null?1:S.pw;if(pw<.8)r.push('電力不足('+Math.round(pw*100)+'%)');
  const dm=(S.dem||{})[res?'r':z]||0;if(dm<.15)r.push('需要が低い('+Math.round(dm*100)+'%)');
  if(S.pop<PG[nl])r.push('人口'+PG[nl]+'人以上が必要');
  if(nl==2&&res&&!(cv('clinic')||cv('school')||cv('hosp')))r.push('診療所・学校・病院の範囲外');
- if(res){if(nl>=2&&S.pop>=25&&!cv('water'))r.push('水道の範囲外');if(nl>=4&&S.pop>=40&&!cv('waste'))r.push('ごみ処理の範囲外');if(nl>=4&&!(cv('clinic')||cv('hosp')))r.push('診療所・病院の範囲外');if(nl>=5&&!(cv('hosp')&&(cv('lib')||cv('univ'))))r.push('病院と図書館/大学の範囲外');if(nl>=6&&!cv('univ'))r.push('大学の範囲外')}
+ if(res){if(nl>=2&&S.pop>=25&&!wOK(x,y))r.push('水の供給が不足（取水場・排水場を増やす）');if(nl>=4&&S.pop>=40&&!cv('waste'))r.push('ごみ処理の範囲外');if(nl>=4&&!(cv('clinic')||cv('hosp')))r.push('診療所・病院の範囲外');if(nl>=5&&!(cv('hosp')&&(cv('lib')||cv('univ'))))r.push('病院と図書館/大学の範囲外');if(nl>=6&&!cv('univ'))r.push('大学の範囲外')}
  const need=(LVR[z]||[])[nl]||0;if(need&&lvv(x,y)<need)r.push('地価が低い('+Math.round(lvv(x,y))+'/'+need+')');
  return n+' Lv'+t.lv+'→'+nl+'：'+(r.length?'足りない条件：'+r.join('、'):'条件OK。毎月'+(nl<=3?40:25)+'%の確率で成長')}
 
@@ -886,8 +1066,8 @@ function invDraw(){const I=S.inv,A=INVA;if(!I&&!A)return;const now=aT(),path=I?I
  if(A&&!A.won&&t>1700){for(let q=0;q<3;q++)O('rgba(60,60,60,.5)',lx+(q-1)*12+Math.sin(now/300+q)*3,ly-((now/40+q*20)%46),6+q,.5)}
 }
 function tick(){
- if(S.over||S.modal)return;S.m++;const PR=prs();S.peak=Math.max(S.peak|0,S.pop);{const TR=Math.floor(PR);if(TR>(S.tier|0)){S.tier=TR;if(TR>=1){sfx('warn');log('人口が'+fmt(100*Math.pow(10,TR))+'人を超えた。国家規模の拡大で、行政負担・選挙基準・外敵と火山の脅威が増していく。')}}}
- const A=tiles().map((t,i)=>({t,x:i%W,y:Math.floor(i/W)})),Z=A.filter(o=>o.t.z&&o.t.lv>0),N=k=>A.filter(o=>o.t.b==k).reduce((s,o)=>s+gm(o.t),0);
+ if(S.over||S.modal)return;S.m++;const PR=prs();recalcWater();polStep();recalcTraffic();S.peak=Math.max(S.peak|0,S.pop);{const TR=Math.floor(PR);if(TR>(S.tier|0)){S.tier=TR;if(TR>=1){sfx('warn');log('人口が'+fmt(100*Math.pow(10,TR))+'人を超えた。国家規模の拡大で、行政負担・選挙基準・外敵と火山の脅威が増していく。')}}}
+ const A=tiles().map((t,i)=>({t,x:i%W,y:Math.floor(i/W)})),Z=A.filter(o=>o.t.z&&o.t.lv>0&&!o.t.ab),N=k=>A.filter(o=>o.t.b==k).reduce((s,o)=>s+gm(o.t),0);
  A.forEach(o=>{if(o.t.lava>0){o.t.lava--;if(o.t.lava==0)o.t.ash=1}});
  const AG={hp:0,fm:0,cp:0,ml:0,rl:0,mo:0,ang:0,fd:0,tr:0,pwr:0,rvd:0};A.forEach(o=>{const d=o.t.b&&D[o.t.b];if(d)for(const k in AG)if(d[k])AG[k]+=d[k]*gm(o.t)});
  const dem=Z.reduce((s,o)=>s+PWW[o.t.lv],0),cap=6+N('pw')*12+AG.pwr,pw=dem?cl(cap/dem):1,ed=S.ed,ml=ed.martial;
@@ -902,13 +1082,13 @@ function tick(){
  A.forEach(o=>{const t=o.t;if(!t.z||t.lv>=MAXL[t.z])return;const nl=t.lv+1;if(!canUp(o,pw)||Math.random()>(nl<=3?.4:.25))return;t.lv=nl;burst(o.x*T+T/2,o.y*T+T/2,'#7dff9a',10);xp(2+nl)});
  const fi=jobs?Math.min(1,work/jobs):0;
  let inc=S.pop*S.tax*.04+luxPop*S.tax*.06+sum('c',l=>LM[l]*9)*Math.min(1,S.pop/(cs*5+1))*pw+sum('i',l=>LM[l]*16)*fi*pw-(ed.ration?ED.ration.cost:0)-(ml?ED.martial.cost:0)-(ed.police?ED.police.cost:0)-(ed.seismic?ED.seismic.cost:0)-(ed.drill?ED.drill.cost:0)+N('casino')*120*pw*Math.max(.3,fi)+N('port')*70*pw+AG.mo*pw+(Z.filter(o=>o.t.z=='i'&&o.t.ore&&conn(o.x,o.y)).reduce((q,o)=>q+LM[o.t.lv]*10,0)+Z.filter(o=>o.t.spa&&conn(o.x,o.y)).reduce((q,o)=>q+LM[o.t.lv]*7,0)+Z.filter(o=>o.t.z=='c'&&o.t.dune&&conn(o.x,o.y)).reduce((q,o)=>q+LM[o.t.lv]*6,0))*pw;
- A.forEach(o=>{if(o.t.r)inc-=([0,.5,1.4,3][o.t.r]||.5)*1.3*Math.sqrt(cm());if(o.t.b)inc-=(D[o.t.b].up||0)*um(o.t)*1.25*Math.sqrt(cm())});
- const lvs=Z.filter(o=>isR(o.t.z)||o.t.z=='c').map(o=>lvv(o.x,o.y)),lvA=lvs.length?lvs.reduce((a,b)=>a+b,0)/lvs.length:50,rd=A.reduce((q,o)=>q+[0,1,2.4,5][o.t.r|0],0),tc=rd*.9+N('depot')*10+AG.tr+4,cg=cl((Z.reduce((s,o)=>s+TW[o.t.lv],0)-tc)/tc||0,0,1);S.lvA=lvA;S.cg=cg;if(inc>0)inc*=(.8+lvA/250)*(1-.25*cg);
+ A.forEach(o=>{if(o.t.r)inc-=([0,.5,1.4,3][o.t.r]||.5)*1.3*Math.sqrt(cm());if(o.t.b)inc-=(D[o.t.b].up||0)*um(o.t)*1.25*Math.sqrt(cm())*(1+.25*PR)});
+ const lvs=Z.filter(o=>isR(o.t.z)||o.t.z=='c').map(o=>lvv(o.x,o.y)),lvA=lvs.length?lvs.reduce((a,b)=>a+b,0)/lvs.length:50,rd=A.reduce((q,o)=>q+[0,1,2.4,5][o.t.r|0],0),tc=rd*.9+N('depot')*10+AG.tr+4,cg=S.tcg||0;S.lvA=lvA;S.cg=cg;if(inc>0)inc*=(.8+lvA/250)*(1-.25*cg);
  if(inc>0)inc*=1+HARD.early*cl(1-PR,0,1);inc-=S.pop*HARD.admin*PR*PR;inc*=1+.1*((S.pk||{}).tax|0);if(S.ch&&S.ch.slump&&inc>0)inc*=.8;if(inc>0)inc*=S.cin||1;S.money+=inc;S.streak=inc>0?(S.streak|0)+1:0;
  fx(SCR,36,(inc>=0?'+$':'-$')+Math.abs(Math.round(inc)),inc>=0?'#7dff9a':'#ff8a7a');xp(2);
  if(inc>0&&Math.random()<.05){const b=Math.round(inc);S.money+=b;fx(SCR,66,'臨時収入！ +$'+b,'#ffd24a');burst(SCR,60,'#ffd24a',20);sfx('coin')}
  if(S.streak>0&&S.streak%6==0){const b=S.streak*5;S.money+=b;log(`連続黒字${S.streak}か月ボーナス +$${b}`);fx(SCR,96,`連続黒字ボーナス +$${b}`,'#8fd3ff');sfx('coin')}
- const res=Z.filter(o=>isR(o.t.z)),wcv=Z.filter(o=>isR(o.t.z)).length?Z.filter(o=>isR(o.t.z)&&covered('water',o.x,o.y)).length/Z.filter(o=>isR(o.t.z)).length:1,gcv=Z.filter(o=>isR(o.t.z)).length?Z.filter(o=>isR(o.t.z)&&covered('waste',o.x,o.y)).length/Z.filter(o=>isR(o.t.z)).length:1;S.wc=wcv;S.gc=gcv;const cov=k=>res.length?res.filter(o=>covered(k,o.x,o.y)).length/res.length:0,un=work?Math.max(0,work-jobs)/work:0,biz=sum('c',l=>l)+sum('i',l=>l),tx=S.tax-9;
+ const res=Z.filter(o=>isR(o.t.z)),wcv=S.ws,gcv=Z.filter(o=>isR(o.t.z)).length?Z.filter(o=>isR(o.t.z)&&covered('waste',o.x,o.y)).length/Z.filter(o=>isR(o.t.z)).length:1;S.wc=wcv;S.gc=gcv;const cov=k=>res.length?res.filter(o=>covered(k,o.x,o.y)).length/res.length:0,un=work?Math.max(0,work-jobs)/work:0,biz=sum('c',l=>l)+sum('i',l=>l),tx=S.tax-9;
  const tg={
   farm:45+Math.min(AG.fm,15)+(S.food>S.pop*2?15:S.food>0?0:-30)-un*20+cov('clinic')*12+(ed.ration?12:0)-(ml?10:0)-(ed.police?8:0)-tx*2.2,
   cap:40+Math.min(AG.cp,15)+Math.min(10,luxPop/6)+Math.min(biz,8)*4+(pw>=1?4:-8)-tx*3+(ml?5:0)+Math.min(N('casino'),2)*6-(ed.police?5:0),
@@ -916,11 +1096,26 @@ function tick(){
   rel:45+Math.min(AG.rl,20)+Math.min(N('shrine'),3)*8+cov('shrine')*8-(ml?5:0)-Math.min(N('casino'),2)*8};
  for(const k in tg){S.f[k]+=(tg[k]-S.f[k])*.25;adj(k,0)}
  const satR=(lo,hi,q)=>lo+(hi-lo)*cl(q),SI=[],sa=(id,v,good,bad,det,hint)=>{v=Math.round(v*10)/10;if(Math.abs(v)>=.1)SI.push({id,v,n:v>=0?good:bad,d:det,h:hint})},covA=ks=>res.length?res.filter(o=>ks.some(k=>covered(k,o.x,o.y))).length/res.length:0;
- sa('cg',4-cg*14,'渋滞が少ない','渋滞がひどい','渋滞度'+Math.round(cg*100)+'%','大通りや高速道路への格上げ、バス車庫・路面電車・地下鉄の建設');
+ sa('cg',4-cg*14,'渋滞が少ない','渋滞がひどい','渋滞度'+Math.round(cg*100)+'%（渋滞区間'+(S.tjam|0)+'マス・走行中の車'+CARS.length+'台）','大通りや高速道路への格上げ、バス車庫・路面電車・地下鉄の建設');
  sa('pw',pw>=1?2:2-(1-pw)*18,'電力が足りている','電力不足で停電が起きている','供給率'+Math.round(pw*100)+'%','発電所を増やす');
  sa('food',satR(-10,2,S.food/((fcons*2)||1)),'食料の備蓄に余裕がある','食料が不足している','備蓄'+(S.food/(fcons||1)).toFixed(1)+'か月分','農地区・農業センター・港を増やす');
  sa('job',satR(-6,3,1-un*2),'就職先が確保されている','失業者があふれている','失業率'+Math.round(un*100)+'%','商業区・工房区・農地区を増やす（道路に接続）');
- if(S.pop>=25)sa('water',satR(-8,3,wcv),'水道が普及している','水道が行き届いていない','カバー率'+Math.round(wcv*100)+'%','浄水場を増設する（範囲5）');
+ if(S.pop>=25){const nI=Z.length?A.filter(o=>o.t.b=='intake').length:0,nO=A.filter(o=>o.t.b=='outfall').length;
+   sa('water',satR(-8,3,wcv),'水道が普及している','水道が足りない','供給率'+Math.round(wcv*100)+'%（取水能力'+S.wcap[0]+'人・排水能力'+S.wcap[1]+'人／人口'+S.pop+'）','取水場・井戸・浄水場と、排水場・下水処理場を増設する（海岸が足りなければ内陸の施設を。グレードは上限なしで上げられる）');
+   if(PO.size){const hs=Z.filter(o=>isR(o.t.z)),nh=hs.filter(o=>nearPoll(o.x,o.y,2)).length;if(nh)sa('poll',-cl(2+nh/Math.max(1,hs.length)*10,0,9),'','水質汚濁への不満','汚濁の近くの住宅'+nh+'戸','排水場を住宅地から離れた海岸に置く／住宅を汚濁域から離す');
+    const ins=A.filter(o=>o.t.b=='intake'),bad=ins.filter(o=>nearPoll(o.x,o.y,1)).length,sh=ins.length?bad/ins.length:0;
+    if(bad){S.pop=Math.max(2,S.pop-Math.ceil(S.pop*.012*(.5+sh)));sa('sick',-cl(2+sh*6,0,8),'','汚染された水で市民が病気になっている','汚濁域の取水場'+bad+'基','取水場を排水場から離す（汚濁範囲の外へ）');if(S.m%2==0)log('汚染された水を取水し、市民が病気になっている…（汚濁域の取水場'+bad+'基）')}
+    S.sickSh=sh}}
+  if(!PO.size||S.pop<25)S.sickSh=0;
+  {let nNew=0,nRec=0;const bad2=(S.sickSh||0)>0,hs2=Z.filter(o=>isR(o.t.z));
+   if(bad2){const k=Math.ceil(hs2.length*(.06+.14*S.sickSh)),cand=hs2.filter(o=>!o.t.sick);for(let q=0;q<k&&cand.length;q++){const o=cand.splice(Math.floor(Math.random()*cand.length),1)[0];o.t.sick=1;o.t.sk=0}}
+   A.forEach(o=>{const t=o.t;if(!t.z){t.ab=0;t.sick=0;return}
+    if(t.sick){t.sk=(t.sk|0)+1;if(bad2){if(t.sk>=3&&Math.random()<.4){t.sick=0;t.ab=1;nNew++}}else if(Math.random()<.5)t.sick=0}
+    else if(t.ab&&!bad2&&Math.random()<.2){t.ab=0;nRec++}});
+   if(nNew)log('病気で住民が去り、住宅'+nNew+'戸が廃墟になった…');if(nRec)log('水が安全になり、廃墟'+nRec+'戸が復旧した');
+   const nab=A.filter(o=>o.t.ab).length,nsk=A.filter(o=>o.t.sick).length;S.nab=nab;S.nsk=nsk;
+   if(nab)sa('ruin',-cl(1+nab*.4,0,7),'','廃墟が増えて街が荒れている','廃墟'+nab+'戸・病人の出た住宅'+nsk+'戸','汚濁を解消すれば、時間とともに復旧する');
+   else if(nsk)sa('ill',-cl(nsk*.2,0,3),'','病気の住民が出ている','病気の住宅'+nsk+'戸','取水場を汚濁域の外へ移す')}
  if(S.pop>=40)sa('waste',satR(-8,2,gcv),'ごみが収集されている','ごみだまりができている','カバー率'+Math.round(gcv*100)+'%','ごみ処理場を増設する（範囲5）');
  sa('edu',satR(S.pop>=30?-3:0,3,covA(['school','univ'])),'学校が整備されている','学校が足りない','カバー率'+Math.round(covA(['school','univ'])*100)+'%','学校・大学を住宅地の近くに建てる');
  sa('med',satR(S.pop>=20?-3:0,3,covA(['clinic','hosp'])),'医療施設が整っている','医療施設が足りない','カバー率'+Math.round(covA(['clinic','hosp'])*100)+'%','診療所・病院を建てる');
@@ -975,14 +1170,15 @@ const TS=[
  {t:'食料を確保しよう',p:'人口が増えると、食料が必要になります。「農地区」を道路沿いに塗りましょう。',ok:()=>cnt(t=>t.z=='a')>=4},
  {t:'商業と工房',p:'「商業区」と「工房区」も塗ってみましょう。需要が高い区画ほど早く成長し、国庫の収入になります。',ok:()=>cnt(t=>t.z=='c')>=2&&cnt(t=>t.z=='i')>=2},
  {t:'電力を用意しよう',p:'「インフラ」タブから「太陽光」（どこにでも建設可）か「地熱発電所」（山や火口に隣接）を建てましょう。電力が足りないと、成長と収益が落ちます。',ok:()=>cnt(t=>t.b=='solar'||t.b=='pw')>=1},
+ {t:'建物を改築しよう',p:'画面下の「改築・移設・撤去」タブを開き、「改築」を選んで、建てた施設（太陽光など）をタップしましょう。費用を払うと、効果が大きくなります（Lv1→2で効果×1.5、維持費は×1.3）。Lv3まで上げられ、範囲のある施設はLv3で範囲が1マス広がります。資金に余裕のあるときに、効果の大きい施設から改築しましょう。',ok:()=>cnt(t=>t.b&&gr(t)>=2)>=1},
  {t:'時間・税・支持率',p:'画面下の「1x / 2x / 4x」で進行速度を、「税−」「＋」で税率を調整できます。税を上げると収入は増えますが、支持率は下がります。選挙は3年（36か月）ごとにあります。'},
  {t:'街を高層化しよう',p:'人口が増えてきたら、「区画」タブの「集合住宅区」（人口30以上）や「高層住宅区」（人口150以上）を使いましょう。区画はレベルが上がるほど、住める人数が増えます（最大Lv6）。成長には、水道、ごみ処理、診療所か病院、学校か大学、そして地価が必要です。人口が増えるほど統治は難しくなります。'},
  {t:'火山と地震',p:'火山の怒りが65%を超えると、噴火の予告が出ることがあります。祠・火山観測所・ガス抜き坑・防災訓練（メニュー）・鎮魂の儀で怒りを抑え、見張り台や溶岩防壁で備えましょう。地震の被害は、「防災軍事」タブの「地震速報局」で軽くできます。'},
  {t:'準備完了！',p:'あとは自由に島を育ててください。遊び方は、メニューからいつでも見直せます。'}
 ];
 let ti=-1;
-function tplace(){const c=$('tut'),k=$('ctl'),tp=$('top').getBoundingClientRect().bottom;if(c)c.style.bottom=($('dock').offsetHeight+8)+'px';let lim=$('dock').getBoundingClientRect().top;if(c)lim=Math.min(lim,c.getBoundingClientRect().top);const av=lim-tp-8;k.classList.toggle('sm',av<252);k.style.top=(tp+4+Math.max(0,av)/2)+'px'}
-function tut(i){ti=i;let c=$('tut');if(!c){c=document.createElement('div');c.id='tut';c.style.cssText='position:fixed;left:8px;right:8px;max-width:520px;margin:0 auto;z-index:7;background:var(--card);color:var(--fg);border:2px solid var(--ac);border-radius:12px;padding:10px 12px;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.35)';document.body.appendChild(c)}
+function tplace(){const c=$('tut'),k=$('ctl'),st=$('stage').getBoundingClientRect();let lim=st.bottom;if(c)lim=Math.min(lim,c.getBoundingClientRect().top);const av=lim-st.top-8;k.classList.toggle('sm',av<252);k.style.top=(4+Math.max(0,av)/2)+'px'}
+function tut(i){ti=i;let c=$('tut');if(!c){c=document.createElement('div');c.id='tut';c.style.cssText='position:absolute;bottom:8px;left:8px;right:8px;max-width:520px;margin:0 auto;z-index:7;background:var(--card);color:var(--fg);border:2px solid var(--ac);border-radius:12px;padding:10px 12px;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.35)';$('stage').appendChild(c)}
  if(i>=TS.length){c.remove();ti=-1;log('チュートリアルが終わりました。自由に島を育ててください。');return}
  const s=TS[i];c.innerHTML='<b>'+(i+1)+'/'+TS.length+'　'+s.t+'</b><div style="margin:4px 0 8px;line-height:1.5">'+s.p+'</div><div style="display:flex;gap:8px;justify-content:flex-end"><button id="tsk">スキップ</button><button id="tnx" style="background:var(--ac);color:#fff;border-color:var(--ac)">'+(s.ok?'次へ（達成で自動進行）':i==TS.length-1?'閉じる':'次へ')+'</button></div>';
  $('tsk').onclick=()=>{c.remove();ti=-1};$('tnx').onclick=()=>tut(i+1);tplace()}
