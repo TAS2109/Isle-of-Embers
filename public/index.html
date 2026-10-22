@@ -24,7 +24,9 @@
 <meta name="twitter:image" content="https://honoo-no-shima.pages.dev/ogp.png">
 <title>Isle of Embers</title>
 <style>
-html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;touch-action:manipulation}button,.tab{user-select:none;-webkit-user-select:none}
+html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;touch-action:manipulation}
+*,*::before,*::after{touch-action:manipulation}
+body{-webkit-user-select:none;user-select:none}input,textarea{-webkit-user-select:text;user-select:text}button,.tab{user-select:none;-webkit-user-select:none}
 
 :root{--bg:#f4efe3;--fg:#2b2a26;--card:#fffaf0;--bd:#d8cfba;--ac:#d9622b;--ok:#2e8b57;--bad:#c0392b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1d1f;--fg:#ece7dc;--card:#26292c;--bd:#3a3f43;--ac:#f08a52;--ok:#5cc488;--bad:#ef6a5b}}
@@ -1326,7 +1328,9 @@ function intro2(){modal('基本説明 2/2','・建物や区画は、道路に面
  $('tCont').onclick=()=>{if(!has)return;hide();S.modal=false;draw();hud()};$('tLoad').style.order=2;$('tLoad').onclick=()=>{hide();S.modal=false;showSL()};
  $('tNew').onclick=()=>{const go=()=>{hide();S.modal=false;startMenu(false);intro(true)};if(has)ask('保存されている島を手放して、最初から始めますか？',go,'はじめから始める');else go()};
 })();
-document.addEventListener('gesturestart',e=>e.preventDefault());
+['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
+(()=>{let lt=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-lt<350&&!(e.target.closest&&e.target.closest('button,input,textarea,select,a,label')))e.preventDefault();lt=n},{passive:false});
+document.addEventListener('dblclick',e=>{if(!(e.target.closest&&e.target.closest('input,textarea')))e.preventDefault()},{passive:false})})();
 addEventListener('orientationchange',()=>setTimeout(()=>{fit();clampCam();draw()},250));
 addEventListener('pointerdown',()=>{try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume()}catch(e){}},{once:true});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)save();else{try{fit();clampCam()}catch(_){}}});addEventListener('pageshow',()=>{try{fit();clampCam()}catch(_){}});addEventListener('pagehide',save);
