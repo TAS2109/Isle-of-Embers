@@ -1490,11 +1490,13 @@ function tick(){
  const dem=Z.reduce((s,o)=>s+PWW[o.t.lv],0),cap=6+N('pw')*12+AG.pwr,ed=S.ed,ml=ed.martial,PT=powTrade(cap*bEff('power'),dem),pw=PT.pw;
  const sum=(z,f)=>Z.filter(o=>o.t.z==z&&conn(o.x,o.y)).reduce((s,o)=>s+f(o.t.lv),0);
  const sumR=f=>Z.filter(o=>isR(o.t.z)&&conn(o.x,o.y)).reduce((s,o)=>s+f(o.t.z,o.t.lv),0),capR=sumR((z,l)=>CAPR[z][l]),luxPop=sumR((z,l)=>z=='l'?CAPR.l[l]:0),jobs=sum('a',l=>LM[l]*3)+sum('c',l=>LM[l]*4)+sum('i',l=>LM[l]*5),work=Math.floor(S.pop*WKR()),cs=sum('c',l=>LM[l]),fcons=S.pop*.65/Math.pow(1+S.pop/800,.25)*(ed.ration?.8:1)*(1+HARD.food*PR);S.fc=fcons;S.pw=pw;
+ const UNJ=(work&&S.pop>=60)?Math.max(0,work-jobs)/work:0;
  S.dem={r:cl((jobs-work+4)/Math.max(10,work*.15)),a:cl((fcons*6-S.food)/(fcons*6||1)),c:cl((S.pop-6*cs)/Math.max(20,S.pop*.08)),i:cl((work-jobs+3)/Math.max(10,work*.15))};
  S.food+=AG.fd+Z.filter(o=>o.t.z=='a'&&o.t.fert&&conn(o.x,o.y)).reduce((q,o)=>q+LM[o.t.lv]*4,0)+Z.filter(o=>o.t.z=='a'&&o.t.ash&&conn(o.x,o.y)).length*4+N('port')*6+sum('a',l=>LM[l]*8)*(pw>=.5?1:.6)*(1+.2*((S.pk||{}).food|0))*(1+(S.cfd||0))*(S.ed.organic?.9:1)+Z.filter(o=>o.t.z=='a'&&o.t.fish&&conn(o.x,o.y)).reduce((q,o)=>q+LM[o.t.lv]*3,0)+Z.filter(o=>o.t.z=='a'&&o.t.wet&&conn(o.x,o.y)).reduce((q,o)=>q+LM[o.t.lv]*3,0)-Z.filter(o=>o.t.z=='a'&&o.t.dune&&conn(o.x,o.y)).reduce((q,o)=>q+LM[o.t.lv]*2,0)-fcons;
  tradeStep(fcons);if(S.food<0){S.food=0;if(S.pop>2){S.pop-=Math.max(1,Math.ceil(S.pop*.05));log('飢餓で国民が減少…')}}
- else if(S.pop<capR&&S.food>fcons*2&&S.hap>=40)S.pop+=Math.min(capR-S.pop,Math.max(4,Math.ceil(S.pop*(.12+Math.max(0,S.hap-50)/400))));
+ else if(S.pop<capR&&S.food>fcons*2&&S.hap>=40&&UNJ<.2)S.pop+=Math.min(capR-S.pop,Math.ceil(Math.max(4,S.pop*(.12+Math.max(0,S.hap-50)/400))*cl(1-(UNJ-.05)/.15)));
  else if(S.pop>capR)S.pop-=Math.max(1,Math.ceil((S.pop-capR)*.15));
+ if(UNJ>.15&&S.pop>20&&S.food>0){const lv=Math.max(1,Math.ceil((work-jobs)/Math.max(.3,WKR())*.08));S.pop=Math.max(20,S.pop-lv);if(!(S.m%6))log('仕事が見つからず、街を出ていく人が増えています（商業区・工房区・農地区を増やしましょう）')}
  if(S.hap<10&&S.pop>3){S.pop-=Math.max(2,Math.ceil(S.pop*.04));log('不満が爆発し、国民が島を去っていく…')}diseaseStep();deathStep();crimeStep();
  A.forEach(o=>{const t=o.t;if(!t.z||t.lv>=MAXL[t.z])return;const nl=t.lv+1;if(!canUp(o,pw)||Math.random()>(nl<=3?.4:.25))return;t.lv=nl;burst(o.x*T+T/2,o.y*T+T/2,'#7dff9a',10);xp(2+nl)});
  const fi=jobs?Math.min(1,work/jobs):0;S.wk=work;S.jb=jobs;
@@ -1580,7 +1582,7 @@ try{if(S.pop>=40&&res.length){
  const sg=A.filter(o=>['fount','tree','lookout','garden','lighthouse','monu'].includes(o.t.b)).length;sa('sight',Math.min(2.5,sg*.4),'名所・景観が街の誇りになっている','','名所'+sg+'か所','噴水・庭園・展望台・灯台・記念碑などを建てる');
  const tw=A.filter(o=>o.t.r==5).length;sa('trees',Math.min(1.5,tw*.06),'並木道が街を彩っている','','並木道'+tw+'マス','道路を並木道にする');
  const capH=res.reduce((a,o)=>a+(conn(o.x,o.y)?(CAPR[o.t.z][o.t.lv]||0):0),0),oc=capH?S.pop/capH:1;
- if(oc>=.98)sa('crowd',-1.5,'','住宅が満杯で住まい探しが大変','入居率'+pc(Math.min(1,oc)),'住宅区を増やす・高層住宅に育てる');else if(oc<=.75&&S.pop>=60)sa('room',1,'住まいに余裕がある','','入居率'+pc(oc),'');
+ if(oc>=.98&&un<.12)sa('crowd',-1.5,'','住宅が満杯で住まい探しが大変','入居率'+pc(Math.min(1,oc)),'住宅区を増やす・高層住宅に育てる');else if(oc<=.75&&S.pop>=60)sa('room',1,'住まいに余裕がある','','入居率'+pc(oc),'');
  const jn=av(o=>nb(o,5,q=>q.z&&!isR(q.z)&&q.lv>0&&!q.ab));sa('jobnear',satR(-2,1.5,jn),'職場が近く通勤が楽','職場が遠く通勤が大変','職場が近い住宅'+pc(jn),'住宅地の近くに商業区・工房区・農地区を置く');
  if(S.money<60)sa('cash',-cl((60-S.money)/60,0,2),'','国庫が乏しく、公共サービスが不安','国庫$'+fmt(Math.round(S.money)),'収入を増やす・支出を抑える')}}catch(e){dErr(e)}
   S.satI=SI;S.sat=cl(50+SI.reduce((a,i)=>a+i.v,0),0,100);
