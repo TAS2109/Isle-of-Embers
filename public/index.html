@@ -387,6 +387,7 @@ art:{n:'幹線道路',c:30,road:6,d:'渋滞への強さは道路の3.6倍。維�
 hwy:{n:'高速道路',c:45,road:3,d:'渋滞への強さは道路の5倍。維持費$3/月。沿道の地価-6。沿道の建物や一般道とは直接つながらない。一般道と交差する所は立体交差になり、乗り降りはインターチェンジ経由'},
 ich:{n:'インターチェンジ',c:140,road:7,d:'高速道路と一般道（道路・大通り・幹線道路）をつなぐ出入口。高速道路のマスの上に置くと差額だけで置き換えられ、その隣の一般道とつながる。建物とは接続しない。維持費$3.4/月・沿道の地価-6'},
 cem:{n:'墓地',c:120,up:2,pop:20,bur:400,d:'死者を埋葬する墓所（1基で約400区画。遺骨は1/4区画）。満杯になると遺体が溜まる。教会の支持+3。改築の上限なし（費用は上がり続けます）'},crem:{n:'火葬場',c:200,up:5,pop:40,cre:120,d:'1基で月約120体を火葬する。改築の上限なし（費用は上がり続けます）'},gas:{n:'ガス火力発電所',c:500,up:20,pop:300,pwr:80,r:3,lv:-6,d:'電力+80。周囲の地価-6'},
+wplus:{n:'広域資源循環センター',c:20000,up:200,pop:4000,cap:40000,max:8,hp:0,d:'核融合炉級の最高級ごみ処理施設（最大8）。街全体のごみを、1基で約40000人分処理する。焼却灰や排気を出さず、周囲の地価も下がらず、大気汚染も出さない。改築すると能力が上がる。極めて高価な大都市向け'},
 aqua:{n:'広域水循環センター',c:20000,up:200,pop:4000,cap:30000,max:8,d:'核融合炉級の巨大水道施設（最大8）。内陸に建てられ、1基で取水・排水ともに約30000人分を一括で担う。水質汚濁は出ず、汚濁の影響も受けない。改築すると能力が上がる。極めて高価な大都市向け'},
 fusion:{n:'核融合炉',c:20000,up:200,pop:4000,pwr:1500,max:8,d:'電力+1500。極めて高価な大都市向けの巨大電源（最大8）'},
 subway:{n:'地下鉄駅',c:600,up:12,pop:1500,tr:30,r:4,lv:4,d:'渋滞を大幅に緩和（道路約30本分）・周囲の地価+4'},
@@ -405,7 +406,7 @@ const LVR={r:[0,0,0,30],q:[0,0,0,35,45],h:[0,0,0,40,50,60,70],l:[0,0,50,55,60,65
 const isR=z=>z=='r'||z=='q'||z=='h'||z=='l'; const zb=z=>isR(z)?'r':z,zv=z=>1;
 const ageOf=()=>S.age||(S.age={y:.2,w:.65,e:.15}),WKR=()=>{const a=ageOf();return a.w*1.05+a.e*.1};
 
-var SV=[],SVG=null,SVT=0;const SVK={fire:['fire'],police:['pstation'],amb:['clinic','hosp'],garb:['waste']},SVL={fire:16,police:20,amb:18,garb:40};
+var SV=[],SVG=null,SVT=0;const SVK={fire:['fire'],police:['pstation'],amb:['clinic','hosp'],garb:['waste','wplus']},SVL={fire:16,police:20,amb:18,garb:40};
 function svDispatch(type,tx,ty){if(!S||SV.length>=28||typeof TLc==='undefined')return null;const G=S.g,M=W*H,ks=SVK[type];
  const accN=(x,y)=>{let best=-1,br=0;for(const[a,b]of NB){const n=at(x+a,y+b);if(n&&n.r&&n.r!=3&&n.r!=7&&RK[n.r]>br){br=RK[n.r];best=(y+b)*W+x+a}}return best};
  const src=accN(tx,ty);if(src<0)return null;const st=new Map();
@@ -434,7 +435,7 @@ function svFx(x0,x1,y0,y1){const now=aT(),dt=Math.min(.1,Math.max(0,(now-SVT)/10
   else{const ox=(dy>0?-off:off)*1.05;R(bc,cx+ox-2.6,cy-5,5.2,10);if(c.k=='amb')R('#d63a2a',cx+ox-2,cy-1,4,2);if(c.k=='police')R('#2f4a73',cx+ox-2.6,cy-5,5.2,4);if(c.k=='garb')R('#3f6d28',cx+ox-2.6,cy-5,5.2,4);R(lc,cx+ox-3.4,cy-1,1.6,2.6)}
   if(c.ph==1&&c.k=='fire'&&fl){const ty2=(P[P.length-1]/W|0)*T+T/2,tx2=(P[P.length-1]%W)*T+T/2;O('#7fd8ff',tx2+(Math.random()-.5)*8,ty2-4-Math.random()*5,1.6,.9)}}
  SV=SV.filter(c=>!c.done)}
-function garbStep(){if(!S||S.pop<40)return;const nw=tiles().filter(t=>t.b=='waste').length;if(!nw)return;const Rz=tiles().map((t,i)=>({t,x:i%W,y:Math.floor(i/W)})).filter(o=>isR(o.t.z)&&o.t.lv>=2&&!o.t.ab);if(!Rz.length)return;for(let i=0;i<Math.min(4,nw+1);i++){const o=Rz[Math.floor(Math.random()*Rz.length)];svDispatch('garb',o.x,o.y)}}
+function garbStep(){if(!S||S.pop<40)return;const nw=tiles().filter(t=>t.b=='waste'||t.b=='wplus').length;if(!nw)return;const Rz=tiles().map((t,i)=>({t,x:i%W,y:Math.floor(i/W)})).filter(o=>isR(o.t.z)&&o.t.lv>=2&&!o.t.ab);if(!Rz.length)return;for(let i=0;i<Math.min(4,nw+1);i++){const o=Rz[Math.floor(Math.random()*Rz.length)];svDispatch('garb',o.x,o.y)}}
 function svModal(){const n=S.svn||{},f=S.svf||{},p=k=>n[k]?Math.round(f[k]/n[k]*100)+'%':'―',ad=[];
  if(n.fire&&f.fire/n.fire<.7)ad.push('消防車の到着が遅れています。消防署を増やすか、道路の渋滞を減らしましょう');
  if(n.police&&f.police/n.police<.7)ad.push('パトカーの到着が遅れています。警察署を近くに建てるか、道路を整備しましょう');
@@ -591,7 +592,7 @@ let PTG=new Set(),SRC=new Set();
 function buildPO(){PO=new Set();const p=S.pol;if(p)for(const k in p)if(p[k]>=.5)PO.add(+k)}
 function polStep(){S.pol=S.pol||{};const p=S.pol,nb=k=>{const x=k%W,y=(k/W)|0;return NB.some(([i,j])=>{const n=at(x+i,y+j);return n&&n.t=='s'&&(p[(y+j)*W+x+i]||0)>=.5})};const up=[];for(const k of PTG){if(SRC.has(k)||nb(k))up.push(k)}for(const k in p){if(!PTG.has(+k)){p[k]-=.04;if(p[k]<=0)delete p[k]}}for(const k of up)p[k]=Math.min(1,(p[k]||0)+.2);buildPO()}
 function recalcWater(){recalcWater0();buildPO()}
-function recalcWater0(){let a=0,b=0,wc=0;const G=S.g;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=G[y][x];if(t.b=='intake'||t.b=='well'||t.b=='purify')a+=D[t.b].cap*gm(t);else if(t.b=='outfall')b+=D[t.b].cap*gm(t);else if(t.b=='sewage'){b+=D[t.b].cap*gm(t);a+=D[t.b].cap*gm(t)*.7}else if(t.b=='aqua'){a+=D.aqua.cap*gm(t);b+=D.aqua.cap*gm(t)}else if(t.b=='waste')wc+=D.waste.cap*gm(t)}
+function recalcWater0(){let a=0,b=0,wc=0;const G=S.g;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=G[y][x];if(t.b=='intake'||t.b=='well'||t.b=='purify')a+=D[t.b].cap*gm(t);else if(t.b=='outfall')b+=D[t.b].cap*gm(t);else if(t.b=='sewage'){b+=D[t.b].cap*gm(t);a+=D[t.b].cap*gm(t)*.7}else if(t.b=='aqua'){a+=D.aqua.cap*gm(t);b+=D.aqua.cap*gm(t)}else if(t.b=='waste')wc+=D.waste.cap*gm(t);else if(t.b=='wplus')wc+=D.wplus.cap*gm(t)}
  {const e=bEff('water');a*=e;b*=e;wc*=e}S.wcap=[Math.round(a),Math.round(b)];S.wsc=Math.round(wc);S.gs=S.pop<40?1:Math.min(1,wc/Math.max(1,wdem(S.pop)*.9));S.wdm=wdem(S.pop);S.ws=Math.min(1,Math.min(a,b)/Math.max(1,S.wdm*.9));
  PTG=new Set();SRC=new Set();const q=[],dist={};for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=G[y][x];if(t.b!='outfall')continue;const rad=3+Math.min(3,gr(t));for(const[i,j]of NB){const n=at(x+i,y+j);if(n&&n.t=='s'){const k=(y+j)*W+x+i;if(!(k in dist)||dist[k]<rad){dist[k]=rad;q.push([x+i,y+j,rad]);SRC.add(k)}}}}
  while(q.length){const[x,y,r]=q.shift();if(dist[y*W+x]>r)continue;PTG.add(y*W+x);if(r<=1)continue;for(const[i,j]of NB){const n=at(x+i,y+j);if(n&&n.t=='s'){const k=(y+j)*W+x+i;if(!(k in dist)||dist[k]<r-1){dist[k]=r-1;q.push([x+i,y+j,r-1])}}}}}
@@ -750,6 +751,7 @@ outfall(x,y){R('#7a828b',x+6,y+14,18,14);P('#6b5a3a',x+4,y+14,x+15,y+7,x+26,y+14
 land(x,y){R('#4a90d9',x+3,y+20,30,12);R('#6fb36a',x+3,y+8,30,12);R('#8a6d4b',x+3,y+20,30,2);P('#ffd24a',x+18,y+26,x+24,y+30,x+12,y+30)},
 dig(x,y){R('#6fb36a',x+3,y+8,30,12);R('#4a90d9',x+9,y+14,18,14);R('#fff',x+12,y+18,8,1.5);P('#c0392b',x+18,y+30,x+24,y+25,x+12,y+25)},
 raze(x,y){P('#8a8378',x+3,y+32,x+16,y+6,x+33,y+32);P('#a49d90',x+16,y+6,x+22,y+17,x+12,y+17);R('#c0392b',x+15,y+14,3,14);R('#c0392b',x+9,y+20,15,3)},
+wplus(x,y){R('#555',x+3,y+27,30,4);R('#dfe8dc',x+6,y+14,24,14);R('#8fb88a',x+6,y+12,24,3);R('#2e8b57',x+9,y+17,6,8);R('#2e8b57',x+21,y+17,6,8);R('#4fd08a',x+16,y+18,4,10);O('#fff',x+18,y+10,3);ctx.strokeStyle='#2e8b57';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(x+18,y+10,6,0,7);ctx.stroke()},
 waste(x,y){R('#6f7d6c',x+9,y+14,18,17);R('#8fa08b',x+9,y+14,18,2);R('#566453',x+7,y+10,22,4);R('#566453',x+15,y+7,6,4);for(let i=0;i<3;i++)R('#566453',x+13+i*5,y+18,1.5,10);P('#4caf50',x+18,y+20,x+21,y+25,x+15,y+25)},
 hosp(x,y){R('#f5f5f0',x+4,y+9,28,22);R('#d5dbe1',x+4,y+9,28,3);R('#c0392b',x+16,y+13,4,12);R('#c0392b',x+12,y+17,12,4);for(let i=0;i<3;i++){WN(x+7+i*0,y+13+i*6,'#9ecbea');WN(x+26,y+13+i*6,'#9ecbea')}R('#4a90d9',x+15,y+26,6,5)},
 lib(x,y){R('#d9c7a8',x+4,y+14,28,17);P('#8a5a2b',x+2,y+14,x+18,y+6,x+34,y+14);for(let i=0;i<4;i++)R('#fff',x+7+i*7,y+16,3,13);R('#8a6d4b',x+3,y+29,30,3);R('#4a90d9',x+14,y+9,8,3);R('#c0392b',x+15,y+9,2,3)},
@@ -983,7 +985,7 @@ function rebel(){S.lastRb=S.m;sfx('warn');const p=cl(.25+S.f.mil/200+Math.min(cn
  modal('反乱軍が蜂起しました','支持を失った民衆と一部の兵士が武装し、街の外れで決起しました。\n\n放っておくと施設が襲撃されます。どう対処しますか？\n\n軍の支持、衛兵詰所、軍司令部があると、鎮圧しやすくなります。',o)}
 const CT=[['road','交通',['lane','road','treeway','avenue','art','hwy','ich','depot'],'交通：小道・道路・並木道・大通り・幹線道路・高速道路・インターチェンジ、路面電車、バス車庫、地下鉄'],
 ['zr','区画',['zr','zq','zh','zl','zc','zi','za'],'区画：住宅・商業・工業・農業の区画を、道路沿いに塗って作ります'],
-['pw','インフラ',['pw','solar','wind','gas','fusion','intake','outfall','well','purify','sewage','aqua','waste'],'インフラ：電力を作る施設と、取水場・排水場（海に隣接）・井戸・浄水場・下水処理場（内陸OK）・ごみ処理場'],
+['pw','インフラ',['pw','solar','wind','gas','fusion','intake','outfall','well','purify','sewage','aqua','waste','wplus'],'インフラ：電力を作る施設と、取水場・排水場（海に隣接）・井戸・浄水場・下水処理場（内陸OK）・ごみ処理場'],
 ['hosp','公共',['clinic','hosp','cem','crem','school','hs','univ','vocat','lib','mkt','theater','museum','conf','lab'],'公共：医療・教育・文化・市場など、住民の暮らしを支える施設'],
 ['port','産業',['farmc','fish','whs','proc','logi','port','mine','spa','bank','hotel','themepark','casino','airport'],'産業：農業・漁業・資源・金融・観光でお金を稼ぐ施設'],
 ['fire','防災軍事',['eew','tower','wall','fire','pstation','obs','vent','dsc','guard','barracks','academy','fort','missile','navy','battery','hq','radio'],'防災軍事：溶岩・噴火・地震への備えと、軍・治安・放送の施設'],
@@ -993,7 +995,7 @@ const VWI={lv:['地価','緑＝地価が高い／赤＝低い（住宅・商業�
 function setView(v){VIEW=v;VCm.clear();VCt=0;if(v)TOV=false;$('info').textContent=v?'情報ビュー【'+VWI[v][0]+'】'+VWI[v][1]+'　色で状況を確認できます。詳しく見たいときは「調べる」を押してタップしてください':'情報ビューを解除しました';draw();tools()}
 function viewMenu(){const o=Object.keys(VWI).map(k=>[(VIEW==k?'✔ ':'')+VWI[k][0]+'　'+VWI[k][1].split('／')[0],()=>setView(k)]);o.push(['交通量（渋滞図）',()=>{setView(null);TOV=true;TD=1;recalcTraffic();$('info').textContent=trafficInfo();draw();tools()}]);if(VIEW||TOV)o.push(['ビューを解除',()=>{TOV=false;setView(null)}]);o.push(['閉じる']);modal('情報ビュー','問題のある場所を色で確認できます',o)}
 function vcv(x,y,f){const n=performance.now();if(n-VCt>900){VCm.clear();VCt=n}const k=y*W+x;let v=VCm.get(k);if(v===undefined){v=f();VCm.set(k,v)}return v}
-const VWG='#1fd16b',VWR='#ff3b30',VWO_='#ff9f0a',VSRC={med:['clinic','hosp'],edu:['school','hs','univ','vocat'],waste:['waste'],water:['intake','well','aqua'],noise:['airport','casino','stadium','arena','port','pw'],air:['pw','waste','port'],crime:['pstation']};
+const VWG='#1fd16b',VWR='#ff3b30',VWO_='#ff9f0a',VSRC={med:['clinic','hosp'],edu:['school','hs','univ','vocat'],waste:['waste','wplus'],water:['intake','well','aqua'],noise:['airport','casino','stadium','arena','port','pw'],air:['pw','waste','port'],crime:['pstation']};
 const NSB={airport:26,casino:5,stadium:8,arena:5,port:6,pw:6},NSR=[0,6,12,22,2,4,17,20];
 function noiseInfo(x,y){let r=0,ind=0,fac=0;for(let j=-3;j<=3;j++)for(let i=-3;i<=3;i++){const q=at(x+i,y+j);if(!q)continue;const f=[1,.75,.45,.2][Math.max(Math.abs(i),Math.abs(j))];
   if(q.r)r+=(NSR[q.r]||0)*f*.45*(.5+.8*Math.min(1.2,TL[(y+j)*W+x+i]||0));
@@ -1972,7 +1974,7 @@ function showDeath(){const t=S.dth||{},nc=Object.keys(S.g.flat().reduce((a,q)=>{
 var BDEPT=[
  ['road','道路','道路の維持費。交通容量（渋滞への強さ）に影響',[]],
  ['power','電力','発電所の維持費。発電量に影響',['pw','solar','wind','gas','fusion','sun']],
- ['water','水道・ごみ','取水・排水・ごみ処理施設の維持費。処理能力に影響',['intake','outfall','well','purify','sewage','aqua','waste']],
+ ['water','水道・ごみ','取水・排水・ごみ処理施設の維持費。処理能力に影響',['intake','outfall','well','purify','sewage','aqua','waste','wplus']],
  ['health','医療','診療所・病院。医療の満足度と死亡率に影響',['clinic','hosp']],
  ['edu','教育','小中学校・高校・大学・専門学校・図書館。教育の満足度に影響',['school','hs','vocat','univ','lib']],
  ['police','警察','警察署。治安に影響',['pstation']],
