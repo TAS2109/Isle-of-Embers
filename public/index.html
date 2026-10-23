@@ -599,7 +599,7 @@ function migW(){if(!(S&&S.g))return;let cv=0;for(let y=0;y<H;y++)for(let x=0;x<W
  if(cv)setTimeout(()=>{try{log('浄水場は廃止されました。取水場に置き換え（海に隣接しない分は撤去・返金）。排水場も建設してください')}catch(e){}},500);recalcWater()}
 // ===== 交通シミュレーション：通勤・買い物の移動を道路網に流して渋滞を計算 =====
 let VIEW=null,VCm=new Map(),VCt=0;
-let TL=new Float32Array(W*H),TLc=new Float32Array(W*H),TRT=[],TRC=[],CARS=[],TD=1,TOV=false,TLAST=0,TG=null,CT0=0,TKF=3.4;
+let TL=new Float32Array(W*H),TLc=new Float32Array(W*H),TRT=[],TRC=[],CARS=[],TD=1,TOV=false,TLAST=0,TG=null,CT0=0,TKF=4.6;
 const RSPD=[0,1,1.6,2.6,.7,1.2,2.1,2.4],RCAP=[0,1,2.4,5,.5,1.4,3.6,4.6],RK=[0,2,4,7,1,3,6,7.5],RKEY=['','road','avenue','hwy','lane','treeway','art','ich'],RUP=[0,.5,1.4,3,.25,.8,2.1,3.4],RLV=[0,0,-2,-6,3,5,-4,-6];
 function hpush(h,k,v){h.k.push(k);h.v.push(v);let i=h.k.length-1;while(i>0){const p=(i-1)>>1;if(h.k[p]<=h.k[i])break;[h.k[p],h.k[i]]=[h.k[i],h.k[p]];[h.v[p],h.v[i]]=[h.v[i],h.v[p]];i=p}}
 function hpop(h){const k=h.k[0],v=h.v[0],lk=h.k.pop(),lv=h.v.pop();if(h.k.length){h.k[0]=lk;h.v[0]=lv;let i=0;const n=h.k.length;for(;;){let l=2*i+1,r=l+1,m=i;if(l<n&&h.k[l]<h.k[m])m=l;if(r<n&&h.k[r]<h.k[m])m=r;if(m==i)break;[h.k[m],h.k[i]]=[h.k[i],h.k[m]];[h.v[m],h.v[i]]=[h.v[i],h.v[m]];i=m}}return[k,v]}
@@ -624,8 +624,8 @@ function recalcTraffic(){TD=0;TLAST=Date.now();const G=S.g,M=W*H,rdv=new Uint8Ar
   for(const[src,o]of O){dist.fill(Infinity);par.fill(-1);dist[src]=cost[src];const h={k:[],v:[]};hpush(h,dist[src],src);
    while(h.k.length){const[d,i]=hpop(h);if(d>dist[i])continue;const x=i%W,y=(i/W)|0;for(const[a,b]of NB){const nx=x+a,ny=y+b;if(nx<0||ny<0||nx>=W||ny>=H)continue;const j=ny*W+nx;if(!rdv[j])continue;{const ri=rdv[i],rj=rdv[j];if((ri==3&&rj!=3&&rj!=7)||(rj==3&&ri!=3&&ri!=7))continue}const nd=d+cost[j];if(nd<dist[j]){dist[j]=nd;par[j]=i;hpush(h,nd,j)}}}
    for(const[kind,mp,amt]of[[0,dW,o.c],[1,dS,o.s],[2,dI,o.f1||0],[3,dC,o.f2||0],[4,dSc,o.sc||0]]){if(!(amt>0))continue;if(first){if(kind==0)totC+=amt;else if(kind==1)totS+=amt;else if(kind==4)totSc+=amt;else totF+=amt}const c=[];for(const[nd,w]of mp){const d=dist[nd];if(d===Infinity)continue;c.push([nd,w/Math.pow(1+d/3,2)])}
-    if(!c.length){if(first&&(kind<2||kind==4))unmet+=amt;continue}c.sort((p,q)=>q[1]-p[1]||p[0]-q[0]);const top=c.slice(0,4),tot=top.reduce((s,q)=>s+q[1],0);if(first){if(kind==0)okC+=amt;else if(kind==1)okS+=amt}
-    for(const[nd,sc]of top){const f=amt*sc/tot,p=[];for(let i=nd;i!=-1;i=par[i])p.push(i);p.reverse();for(const i of p)load[i]+=f;routes.push({p,w:f/KIT,k:kind})}}}
+    if(!c.length){if(first&&(kind<2||kind==4))unmet+=amt;continue}c.sort((p,q)=>q[1]-p[1]||p[0]-q[0]);const top=c.slice(0,6),tot=top.reduce((s,q)=>s+q[1],0);if(first){if(kind==0)okC+=amt;else if(kind==1)okS+=amt}
+    for(const[nd,sc]of top){const f=amt*sc/tot*(.75+.25*cl((dist[nd]-2)/8)),p=[];for(let i=nd;i!=-1;i=par[i])p.push(i);p.reverse();for(let q=0;q<p.length;q++)load[p[q]]+=f*((q==0||q==p.length-1)?.35:1);routes.push({p,w:f/KIT,k:kind})}}}
   for(let i=0;i<M;i++)avg[i]+=(load[i]-avg[i])/(it+1)}
  let sumL=0,del=0,jam=0,mx=0;
  for(let i=0;i<M;i++){if(!rdv[i]){TL[i]=0;TLc[i]=0;continue}const L=avg[i]*scl,ra=L/capK[i];TL[i]=ra;TLc[i]=.5*TLc[i]+.5*ra;sumL+=L;del+=L*cl((ra-.7)/.9,0,1);if(ra>1)jam++;if(ra>mx)mx=ra}
