@@ -316,8 +316,10 @@ zh:{n:'高層住宅区',c:70,z:'h',pop:150,d:'超高層の集合住宅（最大L
 zl:{n:'高級住宅区',c:90,z:'l',pop:120,d:'人数は少ないが税収が高く、資本家の支持も上がる（最大Lv4）。地価50以上で成長'},
 pw:{n:'地熱発電所',c:200,up:6,geo:1,d:'山か火口に隣接して建設。電力+12。火山の怒りが上がる'},
 clinic:{n:'診療所',c:90,up:4,r:4,d:'範囲4。農民の支持が上がり、住宅が育ちやすくなる'},
-school:{n:'学校',c:100,up:4,d:'住宅が育ちやすくなる'},
-shrine:{n:'祠',c:80,up:2,d:'教会の支持が上がり、火山の怒りが鎮まる'},
+school:{n:'小中学校',c:100,up:4,r:4,seat:2000,er:4,d:'定員2,000人（6〜14歳）。通学圏4マス。住宅が育ちやすくなる'},
+
+hs:{n:'高校',c:200,up:6,pop:40,r:5,lv:4,seat:1800,er:8,d:'定員1,800人（15〜17歳）。通学圏8マス。地価+4'},
+shrine:{n:'祠',c:80,up:2,r:4,d:'範囲4。教会の支持が上がり、火山の怒りが鎮まる'},
 tower:{n:'見張り台',c:70,up:3,r:3,sh:3,d:'周囲3マスを溶岩流から守る'},
 barracks:{n:'兵舎',c:100,up:5,d:'軍の支持が上がる。選挙で支持率が足りないとき、「調整」に使える'},
 palace:{n:'大統領宮殿',c:300,up:6,one:1,d:'支持率+6（1つだけ）'},
@@ -331,8 +333,10 @@ port:{n:'港',c:160,up:3,port:1,max:2,pop:15,d:'海に隣接して建設。収�
 park:{n:'公園',c:60,up:1,r:3,d:'範囲3。地価+18・工房の公害を半減'},
 depot:{n:'バス車庫',c:120,up:6,pop:25,d:'渋滞を緩和（道路約10本分）'},
 tram:{n:'路面電車',c:90,up:3,tr:6,d:'渋滞を緩和（道路約6本分）'},
-hosp:{n:'病院',c:260,up:9,pop:40,r:6,hp:2,fm:4,lv:10,d:'範囲6。地価+10・農民+4・支持率+2'},
-univ:{n:'大学',c:320,up:12,pop:60,max:8,mo:60,cp:3,hp:1,lv:8,d:'収益$60・資本家+3・地価+8（最大8）'},
+hosp:{n:'病院',c:260,up:9,pop:40,r:4,hp:2,fm:4,lv:10,d:'範囲4。地価+10・農民+4・支持率+2'},
+univ:{n:'大学',c:320,up:12,pop:60,max:8,r:4,mo:60,cp:3,hp:1,lv:8,seat:3000,er:12,d:'定員3,000人（18〜21歳の進学者）。通学圏12マス。収益$60・資本家+3・地価+8（最大8）'},
+
+vocat:{n:'専門学校',c:150,up:4,pop:60,r:4,lv:3,seat:1000,er:10,d:'定員1,000人（18〜19歳の進学者）。通学圏10マス。地価+3'},
 lib:{n:'図書館',c:110,up:3,pop:20,r:3,hp:1,lv:6,d:'範囲3。地価+6・支持率+1'},
 mkt:{n:'市場',c:120,up:2,pop:10,mo:40,fd:4,d:'収益$40（要電力）・食料+4'},
 theater:{n:'劇場',c:150,up:4,pop:25,r:3,hp:2,lv:5,d:'範囲3。支持率+2・地価+5'},
@@ -345,10 +349,10 @@ mine:{n:'採掘場',c:240,up:7,pop:30,geo:1,max:3,mo:140,hp:-1,ang:.8,r:3,lv:-12
 spa:{n:'温泉リゾート',c:230,up:6,pop:35,geo:1,max:3,mo:80,hp:2,r:3,lv:6,d:'山に隣接。収益$80・支持率+2（最大3）'},
 bank:{n:'銀行',c:280,up:8,pop:45,max:3,mo:110,cp:4,d:'収益$110・資本家+4（最大3）'},
 hotel:{n:'ホテル',c:200,up:6,pop:35,mo:90,r:3,lv:4,d:'収益$90・地価+4'},
-themepark:{n:'遊園地',c:380,up:12,pop:55,max:2,mo:130,hp:2,r:6,lv:5,d:'収益$130・支持率+2（最大2）'},
+themepark:{n:'遊園地',c:380,up:12,pop:55,max:2,mo:130,hp:2,r:4,lv:5,d:'収益$130・支持率+2（最大2）'},
 airport:{n:'空港',c:700,up:22,pop:80,max:1,mo:320,tr:4,cp:5,r:4,lv:-8,d:'収益$320・資本家+5。周囲の地価-8（1つだけ）'},
 wall:{n:'溶岩防壁',c:60,up:1,sh:1,d:'周囲1マスを溶岩流から守る'},
-fire:{n:'消防署',c:100,up:4,pop:12,sh:2,r:6,hp:1,d:'範囲6。火災を防ぐ（範囲外では火災で建物が焼ける）。周囲2マスを溶岩流から守る・支持率+1'},
+fire:{n:'消防署',c:100,up:4,pop:12,sh:2,r:4,hp:1,d:'範囲4。火災を防ぐ（範囲外では火災で建物が焼ける）。周囲2マスを溶岩流から守る・支持率+1'},
 obs:{n:'火山観測所',c:180,up:6,pop:20,geo:1,max:2,ang:-1.5,d:'山に隣接。火山の怒り-1.5/月・噴火までの猶予が1か月増える（最大2）'},
 vent:{n:'ガス抜き坑',c:160,up:3,pop:15,geo:1,max:4,ang:-1.2,d:'山に隣接。地下のガスを抜いて、火山の怒り-1.2/月（最大4）'},
 guard:{n:'衛兵詰所',c:120,up:5,pop:15,max:4,ml:3,d:'軍+3・反乱軍の鎮圧に有利（最大4）'},
@@ -375,14 +379,14 @@ academy:{n:'士官学校',c:800,up:25,pop:200,max:3,ml:4,d:'軍+4・防衛力+30
 fort:{n:'要塞',c:1500,up:40,pop:500,max:4,ml:2,d:'軍+2・防衛力+55（最大4）。改築の上限なし（費用は上がり続けます）'},
 missile:{n:'対艦ミサイル基地',c:3500,up:60,pop:5000,max:6,ml:1,d:'防衛力+80（上陸地点から10マス以内。遠いと半分）・軍+1（最大6）。改築の上限なし（費用は上がり続けます）'},
 navy:{n:'海軍基地',c:5000,up:80,pop:8000,max:3,ml:2,port:1,d:'海に隣接して建てる。防衛力+70・軍+2（最大3）。改築の上限なし（費用は上がり続けます）'},
-pstation:{n:'警察署',c:120,up:5,pop:150,r:6,hp:1,d:'範囲6。治安が良くなる（範囲外の住宅は治安への不満が出る。人口300以上）・支持率+1'},
+pstation:{n:'警察署',c:120,up:5,pop:150,r:4,hp:1,d:'範囲4。治安が良くなる（範囲外の住宅は治安への不満が出る。人口300以上）・支持率+1'},
 waste:{n:'ごみ処理場',c:150,up:5,pop:25,cap:1500,hp:0,d:'範囲はなく、街全体のごみを処理する。1基で約1500人分（改築で増える）。処理能力が足りないと住宅が育たず、満足度が下がる。周囲2マスの地価-4'},
 eew:{n:'地震速報局',c:220,up:6,pop:30,r:6,hp:1,d:'範囲6。地震の被害を大きく減らし、緊急地震速報も出る'},
 avenue:{n:'大通り',c:18,road:2,d:'渋滞への強さは道路の2.4倍。維持費$1.4/月。交通量が多く、沿道の地価-2。既存の道路の上に引くと、差額だけでアップグレードできる。海には橋として架けられる'},
 art:{n:'幹線道路',c:30,road:6,d:'渋滞への強さは道路の3.6倍。維持費$2.1/月。大通りと高速道路の中間。沿道の地価-4'},
 hwy:{n:'高速道路',c:45,road:3,d:'渋滞への強さは道路の5倍。維持費$3/月。沿道の地価-6。沿道の建物や一般道とは直接つながらない（インターチェンジ経由でつなぐ）'},
 ich:{n:'インターチェンジ',c:140,road:7,d:'高速道路と一般道（道路・大通り・幹線道路）をつなぐ出入口。高速道路のマスの上に置くと差額だけで置き換えられ、その隣の一般道とつながる。建物とは接続しない。維持費$3.4/月・沿道の地価-6'},
-cem:{n:'墓地',c:120,up:2,pop:20,bur:400,lv:-2,d:'死者を埋葬する墓所（1基で約400区画。遺骨は1/4区画）。満杯になると遺体が溜まる。改築の上限なし（費用は上がり続けます）'},crem:{n:'火葬場',c:200,up:5,pop:40,cre:120,lv:-5,d:'1基で月約120体を火葬する。改築の上限なし（費用は上がり続けます）'},gas:{n:'ガス火力発電所',c:500,up:20,pop:300,pwr:80,r:3,lv:-6,d:'電力+80。周囲の地価-6'},
+cem:{n:'墓地',c:120,up:2,pop:20,bur:400,r:2,lv:-2,d:'死者を埋葬する墓所（1基で約400区画。遺骨は1/4区画）。満杯になると遺体が溜まる。周囲2マスの地価-2・教会の支持+3。改築の上限なし（費用は上がり続けます）'},crem:{n:'火葬場',c:200,up:5,pop:40,cre:120,r:3,lv:-5,d:'1基で月約120体を火葬する。周囲3マスの地価-5。改築の上限なし（費用は上がり続けます）'},gas:{n:'ガス火力発電所',c:500,up:20,pop:300,pwr:80,r:3,lv:-6,d:'電力+80。周囲の地価-6'},
 fusion:{n:'核融合炉',c:20000,up:200,pop:4000,pwr:1500,max:8,d:'電力+1500。極めて高価な大都市向けの巨大電源（最大8）'},
 subway:{n:'地下鉄駅',c:600,up:12,pop:1500,tr:30,r:4,lv:4,d:'渋滞を大幅に緩和（道路約30本分）・周囲の地価+4'},
 monu:{n:'大統領記念塔',c:6000,up:80,pop:10000,max:1,post:1,hp:8,ml:8,rl:4,d:'【10万人到達後】支持率+8・軍+8・教会+4。島のシンボル（1つだけ）'},
@@ -494,11 +498,11 @@ function lineFx(x0,x1,y0,y1){const Ls=S.lines||[];if(!Ls.length&&!LD)return;cons
  for(const L of Ls){const c=lnPts(L),sub=L.type=='subway';strokeP(c.p,L.col,sub,sub?2.4:3);L.stops.forEach(n=>stop(n,L.col));
   const T0=LTY[L.type],nv=L.veh,span=c.len*2;for(let k=0;k<nv;k++){const u=(now*T0.spd+k*span/nv)%span,d=u<c.len?u:span-u;let j=1;while(j<c.cum.length-1&&c.cum[j]<d)j++;const q0=c.p[j-1],q1=c.p[j],sg=(c.cum[j]-c.cum[j-1])||1,f=Math.max(0,Math.min(1,(d-c.cum[j-1])/sg)),x=q0[0]+(q1[0]-q0[0])*f,y=q0[1]+(q1[1]-q0[1])*f;ctx.globalAlpha=sub?.7:1;R(L.col,x-4.5,y-2.4,9,4.8);R('#fff',x-2.5,y-1.2,5,2.4);ctx.globalAlpha=1}}
  if(LD&&LD.path.length){const col=LCOL[((S.lnid|0))%8];strokeP(LD.path.map(n=>[(n%W+.5)*T,((n/W|0)+.5)*T]),col,LD.type=='subway',3);LD.stops.forEach(n=>stop(n,col))}}
-function popModal(){const a=ageOf(),P=S.pop,p=v=>Math.round(v*100)+'%',n=v=>Math.round(v),enr=S.enr==null?.5:S.enr,wk=S.wk||0,jb=S.jb||0,ad=[];
- if(a.y>.26)ad.push('子どもが多い社会です。学校・大学を増やしましょう');if(enr<.6&&a.y>.1)ad.push('通学できない子どもがいます。住宅地の近くに学校を建てましょう（就学率が下がると生産性も落ちます）');
+function popModal(){const a=ageOf(),P=S.pop,p=v=>Math.round(v*100)+'%',n=v=>Math.round(v),enr=S.enr==null?.5:S.enr,wk=S.wk||0,jb=S.jb||0,ad=[],E=eduCalc(),eu=EDK.map(k=>{const q=E.t[k];return EDN[k]+'（'+EDAGE[k]+'）　在学 '+fmt(q.en)+'人／定員 '+fmt(q.cap)+'人（'+q.n+'校・希望者 '+fmt(q.dem)+'人）'});
+ if(a.y>.26)ad.push('子どもが多い社会です。小中学校の定員に余裕を持たせましょう');if(enr<.6&&a.y>.1)ad.push('小中学校に通えない子どもがいます。定員が足りないか、通学圏の外に住宅があります（就学率が下がると生産性も落ちます）');for(const k of EDK)if(k!='school'&&P>=EDREQ[k]&&E.t[k].rate<.8)ad.push(E.t[k].cap<E.t[k].dem*.95?EDN[k]+'の定員が足りません。建てるか、改築しましょう':EDN[k]+'の通学圏の外に住民がいます。住宅地の近くに建てましょう');
  if(a.e>.2)ad.push('高齢化が進んでいます。診療所・病院で医療を手厚くしましょう');if(jb&&wk>jb*1.1)ad.push('働き手に対して職場が足りません。商業区・工房区・農地区を増やしましょう');else if(jb&&wk<jb*.9)ad.push('職場に対して働き手が足りません。住宅を増やしましょう');
  if((S.cok==null?1:S.cok)<.9)ad.push('職場や学校に行けない住民がいます。道路をつなぎましょう');
- modal('人口構成・通勤通学','人口 '+fmt(P)+'人\n子ども（〜14歳） '+fmt(n(P*a.y))+'人（'+p(a.y)+'）\n現役（15〜64歳） '+fmt(n(P*a.w))+'人（'+p(a.w)+'）\n高齢者（65歳〜） '+fmt(n(P*a.e))+'人（'+p(a.e)+'）\n\n【通勤】\n労働力 '+fmt(wk)+'人／職場の定員 '+fmt(jb)+'人\n通勤できる割合 '+p(S.cok==null?1:S.cok)+'\n\n【通学】\n通学する子ども '+fmt(S.stu|0)+'人（就学率 '+p(enr)+'）\n学校に通う子どもが多いほど、商業・工房の生産性が上がります（現在 ×'+(Math.round((.94+.12*enr)*100)/100)+'）\n\n'+(ad.join('\n')||'年齢構成は安定しています。'),[['閉じる']])}
+ modal('人口構成・通勤通学','人口 '+fmt(P)+'人\n子ども（〜14歳） '+fmt(n(P*a.y))+'人（'+p(a.y)+'）\n現役（15〜64歳） '+fmt(n(P*a.w))+'人（'+p(a.w)+'）\n高齢者（65歳〜） '+fmt(n(P*a.e))+'人（'+p(a.e)+'）\n\n【通勤】\n労働力 '+fmt(wk)+'人／職場の定員 '+fmt(jb)+'人\n通勤できる割合 '+p(S.cok==null?1:S.cok)+'\n\n【通学（定員制）】\n'+eu.join('\n')+'\n\n小中学校に通う子どもが多いほど、商業・工房の生産性が上がります（就学率 '+p(enr)+'・現在 ×'+(Math.round((.94+.12*enr)*100)/100)+'）\n\n'+(ad.join('\n')||'年齢構成は安定しています。'),[['閉じる']])}
 const fmt=n=>{n=Math.round(n);const a=Math.abs(n);return a>=1e8?(n/1e8).toFixed(1)+'億':a>=1e4?(n/1e4).toFixed(1)+'万':String(n)};
 const EDX=()=>{let c=0;if(S&&S.ed)for(const k in ED)if(ED[k].x&&S.ed[k])c+=ED[k].cost*EK();return c},TXC=()=>S.taxC??9,TXI=()=>S.taxI??9;
 const BIGF=()=>Math.max(0,(S?S.pop:0)-5000)/5000,cm=()=>1+Math.max(0,S.pop-100)/4000+1.5*BIGF(),EK=()=>Math.pow(cm(),.8);
@@ -605,7 +609,7 @@ function recalcTraffic(){TD=0;TLAST=Date.now();const G=S.g,M=W*H,rdv=new Uint8Ar
  const acc=(x,y)=>{let best=-1,br=0;for(const[a,b]of NB){const n=at(x+a,y+b);if(n&&n.r&&n.r!=3&&n.r!=7&&RK[n.r]>br){br=RK[n.r];best=(y+b)*W+x+a}}return best};
  const O=new Map(),dW=new Map(),dS=new Map(),dI=new Map(),dC=new Map(),dSc=new Map(),AGE=ageOf(),CF=WKR()/.7*(1-.55*(S.pxs||0)),AYF=AGE.y/.2,og=nd=>{let o=O.get(nd);if(!o){o={c:0,s:0,f1:0,f2:0};O.set(nd,o)}return o},FR=Math.max(.5,1-.12*lgc),add=(m,k,v)=>m.set(k,(m.get(k)||0)+v);let homeTW=0;
  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=G[y][x];if(t.b=='mkt'){const nd=acc(x,y);if(nd>=0)add(dS,nd,3*gm(t))}
-  if(t.b=='school'||t.b=='univ'){const nd=acc(x,y);if(nd>=0)add(dSc,nd,(t.b=='univ'?4:3)*gm(t))}
+  if(t.b=='school'||t.b=='hs'||t.b=='univ'||t.b=='vocat'){const nd=acc(x,y);if(nd>=0)add(dSc,nd,(t.b=='univ'?4:t.b=='vocat'?2:3)*gm(t))}
   if(!t.z||!(t.lv>0)||t.ab)continue;const nd=acc(x,y);if(nd<0)continue;const z=t.z,l=t.lv;
   if(isR(z)){const o=og(nd);o.c+=TW[l]*.6*CF;o.s+=TW[l]*.3*(1-.4*(S.pxs||0));o.sc=(o.sc||0)+TW[l]*.25*AYF;homeTW+=TW[l]}
   else{if(z=='a'){add(dW,nd,LM[l]*3);og(nd).f1+=LM[l]*1.2*FR}else if(z=='c'){add(dW,nd,LM[l]*4);add(dS,nd,LM[l]*4);add(dC,nd,LM[l]*4)}else if(z=='i'){add(dW,nd,LM[l]*5);add(dI,nd,LM[l]*3);og(nd).f2+=LM[l]*1.5*FR}}}
@@ -675,6 +679,33 @@ function lvv(x,y){let v=50;for(const k of['clinic','school','shrine'])if(covered
  let rl=0;for(const[a,b]of NB){const t=at(x+a,y+b);if(t&&t.r)rl+=RLV[t.r]||0}v+=cl(rl,-8,8);if(S.ed){if(S.ed.noise)v+=3;if(S.ed.night)v-=2}{let wn=0;for(let j=-2;j<=2&&!wn;j++)for(let i=-2;i<=2;i++){const t=at(x+i,y+j);if(t&&t.b=='waste'){wn=1;break}}if(wn)v-=4}return cl(v,0,100)}
 const UNL=new Set(['intake','well','purify','sewage','cem','crem','conf','lab','dsc','megapark','academy','fort','missile','navy']);
 const gr=t=>(t.bl|0)||1,gm=t=>WTR.has(t.b)?1+.8*(gr(t)-1):UNL.has(t.b)?1+.5*(gr(t)-1):([1,1.5,2][gr(t)-1]||1),um=t=>UNL.has(t.b)?1+.3*(gr(t)-1):([1,1.3,1.6][gr(t)-1]||1);migW();
+
+/* ===== 学校（定員制）：小中学校・高校・大学・専門学校 ===== */
+const EDK=['school','hs','univ','vocat'],EDN={school:'小中学校',hs:'高校',univ:'大学',vocat:'専門学校'},EDAGE={school:'6〜14歳',hs:'15〜17歳',univ:'18〜21歳の進学者',vocat:'18〜19歳の進学者'},EDREQ={school:30,hs:400,univ:800,vocat:1200};
+const edM=t=>1+.5*(gr(t)-1),edCap=t=>Math.round(D[t.b].seat*edM(t)),edReach=t=>D[t.b].er+(gr(t)>=3?1:0),edPer=(k,a)=>k=='school'?a.y*.6:k=='hs'?a.w*.058:k=='univ'?a.w*.04:a.w*.01;
+let _edL=null,_edT=0;
+function edList(){const n=performance.now();if(_edL&&_edL.g===S.g&&n-_edT<400)return _edL.a;const a=[];for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=S.g[y]&&S.g[y][x];if(t&&t.b&&D[t.b]&&D[t.b].seat)a.push({x,y,t,k:t.b})}_edL={g:S.g,a};_edT=n;return a}
+function eduNear(x,y){const o={};for(const k of EDK)o[k]={d:1e9,ok:false,r:D[k].er};for(const s of edList()){const d=Math.max(Math.abs(s.x-x),Math.abs(s.y-y)),q=o[s.k];if(d<q.d)q.d=d;if(d<=edReach(s.t))q.ok=true}return o}
+function edTags(x,y){const n=eduNear(x,y),r=[];for(const k of EDK){if(k!='school'&&S.pop<EDREQ[k])continue;r.push([EDN[k],n[k].ok])}return r}
+function edProbs(x,y){if(S.pop<30)return[];const n=eduNear(x,y),r=[];for(const k of EDK){if(k!='school'&&S.pop<EDREQ[k])continue;if(n[k].ok)continue;r.push(n[k].d>=1e9?EDN[k]+'がありません':EDN[k]+'が遠すぎます（最寄りまで'+n[k].d+'マス・通学圏は'+n[k].r+'マス）')}return r}
+/* 住宅ごとの対象者を、近い学校から順に定員の範囲で割り当てる。通学圏の外・定員超過の人は通えない */
+function eduCalc(){const a=ageOf(),P=S.pop,res=[],sch=[];let capR=0;
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=S.g[y]&&S.g[y][x];if(!t)continue;
+  if(t.z&&isR(t.z)&&t.lv>0&&!t.ab){if(conn(x,y)){const c=CAPR[t.z][t.lv]||0;if(c){capR+=c;res.push({x,y,c})}}}
+  else if(t.b&&D[t.b]&&D[t.b].seat)sch.push({x,y,t,k:t.b,cap:edCap(t),reach:edReach(t),en:0})}
+ const occ=capR?Math.min(1,P/capR):0,TT={};let qs=0,qw=0;
+ for(const k of EDK){const ls=sch.filter(s=>s.k==k),pr=edPer(k,a),it=[];let dem=0,cap=0,en=0,ds=0,ws=0,ok=0;
+  for(const s of ls)cap+=s.cap;
+  for(const o of res){const p=o.c*occ*pr;if(p<=0)continue;dem+=p;let best=1e9;const cd=[];
+   for(const s of ls){const d=Math.max(Math.abs(s.x-o.x),Math.abs(s.y-o.y));if(d<best)best=d;if(d<=s.reach)cd.push([d,s])}
+   cd.sort((u,v)=>u[0]-v[0]);it.push({p,best,cd})}
+  it.sort((u,v)=>u.best-v.best);
+  for(const e of it){let need=e.p;for(const[d,s]of e.cd){if(need<=1e-9)break;const f=s.cap-s.en;if(f<=0)continue;const g=Math.min(f,need);s.en+=g;need-=g;en+=g}
+   if(ls.length){ds+=e.p*e.best/D[k].er;ws+=e.p;if(e.cd.length)ok+=e.p}}
+  TT[k]={n:ls.length,dem,cap,en,rate:dem>0?Math.min(1,en/dem):1,rc:ok>0?Math.min(1,en/ok):0};
+  if(ws>0){qs+=dem*(ds/ws);qw+=dem}}
+ return{t:TT,sch,q:qw>0?qs/qw:null,res:res.length}}
+
 function covered(k,x,y){const r=D[k].r;for(let j=-r-1;j<=r+1;j++)for(let i=-r-1;i<=r+1;i++){const t=at(x+i,y+j);if(t&&t.b==k&&((Math.abs(i)<=r&&Math.abs(j)<=r)||gr(t)>=3))return true}return false}
 const R=(c,x,y,w,h)=>{ctx.fillStyle=c;ctx.fillRect(x,y,w,h)};
 const P=(c,...p)=>{ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(p[0],p[1]);for(let i=2;i<p.length;i+=2)ctx.lineTo(p[i],p[i+1]);ctx.fill()};
@@ -713,6 +744,10 @@ waste(x,y){R('#6f7d6c',x+9,y+14,18,17);R('#8fa08b',x+9,y+14,18,2);R('#566453',x+
 hosp(x,y){R('#f5f5f0',x+4,y+9,28,22);R('#d5dbe1',x+4,y+9,28,3);R('#c0392b',x+16,y+13,4,12);R('#c0392b',x+12,y+17,12,4);for(let i=0;i<3;i++){WN(x+7+i*0,y+13+i*6,'#9ecbea');WN(x+26,y+13+i*6,'#9ecbea')}R('#4a90d9',x+15,y+26,6,5)},
 lib(x,y){R('#d9c7a8',x+4,y+14,28,17);P('#8a5a2b',x+2,y+14,x+18,y+6,x+34,y+14);for(let i=0;i<4;i++)R('#fff',x+7+i*7,y+16,3,13);R('#8a6d4b',x+3,y+29,30,3);R('#4a90d9',x+14,y+9,8,3);R('#c0392b',x+15,y+9,2,3)},
 univ(x,y){R('#c9b48f',x+3,y+19,30,12);R('#b09a72',x+12,y+9,12,22);P('#7a4a2b',x+11,y+9,x+18,y+2,x+25,y+9);O('#fff',x+18,y+14,3.4);R('#555',x+17.5,y+12,1,3);for(let i=0;i<2;i++){WN(x+6+i*5,y+23,'#9ecbea');WN(x+23+i*5,y+23,'#9ecbea')}R('#4a3a2a',x+16,y+25,4,6)},
+hs(x,y){R('#b5573c',x+3,y+17,30,14);R('#8f3f2b',x+3,y+17,30,2);R('#b5573c',x+13,y+7,10,11);P('#6b2f20',x+12,y+7,x+18,y+2,x+24,y+7);O('#fff',x+18,y+12,3);R('#555',x+17.5,y+10.5,1,2.5);for(let i=0;i<2;i++){WN(x+6+i*5,y+22,'#cfe8f7');WN(x+23+i*5,y+22,'#cfe8f7')}R('#4a3a2a',x+16,y+24,4,7)},
+
+vocat(x,y){R('#6f8fa3',x+4,y+14,28,17);R('#56768a',x+4,y+14,28,3);R('#dfe9ef',x+8,y+19,6,5);R('#dfe9ef',x+16,y+19,6,5);R('#dfe9ef',x+24,y+19,5,5);R('#4a3a2a',x+16,y+25,5,6);O('#e8a33a',x+10,y+9,4);O('#6f8fa3',x+10,y+9,1.6);R('#555',x+22,y+4,2,10);R('#e8a33a',x+24,y+4,7,4)},
+
 mkt(x,y){R('#e6d5b8',x+5,y+17,26,14);for(let i=0;i<5;i++)R(i%2?'#fff':'#c0392b',x+4+i*5.6,y+10,5.6,7);P('#c0392b',x+3,y+10,x+18,y+6,x+33,y+10);O('#e5533d',x+11,y+24,3);O('#8dc15a',x+18,y+24,3);O('#f1c40f',x+25,y+24,3);R('#8a5a2b',x+7,y+27,22,3)},
 theater(x,y){R('#8a3a4a',x+4,y+13,28,18);P('#c9a227',x+2,y+13,x+18,y+5,x+34,y+13);E('#f5e6c8',x+12.5,y+22,4,4.6);E('#f5e6c8',x+23.5,y+22,4,4.6);R('#8a3a4a',x+10.5,y+21,1.6,1.4);R('#8a3a4a',x+13.8,y+21,1.6,1.4);R('#8a3a4a',x+21.6,y+21,1.6,1.4);R('#8a3a4a',x+24.9,y+21,1.6,1.4);ctx.strokeStyle='#8a3a4a';ctx.lineWidth=1;ctx.beginPath();ctx.arc(x+12.5,y+24,1.8,0,Math.PI);ctx.stroke();ctx.beginPath();ctx.arc(x+23.5,y+25.4,1.8,Math.PI,0);ctx.stroke()},
 museum(x,y){R('#e8e0d0',x+4,y+14,28,16);P('#b8b0a0',x+2,y+14,x+18,y+5,x+34,y+14);for(let i=0;i<5;i++)R('#fff',x+6+i*5.6,y+15,3,13);R('#b8b0a0',x+3,y+28,30,2);R('#9a9284',x+2,y+30,32,2);O('#e6c84a',x+18,y+10,2)},
@@ -904,7 +939,7 @@ ART.mov=(x,y)=>{R('#d9a441',x+2,y+19,12,11);P('#8a5a2b',x+1,y+19,x+8,y+12,x+15,y
 const pkc=()=>1-.15*Math.min(3,(S.pk||{}).cheap|0),mvCost=k=>Math.max(10,Math.round(D[k].c*.3*pkc()*cmk(k)));
 function upgTap(x,y,t){const k=t.b,d=k&&D[k];if(!d||k=='wall')return say('改築できる建物をタップしてください');const g=gr(t);const ul=UNL.has(k)||!!S.cleared;if(g>=3&&!ul)return say(d.n+'は、Lv3が上限です。人口10万人に到達すると、Lv4以降に改築できます');
  const cc=Math.round(d.c*(ul?(g==1?.8:1.5*Math.pow(1.4,g-2)):(g==1?.8:1.5))*pkc()*cmk(k)),E=WTR.has(k)?[1+.8*(g-1),1+.8*g]:ul?[1+.5*(g-1),1+.5*g]:[1,1.5,2],U=ul||WTR.has(k)?[1+.3*(g-1),1+.3*g]:[1,1.3,1.6],ei=ul||WTR.has(k)?0:g-1;
- modal(`${d.n}　Lv${g} → Lv${g+1}`,`費用　$${fmt(cc)}\n効果　×${E[ei]} → ×${E[ei+1]}\n維持費　×${U[ei]} → ×${U[ei+1]}`+(g==2&&d.r?'\n効果範囲が1マス広がります':''),[[`$${fmt(cc)}で改築する`,()=>{if(t.b!=k)return;if(S.money<cc)return say('資金が足りません！');S.money-=cc;t.bl=g+1;sfx('build');burst(x*T+T/2,y*T+T/2,'#ffd24a',14);fx(x*T+T/2,y*T,'-$'+cc,'#ffd24a');xp(3);log(`${d.n}をLv${g+1}に改築した`)}],['やめる']])}
+ modal(`${d.n}　Lv${g} → Lv${g+1}`,`費用　$${fmt(cc)}\n効果　×${E[ei]} → ×${E[ei+1]}\n維持費　×${U[ei]} → ×${U[ei+1]}`+(d.seat?`\n定員　${fmt(d.seat*(1+.5*(g-1)))}人 → ${fmt(d.seat*(1+.5*g))}人`:'')+(g==2&&d.r?'\n効果範囲が1マス広がります':''),[[`$${fmt(cc)}で改築する`,()=>{if(t.b!=k)return;if(S.money<cc)return say('資金が足りません！');S.money-=cc;t.bl=g+1;sfx('build');burst(x*T+T/2,y*T+T/2,'#ffd24a',14);fx(x*T+T/2,y*T,'-$'+cc,'#ffd24a');xp(3);log(`${d.n}をLv${g+1}に改築した`)}],['やめる']])}
 function movTap(x,y,t){
  if(t.b){if(MV&&MV.x==x&&MV.y==y){MV=null;$('info').textContent='移設をやめました';return}if(D[t.b]&&t.b!='wall'){MV={x,y};sfx('tick');$('info').textContent=`${D[t.b].n}を選びました。移設先の空き地をタップしてください（費用 $${fmt(mvCost(t.b))}）。やめるときは、同じ建物をもう一度タップします`;return}return say('その建物は移設できません')}
  if(!MV)return say('先に、移設する建物をタップしてください');
@@ -924,16 +959,16 @@ function rebel(){S.lastRb=S.m;sfx('warn');const p=cl(.25+S.f.mil/200+Math.min(cn
 const CT=[['road','交通',['lane','road','treeway','avenue','art','hwy','ich','depot'],'交通：小道・道路・並木道・大通り・幹線道路・高速道路・インターチェンジ、路面電車、バス車庫、地下鉄'],
 ['zr','区画',['zr','zq','zh','zl','zc','zi','za'],'区画：住宅・商業・工業・農業の区画を、道路沿いに塗って作ります'],
 ['pw','インフラ',['pw','solar','wind','gas','fusion','intake','outfall','well','purify','sewage','waste'],'インフラ：電力を作る施設と、取水場・排水場（海に隣接）・井戸・浄水場・下水処理場（内陸OK）・ごみ処理場'],
-['hosp','公共',['clinic','hosp','cem','crem','school','univ','lib','mkt','theater','museum','conf','lab'],'公共：医療・教育・文化・市場など、住民の暮らしを支える施設'],
+['hosp','公共',['clinic','hosp','cem','crem','school','hs','univ','vocat','lib','mkt','theater','museum','conf','lab'],'公共：医療・教育・文化・市場など、住民の暮らしを支える施設'],
 ['port','産業',['farmc','fish','whs','proc','logi','port','mine','spa','bank','hotel','themepark','casino','airport'],'産業：農業・漁業・資源・金融・観光でお金を稼ぐ施設'],
 ['fire','防災軍事',['eew','tower','wall','fire','pstation','obs','vent','dsc','guard','barracks','academy','fort','missile','navy','battery','hq','radio'],'防災軍事：溶岩・噴火・地震への備えと、軍・治安・放送の施設'],
 ['palace','名所',['palace','statue','shrine','temple','arena','stadium','monu','space','sun','park','megapark','fount','tree','lookout','garden','lighthouse'],'名所：宮殿・像・神殿などの象徴と、公園・噴水・庭園などの景観']],MT=['upg','mov','land','dig','raze','bull','ins'];let ct=0;
 
-const VWI={lv:['地価','緑＝地価が高い／赤＝低い（住宅・商業区）'],water:['水道','緑＝水が届いている／赤＝水不足の住宅'],pol:['水質汚濁','赤い海＝汚濁域／赤い住宅＝病気・廃墟（取水場は汚濁域の外へ）'],med:['医療','緑＝診療所・病院の範囲内／赤＝範囲外の住宅'],edu:['教育','緑＝学校・大学の範囲内／赤＝範囲外の住宅'],waste:['ごみ','緑＝処理が間に合っている／赤＝処理能力が不足している住宅'],noise:['騒音','緑＝静か／橙＝やや騒がしい／赤＝騒がしい住宅（道路・工房・空港などが近い）。紫の枠＝騒音源'],air:['大気汚染','緑＝きれい／橙＝やや汚れている／赤＝汚染がひどい住宅（工房・地熱発電所・ごみ処理場が近い）。紫の枠＝汚染源。公園の範囲内では軽くなります'],crime:['治安','緑＝警察署の範囲内／橙＝範囲外／赤＝犯罪が発生中。青の枠＝警察署（人口300以上で治安が満足度に影響）']};
+const VWI={lv:['地価','緑＝地価が高い／赤＝低い（住宅・商業区）'],water:['水道','緑＝水が届いている／赤＝水不足の住宅'],pol:['水質汚濁','赤い海＝汚濁域／赤い住宅＝病気・廃墟（取水場は汚濁域の外へ）'],med:['医療','緑＝診療所・病院の範囲内／赤＝範囲外の住宅'],edu:['教育','緑＝小中学校の通学圏内／赤＝通学圏の外の住宅（学校が遠すぎる）'],waste:['ごみ','緑＝処理が間に合っている／赤＝処理能力が不足している住宅'],noise:['騒音','緑＝静か／橙＝やや騒がしい／赤＝騒がしい住宅（道路・工房・空港などが近い）。紫の枠＝騒音源'],air:['大気汚染','緑＝きれい／橙＝やや汚れている／赤＝汚染がひどい住宅（工房・地熱発電所・ごみ処理場が近い）。紫の枠＝汚染源。公園の範囲内では軽くなります'],crime:['治安','緑＝警察署の範囲内／橙＝範囲外／赤＝犯罪が発生中。青の枠＝警察署（人口300以上で治安が満足度に影響）']};
 function setView(v){VIEW=v;VCm.clear();VCt=0;if(v)TOV=false;$('info').textContent=v?'情報ビュー【'+VWI[v][0]+'】'+VWI[v][1]+'　土地・建物をタップすると、居住者・収支・問題点・医療やごみの到達状況を表示します':'情報ビューを解除しました';draw();tools()}
 function viewMenu(){const o=Object.keys(VWI).map(k=>[(VIEW==k?'✔ ':'')+VWI[k][0]+'　'+VWI[k][1].split('／')[0],()=>setView(k)]);o.push(['交通量（渋滞図）',()=>{setView(null);TOV=true;TD=1;recalcTraffic();$('info').textContent=trafficInfo();draw();tools()}]);if(VIEW||TOV)o.push(['ビューを解除',()=>{TOV=false;setView(null)}]);o.push(['閉じる']);modal('情報ビュー','問題のある場所を色で確認できます',o)}
 function vcv(x,y,f){const n=performance.now();if(n-VCt>900){VCm.clear();VCt=n}const k=y*W+x;let v=VCm.get(k);if(v===undefined){v=f();VCm.set(k,v)}return v}
-const VWG='#1fd16b',VWR='#ff3b30',VWO_='#ff9f0a',VSRC={med:['clinic','hosp'],edu:['school','univ'],waste:['waste'],water:['intake','well'],noise:['airport','casino','stadium','arena','port','pw'],air:['pw','waste','port'],crime:['pstation']};
+const VWG='#1fd16b',VWR='#ff3b30',VWO_='#ff9f0a',VSRC={med:['clinic','hosp'],edu:['school','hs','univ','vocat'],waste:['waste'],water:['intake','well'],noise:['airport','casino','stadium','arena','port','pw'],air:['pw','waste','port'],crime:['pstation']};
 const NSB={airport:40,casino:8,stadium:12,arena:8,port:10,pw:10},NSR=[0,6,12,22,2,4,17,20];
 function noiseInfo(x,y){let r=0,ind=0,fac=0;for(let j=-3;j<=3;j++)for(let i=-3;i<=3;i++){const q=at(x+i,y+j);if(!q)continue;const f=[1,.75,.45,.2][Math.max(Math.abs(i),Math.abs(j))];
   if(q.r)r+=(NSR[q.r]||0)*f*(.6+Math.min(1.4,TL[(y+j)*W+x+i]||0));
@@ -957,7 +992,8 @@ function viewState(x,y,t){if(!VIEW||!t)return null;const z=t.z,hs=z&&t.lv>0&&!t.
  if(VIEW=='crime'){if(!(z&&t.lv>0&&!t.ab&&(isR(z)||z=='c')))return null;if(t.cr>0)return{col:VWR,sym:'x',ok:false,txt:'犯罪が発生しています（警察署を近くに建てる・取り締まり強化）'};const cv=!!vcv(x,y,()=>covered('pstation',x,y)?1:0);return cv?{col:VWG,sym:'o',ok:true,txt:'警察署の範囲内です（犯罪は検挙されやすく、早く収まります）'}:{col:VWO_,sym:'!',ok:null,txt:'警察署の範囲外です（犯罪が検挙されにくく、長引きます）'}}
  if(VIEW=='water'){if(hs&&S.pop>=25){const ok=!!wOK(x,y);return{col:ok?VWG:VWR,sym:ok?'o':'x',ok,txt:ok?'水道が届いています':'水道が届いていません（取水場・排水場を増やす）'}}return null}
  if(VIEW=='waste'){if(hs&&S.pop>=40){const ok=!!wsOK(x,y);return{col:ok?VWG:VWR,sym:ok?'o':'x',ok,txt:ok?'ごみ処理が間に合っています':'ごみ処理能力が足りません（ごみ処理場を増やす）'}}return null}
- if(hs&&(VIEW=='med'||VIEW=='edu')){const ks=VSRC[VIEW],ok=!!vcv(x,y,()=>ks.some(k=>covered(k,x,y))?1:0),nm=VIEW=='med'?'診療所・病院':'学校・大学';return{col:ok?VWG:VWR,sym:ok?'o':'x',ok,txt:ok?nm+'の範囲内です':nm+'の範囲外です'}}
+ if(hs&&VIEW=='med'){const ks=VSRC.med,ok=!!vcv(x,y,()=>ks.some(k=>covered(k,x,y))?1:0),nm='診療所・病院';return{col:ok?VWG:VWR,sym:ok?'o':'x',ok,txt:ok?nm+'の範囲内です':nm+'の範囲外です'}}
+ if(hs&&VIEW=='edu'){const n=vcv(x,y,()=>eduNear(x,y)),a=n.school,ex=EDK.filter(k=>k!='school'&&S.pop>=EDREQ[k]&&!n[k].ok).map(k=>EDN[k]);if(a.ok)return{col:VWG,sym:'o',ok:true,txt:'小中学校の通学圏内です（最寄りまで'+a.d+'マス）'+(ex.length?'。'+ex.join('・')+'は通学圏の外です':'')};return{col:VWR,sym:'x',ok:false,txt:a.d>=1e9?'小中学校がありません（学校が遠すぎる）':'小中学校の通学圏の外です（最寄りまで'+a.d+'マス・学校が遠すぎる）'}}
  return null}
 function viewBadge(s,px,py){const cx=px+12,cy=py+T-12;ctx.save();ctx.lineJoin='round';ctx.lineCap='round';ctx.fillStyle=s.col;ctx.strokeStyle='#fff';ctx.lineWidth=2;
  if(s.num!=null){const w=s.num>=100?28:22;ctx.fillRect(cx-w/2,cy-8,w,16);ctx.strokeRect(cx-w/2,cy-8,w,16);ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.8)';ctx.strokeText(s.num,cx,cy+.5);ctx.fillStyle='#fff';ctx.fillText(s.num,cx,cy+.5)}
@@ -1452,11 +1488,11 @@ function tick(){
  if(inc>0&&Math.random()<.05){const b=Math.round(inc);S.money+=b;fx(SCR,66,'臨時収入！ +$'+b,'#ffd24a');burst(SCR,60,'#ffd24a',20);sfx('coin')}
  if(S.streak>0&&S.streak%6==0){const b=S.streak*5;S.money+=b;log(`連続黒字${S.streak}か月ボーナス +$${b}`);fx(SCR,96,`連続黒字ボーナス +$${b}`,'#8fd3ff');sfx('coin')}
  const res=Z.filter(o=>isR(o.t.z)),wcv=S.ws,gcv=S.gs??1;S.wc=wcv;S.gc=gcv;const cov=k=>res.length?res.filter(o=>covered(k,o.x,o.y)).length/res.length:0,un=work?Math.max(0,work-jobs)/work:0,biz=sum('c',l=>l)+sum('i',l=>l),tx=S.tax-9;
- {const a=ageOf(),med=Math.max(cov('clinic'),cov('hosp')),sch=Math.max(cov('school'),cov('univ')),yrs=S.m/12,
+ {const a=ageOf(),med=Math.max(cov('clinic'),cov('hosp')),yrs=S.m/12,
   ty=cl(.10+.14*cl((S.hap-30)/60)+(S.food>fcons*2?.03:0),.08,.3),te=cl(.07+.07*med+.08*(1-Math.exp(-yrs/25)),.06,.28),lp=S.lpop==null?S.pop:S.lpop;
   if(S.pop>lp){const g=Math.min(.3,(S.pop-lp)/Math.max(1,S.pop));a.y=a.y*(1-g)+g*.12;a.e=a.e*(1-g)+g*.04}
   a.y+=(ty-a.y)*.02;a.e+=(te-a.e)*.02;a.y=cl(a.y,.05,.35);a.e=cl(a.e,.04,.32);a.w=1-a.y-a.e;S.lpop=S.pop;
-  const kids=S.pop*a.y,capS=N('school')*50+N('univ')*120,eT=Math.min(sch,kids>0?capS/kids:1);S.enr=S.enr==null?eT:S.enr+(eT-S.enr)*.15;S.stu=Math.round(kids*S.enr)}garbStep();
+  const E0=eduCalc(),eT=E0.t.school.rate;S.enr=S.enr==null?eT:S.enr+(eT-S.enr)*.15;S.stu=Math.round(E0.t.school.en)}garbStep();
  const tg={
   farm:45+Math.min(AG.fm,15)+(S.food>S.pop*2?15:S.food>0?0:-30)-un*20+cov('clinic')*12+(ed.ration?12:0)-(ml?10:0)-(ed.police?8:0)-SR()*120-tx*2.2-(S.trd&&S.trd.fx>0?3:0),
   cap:40+Math.min(AG.cp,15)+Math.min(10,luxPop/6)+Math.min(biz,8)*4+(pw>=1?4:-8)-tx*3+(ml?5:0)+(S.trd&&S.trd.gx>0?4:0)+Math.min(N('casino'),2)*6-(ed.police?5:0),
@@ -1491,7 +1527,9 @@ function tick(){
  if(S.qua&&S.dz)sa('quar',-1.5,'','隔離措置による行動制限','','隔離措置をOFFにする');
  if(S.pop>=300)sa('crime',satR(-5,1.5,covA(['pstation'])*bEff('police')*(ed.police?1:.9)+(ed.police?.15:0)),'治安が良い','治安が悪い','警察署のカバー率'+Math.round(covA(['pstation'])*100)+'%','警察署を住宅地の近くに建てる');
  if(S.pop>=150)sa('fire',satR(-3,1,covA(['fire'])*bEff('fire')),'消防が整っている','火災への不安','消防署のカバー率'+Math.round(covA(['fire'])*100)+'%','消防署を住宅地の近くに建てる');
- sa('edu',satR(S.pop>=30?-3:0,3,covA(['school','univ']))+(ed.school?2:0),'学校が整備されている','学校が足りない','カバー率'+Math.round(covA(['school','univ'])*100)+'%','学校・大学を住宅地の近くに建てる');
+ {const E=eduCalc(),EW={school:.5,hs:.25,univ:.15,vocat:.1},dt=[];let sw=0,sq=0;for(const k of EDK){if(S.pop<EDREQ[k])continue;const q0=E.t[k];sw+=EW[k];sq+=EW[k]*q0.rate;dt.push(EDN[k]+Math.round(q0.rate*100)+'%')}
+ sa('edu',satR(S.pop>=30?-3:0,3,cl((sw?sq/sw:1)*bEff('edu')))+(ed.school?2:0),'学校の定員が足りている','学校の定員が足りない','就学率　'+(dt.join('・')||'対象なし'),'学校を建てる・改築して定員を増やす（通学圏の外にいる人は通えません）');
+ if(S.pop>=30&&E.q!=null)sa('sdist',E.q<=.5?cl((.5-E.q)*8,0,2):E.q>=.75?-cl((E.q-.75)*5.3,0,4):0,'学校が近い','学校が遠すぎる','住宅から最寄りの学校までの平均距離は通学圏の'+Math.round(E.q*100)+'%（低いほど近い）','住宅地の近くに学校を建てる（遠い住宅地には小中学校を増やす）')}
  sa('med',satR(S.pop>=20?-3:0,3,covA(['clinic','hosp'])*bEff('health'))+(ed.health?2:0),'医療施設が整っている','医療施設が足りない','カバー率'+Math.round(covA(['clinic','hosp'])*100)+'%','診療所・病院を建てる');
  sa('env',cl((lvA-50)/6,-6,6),'街の環境が良い','街の環境が悪い','平均地価'+Math.round(lvA),'公園・噴水・並木を置く、工房や空港を住宅地から離す');
  if(PR>.5)sa('big',-cl((PR-.5)*HARD.sat,0,9),'','大国の統治負担','人口'+fmt(S.pop),'あらゆる公共サービスを充実させ、支持率を底上げする');
@@ -1746,16 +1784,16 @@ function tstat(x,y){const t=at(x,y);if(!t)return null;
   if(t.ab)R.prob.push(['bad','廃墟：汚染された水の病気で住民が去りました。取水場を汚濁域の外へ移すと復旧します']);
   else if(t.sick)R.prob.push(['bad','病気の住民が出ています。放置すると廃墟になります']);
   if(t.cr>0)R.prob.push(['bad','犯罪が発生しています（警察署を近くに建てる・取り締まり強化）']);const on=lv>0&&!t.ab&&c;
-  if(res){const cap=CAPR[z][lv]||0,rs=on?Math.round(cap*occ):0;R.pop.push(['居住者',rs+'人（定員'+cap+'人・入居率'+Math.round(occ*100)+'%）']);{const ag=ageOf(),en=S.enr==null?.5:S.enr;R.pop.push(['年齢構成','子ども'+Math.round(rs*ag.y)+'・現役'+Math.round(rs*ag.w)+'・高齢'+Math.round(rs*ag.e)+'人']);R.pop.push(['通勤・通学','働き手'+Math.round(rs*WKR())+'人が通勤／子ども'+Math.round(rs*ag.y*en)+'人が通学'])}
+  if(res){const cap=CAPR[z][lv]||0,rs=on?Math.round(cap*occ):0;R.pop.push(['居住者',rs+'人（定員'+cap+'人・入居率'+Math.round(occ*100)+'%）']);{const ag=ageOf(),en=S.enr==null?.5:S.enr;R.pop.push(['年齢構成','子ども'+Math.round(rs*ag.y)+'・現役'+Math.round(rs*ag.w)+'・高齢'+Math.round(rs*ag.e)+'人']);{const E=eduCalc(),nr=eduNear(x,y),e2=EDK.map(k=>nr[k].ok?Math.round(rs*edPer(k,ag)*E.t[k].rc):0);R.pop.push(['通勤・通学','働き手'+Math.round(rs*WKR())+'人が通勤／'+e2.reduce((u,v)=>u+v,0)+'人が通学（小中'+e2[0]+'・高校'+e2[1]+'・大学'+e2[2]+'・専門'+e2[3]+'）'])}}
    const tx=on?rs*S.tax*.04+(z=='l'?cap*S.tax*.06:0):0;R.rev.push(['住民税'+(z=='l'?'（高級住宅の上乗せ込み）':''),tx*mul]);
    R.pop.push(['地価',Math.round(lvv(x,y))+'（高いほど成長・税収に有利）']);if(lv>0){const nz=noiseInfo(x,y),ar=airInfo(x,y);R.pop.push(['騒音・大気汚染（推定）','騒音 '+Math.min(99,Math.round(nz.n))+'／大気 '+Math.min(99,Math.round(ar.n))+'（低いほど快適）'])}
-   const cv=k=>covered(k,x,y),sv=[['診療所・病院',cv('clinic')||cv('hosp')],['学校・大学',cv('school')||cv('univ')],['警察署',cv('pstation')],['消防署',cv('fire')],['公園',cv('park')],['祠',cv('shrine')]];
+   const cv=k=>covered(k,x,y),sv=[['診療所・病院',cv('clinic')||cv('hosp')],...edTags(x,y),['警察署',cv('pstation')],['消防署',cv('fire')],['公園',cv('park')],['祠',cv('shrine')]];
    R.tags=sv.concat(lv>0?[...(S.pop>=25?[['水道',!!wOK(x,y)]]:[]),...(S.pop>=40?[['ごみ処理',!!wsOK(x,y)]]:[]),['水質（汚濁域の外）',!nearPoll(x,y,2)]]:[]);
    if(lv>0){if(S.pop>=25&&!wOK(x,y))R.prob.push(['bad','水道が届いていません（取水場・排水場を増やす）']);
     if(lv>=4&&S.pop>=40&&!wsOK(x,y))R.prob.push(['bad','ごみ処理が追いついていません']);
     if(nearPoll(x,y,2))R.prob.push(['bad','水質汚濁域の近くにあります（住民の不満）']);
     if(!cv('clinic')&&!cv('hosp')&&S.pop>=20)R.prob.push(['warn','医療施設の範囲外です']);
-    if(!cv('school')&&!cv('univ')&&S.pop>=30)R.prob.push(['warn','学校の範囲外です']);
+    edProbs(x,y).forEach(m=>R.prob.push(['warn',m]));
     if(S.pop>=300&&!cv('pstation'))R.prob.push(['warn','警察署の範囲外です（治安）']);
     if(S.pop>=150&&!cv('fire'))R.prob.push(['warn','消防署の範囲外です']);
     let ind=0;for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const q=at(x+i,y+j);if(q&&q.z=='i'&&q.lv>0)ind++}if(ind)R.prob.push(['warn','工房が近くにあり、地価が下がっています（'+ind+'区画）'])}}
@@ -1776,12 +1814,13 @@ function tstat(x,y){const t=at(x,y);if(!t)return null;
   EF.forEach(([q,n,u])=>{if(d[q])R.eff.push([n,(d[q]*gmv>0?'+':'')+Math.round(d[q]*gmv*10)/10+u])});
   if(d.lv)R.eff.push(['地価（範囲内）',(d.lv>0?'+':'')+d.lv]);if(k=='pw'||d.pwr)R.eff.push(['電力の貯蔵容量','+'+Math.round((k=='pw'?12:d.pwr)*gmv*2)]);if(d.bur)R.eff.push(['墓所の容量',Math.round(d.bur*gmv)+'区画']);if(d.cre)R.eff.push(['火葬能力','月'+Math.round(d.cre*gmv)+'体']);
   if(k=='pw'){R.eff.push(['電力','+'+12*gmv]);R.eff.push(['火山の怒り','上がりやすくなる'])}
-  if(d.r){let n=0,tot=0;for(let j=-d.r-1;j<=d.r+1;j++)for(let i=-d.r-1;i<=d.r+1;i++){const q=at(x+i,y+j);if(q&&q.z&&isR(q.z)&&q.lv>0&&!q.ab){tot++;if((Math.abs(i)<=d.r&&Math.abs(j)<=d.r)||g>=3)n++}}
-   R.pop.push(['効果範囲','半径'+d.r+'マス（住宅'+n+'区画をカバー）']);if(!n)R.prob.push(['warn','範囲内に住宅がなく、効果が出ていません'])}
+  if(d.seat){const E=eduCalc(),me=E.sch.find(s=>s.x==x&&s.y==y),tp=E.t[k];if(me){R.pop.push(['定員',fmt(me.cap)+'人（Lv'+g+'）']);R.pop.push(['在学人数',fmt(me.en)+'人（定員の'+Math.round(me.en/me.cap*100)+'%）']);R.pop.push(['対象・通学圏',EDAGE[k]+'／半径'+me.reach+'マス']);R.pop.push([EDN[k]+'全体','在学'+fmt(tp.en)+'人／定員'+fmt(tp.cap)+'人・希望者'+fmt(tp.dem)+'人（'+tp.n+'校）']);if(me.en>=me.cap-.5)R.prob.push(['warn','定員いっぱいです。改築すると定員が増えます。別の場所に増設すると通学圏も広がります']);else if(me.en<.5&&S.pop>=30)R.prob.push(['warn','通学する人がいません。通学圏内に対象の住民がいないか、他の学校で足りています'])}}
+   if(d.r){let n=0,tot=0;for(let j=-d.r-1;j<=d.r+1;j++)for(let i=-d.r-1;i<=d.r+1;i++){const q=at(x+i,y+j);if(q&&q.z&&isR(q.z)&&q.lv>0&&!q.ab){tot++;if((Math.abs(i)<=d.r&&Math.abs(j)<=d.r)||g>=3)n++}}
+   R.pop.push([d.seat?'効果範囲（地価・成長）':'効果範囲','半径'+d.r+'マス（住宅'+n+'区画をカバー）']);if(!n&&!d.seat)R.prob.push(['warn','範囲内に住宅がなく、効果が出ていません'])}
   if(!R.pop.length)R.pop.push(['居住者','なし（住宅ではありません）']);
   if(k=='intake'&&nearPoll(x,y,1))R.prob.push(['bad','汚濁域に入った取水場です。市民が病気になります。排水場から離してください']);
   if(['casino','port','mkt','univ'].includes(k)&&pw<.8)R.prob.push(['bad','電力不足で収益が落ちています']);
-  if(up&&!R.rev.length&&!R.eff.length)R.prob.push(['warn','維持費だけがかかっています']);
+  if(up&&!d.seat&&!R.rev.length&&!R.eff.length)R.prob.push(['warn','維持費だけがかかっています']);
   if(!R.cost.length&&!R.rev.length)R.rev.push(['直接の収支',0])}
  else if(t.r){R.title=['','道路','大通り','高速道路','小道','並木道','幹線道路','インターチェンジ'][t.r];R.sub='座標 ('+x+','+y+')';const u=(RUP[t.r]??.5)*1.3*Math.sqrt(cm());R.cost.push(['維持費',u*bFac('road')]);const ra=TL[y*W+x]||0;R.eff.push(['交通量','容量の'+Math.round(ra*100)+'%']);R.pop.push(['居住者','なし']);if(ra>1.3)R.prob.push(['bad','渋滞しています。大通りなどへの格上げを検討しましょう'])}
  else return null;
@@ -1889,7 +1928,7 @@ var BDEPT=[
  ['power','電力','発電所の維持費。発電量に影響',['pw','solar','wind','gas','fusion','sun']],
  ['water','水道・ごみ','取水・排水・ごみ処理施設の維持費。処理能力に影響',['intake','outfall','well','purify','sewage','waste']],
  ['health','医療','診療所・病院。医療の満足度と死亡率に影響',['clinic','hosp']],
- ['edu','教育','学校・大学・図書館。教育の満足度と卒業の速さに影響',['school','hs','vocat','univ','lib']],
+ ['edu','教育','小中学校・高校・大学・専門学校・図書館。教育の満足度に影響',['school','hs','vocat','univ','lib']],
  ['police','警察','警察署。治安に影響',['pstation']],
  ['fire','消防','消防署。火災の鎮火率と消防の満足度に影響',['fire']],
  ['cult','文化・公園','公園・劇場・博物館・スタジアムなど。娯楽・文化の満足度に影響',['park','megapark','fount','tree','garden','lookout','theater','museum','stadium','arena']],
