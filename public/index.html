@@ -410,6 +410,13 @@ const ZC={r:'#4a90d9',q:'#3fb0a8',h:'#e0546e',l:'#e67ab0',a:'#d4b02a',c:'#a35cc9
 const ADM=()=>{try{return localStorage.getItem(KEY+'_adm')=='1'}catch(e){return false}};
 function admInit(){try{const q=location.search;if(/[?&]admin=0(&|$)/.test(q))localStorage.removeItem(KEY+'_adm');else if(/[?&]admin(=1)?(&|$)/.test(q)){localStorage.setItem(KEY+'_adm','1');log('管理者モードが有効です（メニューに「管理者モード」が出ます）')}}catch(e){}}
 const admUse=()=>{if(!S.adm){S.adm=1;log('管理者モードを使用しました（結果に印が付きます）')}};
+const admHash=s=>{let h=5381;for(const c of s)h=(Math.imul(h,33)^c.charCodeAt(0))>>>0;return h},ADMH=3821855823;let ADMOK=false;
+function admInput(title,msg,def,pw,cb){let o=document.getElementById('admd');if(o)o.remove();o=document.createElement('div');o.id='admd';o.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:10;padding:20px';o.innerHTML='<div style="background:var(--card);border-radius:12px;padding:20px;max-width:340px;width:100%;text-align:center"><h2 style="margin:0 0 8px"></h2><p style="margin:0 0 10px;font-size:13px;white-space:pre-wrap"></p><input style="width:100%;box-sizing:border-box;padding:10px;font-size:16px"><button style="display:block;width:100%;min-height:44px;margin-top:10px">OK</button><button style="display:block;width:100%;min-height:44px;margin-top:8px">やめる</button></div>';document.body.appendChild(o);o.querySelector('h2').textContent=title;o.querySelector('p').textContent=msg;const i=o.querySelector('input'),bs=o.querySelectorAll('button');i.type=pw?'password':'text';if(!pw)i.inputMode='decimal';i.value=def;const done=v=>{o.remove();cb(v)};bs[0].onclick=()=>done(i.value.trim());bs[1].onclick=()=>done(null);i.onkeydown=e=>{if(e.key=='Enter')done(i.value.trim())};setTimeout(()=>i.focus(),50)}
+function admGate(){if(ADMOK)return admMenu();admInput('管理者パスワード','パスワードを入力してください','',true,v=>{if(v==null)return;if(admHash(v)==ADMH){ADMOK=true;admMenu()}else{sfx('err');modal('パスワードが違います','',[['もう一度',admGate],['閉じる']])}})}
+const ADN={money:'資金',pop:'人口',food:'食料',hap:'支持率',anger:'火山の怒り',tax:'住民税率',taxC:'商業税率',taxI:'工業税率',m:'経過月数',peak:'最大人口',mpop:'最高人口',spd:'時間の速さ',lv:'国力Lv',xp:'国力XP','f.farm':'農民の支持','f.cap':'資本家の支持','f.mil':'軍の支持','f.rel':'教会の支持',sr:'兵の割合',enr:'就学率'};
+function admFlat(){const r=[],ok=v=>typeof v=='number'||typeof v=='boolean';for(const k in S){if(k=='g'||k=='sel'||k=='modal'||k=='v')continue;const v=S[k];if(ok(v))r.push([k,v]);else if(v&&typeof v=='object'&&!Array.isArray(v)&&!(v instanceof Set)){const ks=Object.keys(v);if(ks.length<=40)for(const q of ks)if(ok(v[q]))r.push([k+'.'+q,v[q]])}}return r}
+function admSet(k,v){const p=k.split('.');let o=S;for(let i=0;i<p.length-1;i++)o=o[p[i]];o[p[p.length-1]]=v;admUse();hud();draw()}
+function admList(pg){const a=admFlat(),N=10,pn=Math.max(1,Math.ceil(a.length/N));pg=Math.max(0,Math.min(pn-1,pg|0));const fv=v=>typeof v=='boolean'?(v?'ON':'OFF'):String(Math.round(v*100)/100),o=a.slice(pg*N,pg*N+N).map(([k,v])=>[(ADN[k]||k)+'：'+fv(v),()=>{if(typeof v=='boolean'){admSet(k,!v);admList(pg)}else admInput(ADN[k]||k,'現在の値：'+fv(v)+'\n新しい値を入力してください（数値）',String(v),false,s=>{if(s!=null&&s!==''&&isFinite(+s))admSet(k,+s);admList(pg)})}]);if(pg>0)o.push(['← 前のページ',()=>admList(pg-1)]);if(pg<pn-1)o.push(['次のページ →',()=>admList(pg+1)]);o.push(['← 管理者メニューに戻る',admMenu]);modal('すべての値を編集','全'+a.length+'項目（'+(pg+1)+'/'+pn+'ページ）\n項目をタップして値を変更します。変更は即座に反映されます',o)}
 function admMenu(){const on=v=>v?'ON':'OFF',A=f=>()=>{admUse();f();hud();draw();if(!S.modal&&!S.over)admMenu()};
  modal('管理者モード','資金 $'+fmt(S.money)+'／人口 '+fmt(S.pop)+'／'+(Math.floor(S.m/12)+1)+'年目'+(S.m%12+1)+'か月\n使うと結果に「管理者モード使用」の印が付きます（実績・ランキング・セーブは通常どおり記録されます）',[
  ['資金 +$10,000',A(()=>{S.money+=1e4})],['資金 +$1,000,000',A(()=>{S.money+=1e6})],
@@ -418,7 +425,8 @@ function admMenu(){const on=v=>v?'ON':'OFF',A=f=>()=>{admUse();f();hud();draw();
  ['支持率を100にする',A(()=>{S.hap=100})],
  ['全建造物を解禁：'+on(S.admUnl),A(()=>{S.admUnl=!S.admUnl;tools()})],
  ['建設費を無料に：'+on(S.admFree),A(()=>{S.admFree=!S.admFree})],
- ['管理者モードを無効にする',()=>{try{localStorage.removeItem(KEY+'_adm')}catch(e){}log('管理者モードを無効にしました（メニューから消えます）')}],
+ ['すべての値を編集（'+admFlat().length+'項目）',()=>admList(0)],
+ ['管理者モードを無効にする',()=>{ADMOK=false;try{localStorage.removeItem(KEY+'_adm')}catch(e){}log('管理者モードを無効にしました（メニューから消えます）')}],
  ['閉じる']])}
 /* ===== マイルストーン：人口の節目ごとに施設が解禁され、報酬が出る ===== */
 const MSU={0:'road lane zr za zc zi pw',15:'well intake outfall zcs',30:'clinic school mkt zik farmc fish park tree',60:'zq shrine fire waste whs treeway',100:'avenue pstation lib fount guard tower depot',150:'zh wind solar garden lighthouse vent obs eew purify',250:'theater hosp hs barracks radio cem logi',400:'zcm bank hotel zl statue arena proc tram port',600:'univ vocat zif museum spa mine casino temple art battery wall ich lookout',800:'zco stadium hq',1500:'zit airport themepark',2000:'hwy megapark'};
@@ -960,7 +968,7 @@ function showSL(){const o=[];
  o.push(['ファイルに書き出す（バックアップ）',()=>{exportSave();showSL()}],['ファイルから読み込む',()=>ask('セーブファイルを読み込みますか？\n（現在の島は、セーブしていない分が失われます）',importSave,'選ぶ')],['閉じる']);
  modal('セーブ／ロード','手動セーブは3スロット。現在の島は毎月オートセーブされ、「続きから」で再開できます。\nブラウザのデータを消すとセーブも消えるため、大切な島は「ファイルに書き出す」で保存してください。',o)}
 function menu(){const A=!S.over,o=[],n=Object.keys(ED).filter(k=>S.ed[k]).length;
- o.push(['セーブ／ロード',showSL]);o.push(['マイルストーン（人口の節目と報酬）',msModal]);if(ADM())o.push(['管理者モード',admMenu]);
+ o.push(['セーブ／ロード',showSL]);o.push(['マイルストーン（人口の節目と報酬）',msModal]);if(ADM())o.push(['管理者モード',admGate]);
  if(A){o.push(['政策・布告'+(n?'（'+n+'件ON）':''),menuPol]);o.push(['行動（パレード・粛清・鎮魂の儀・兵）',menuAct])}
  o.push(['財政・貿易（予算・融資・税率・取引）',menuFin],['人口構成・通勤通学',popModal],['緊急・サービス車両',svModal],['公共交通（路線・停留所）',transitMenu],['情報・統計（満足度・ビュー・派閥ほか）',menuInfo],['記録・成長（実績・ランキング・遺産）',menuRec],['設定・ヘルプ',menuSet],['新しい島へ（デイリー・最初から）',menuNew],['閉じる']);
  modal('メニュー','',o)}
