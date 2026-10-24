@@ -1600,12 +1600,13 @@ function mbMk(s,p){const m=s=='p'?30*(1+S.f.mil/200):s=='e'?26+Math.min(14,(S.in
 function mbObj(u){const r=Math.random();if(r<(u.s=='r'?.4:.5))return'g';let L=mbTiles(t=>(t.b&&t.b!='gov')||(t.z&&t.lv>0));if(u.s=='r'&&r<.7){const M2=L.filter(a=>MBMIL.includes(a[2].b));if(M2.length)L=M2}if(!L.length)return'g';let best=null,bd=1e9;for(let i=0;i<6;i++){const a=L[Math.floor(Math.random()*L.length)],d=Math.hypot(a[0]+.5-u.x,a[1]+.5-u.y);if(d<bd){bd=d;best=a}}return[best[0],best[1]]}
 function mbMove(u,tx,ty,dt){const dx=tx-u.x,dy=ty-u.y,d=Math.hypot(dx,dy)||1,st=Math.min(d,u.v*dt);let nx=u.x+dx/d*st,ny=u.y+dy/d*st;if(u.sd>0){u.sd-=dt;nx=u.x-dy/d*u.sg*st;ny=u.y+dx/d*u.sg*st}if(mbWalk(nx,ny)){u.x=nx;u.y=ny;return}if(mbWalk(nx,u.y)){u.x=nx;return}if(mbWalk(u.x,ny)){u.y=ny;return}u.sd=.8;u.sg=Math.random()<.5?1:-1}
 function mbKill(x,y){const t=at(x,y);if(!t||t.b=='gov')return;if(t.b||t.z){MB.lost++;burst(x*T+T/2,y*T+T/2,'#ff6a3a',12);MB.fx.push({ex:1,x1:x+.5,y1:y+.5,t:.5,l:.5})}t.ov=0;t.z=null;t.lv=0;t.b=null;t.bl=0;t.ab=0;t.sick=0;MB.bh.delete(y*W+x)}
+function mbDmg(x,y,d){const t=at(x,y);if(!t||!(t.b||t.z)||t.b=='gov')return;const k=y*W+x,h=(MB.bh.has(k)?MB.bh.get(k):mbBH(t))-d;MB.bh.set(k,h);if(h<=0)mbKill(x,y)}
 function mbStart(c,resume){if(MB||!S.gov)return;S.bt=c;const g=S.gov,df=mbDef(c.boost?c.boost:0);
  MB={c,u:[],sh:[],pr:[],fx:[],sq:[],t:0,last:aT(),lost:0,bh:new Map(),ar:{},al:null,alt:-9,ac:df.ac,ret:0,mc:0,mt:0};
  const src=mbTiles(t=>MBMIL.includes(t.b)).map(a=>[a[0],a[1]]);for(let i=0;i<=g.lv+1;i++)src.push([g.x,g.y]);
  for(let i=0;i<df.n;i++)MB.sq.push({s:'p',p:src[i%src.length],at:i*.3});
  let fx0,fy0;
- if(c.k=='inv'){fx0=c.lx;fy0=c.ly;const dir=c.lx>=c.sx?1:-1,hp=50+c.wave*8;for(let i=0;i<c.ships;i++)MB.sh.push({x:c.sx+.5-dir*i*26/T,y:c.sy+.5+(i%2?1:-1)*Math.ceil(i/2)*9/T,hp,m:hp,cd:1.5+Math.random()*2.5,seed:i*1.7,dir,sk:0});
+ if(c.k=='inv'){fx0=c.lx;fy0=c.ly;const pw=Math.max(.2,Math.min(1.5,c.str/Math.max(1,invDef(c)))),am=Math.max(3,Math.round((4+c.str/25)*Math.min(1,pw*1.3))),dir=c.lx>=c.sx?1:-1,hp=50+c.wave*8;for(let i=0;i<c.ships;i++)MB.sh.push({x:c.sx+.5-dir*i*26/T,y:c.sy+.5+(i%2?1:-1)*Math.ceil(i/2)*9/T,hp,m:hp,cd:1.5+Math.random()*2.5,seed:i*1.7,dir,sk:0,am});
   if(c.mode=='land'){const n=Math.max(4,Math.min(32,Math.round(c.str/8)));for(let i=0;i<n;i++)MB.sq.push({s:'e',p:[c.lx,c.ly],at:3+i*.35})}}
  else{fx0=c.rx;fy0=c.ry;for(let i=0;i<c.n;i++)MB.sq.push({s:'r',p:[c.rx,c.ry],at:1+i*.3})}
  if(!resume){sfx('warn');cam.x=VW/2-(fx0+.5)*T*cam.z;cam.y=VH*.4-(fy0+.5)*T*cam.z;clampCam();
@@ -1626,11 +1627,11 @@ function mbStep(dt){if(!MB||S.over)return;const g=S.gov,c=MB.c;MB.t+=dt;
  for(const u of U)if(u.hp<=0&&!u.dd){u.dd=1;burst(u.x*T,u.y*T,u.s=='p'?'#6fa8ff':'#ff6a4a',5)}
  MB.u=U.filter(u=>u.hp>0);
  for(const s of MB.sh){if(s.hp<=0){if(!s.dd){s.dd=1;burst(s.x*T,s.y*T,'#ffb050',16)}s.sk+=dt;continue}
-  s.cd-=dt;if(s.cd>0)continue;s.cd=(c.mode=='shell'?2.6:3.6)+Math.random()*1.4;
-  const L=mbTiles(t=>t.b||(t.z&&t.lv>0)),W2=[];let tot=0;for(const a of L){const d=Math.hypot(a[0]+.5-s.x,a[1]+.5-s.y);if(d>9.5)continue;const w=(a[2].b=='gov'?3:1)/(d+2);W2.push([a,w]);tot+=w}
-  if(W2.length){let r=Math.random()*tot,p=W2[0][0];for(const q of W2){r-=q[1];if(r<=0){p=q[0];break}}MB.pr.push({x1:s.x,y1:s.y-.3,x2:p[0]+.5,y2:p[1]+.5,t:0,T:.9+Math.random()*.3,tx:p[0],ty:p[1]})}}
+  s.cd-=dt;if(s.cd>0)continue;if(s.am<=0){s.hp=0;s.dd=1;s.fl=1;continue}s.cd=(c.mode=='shell'?2.6:3.6)+Math.random()*1.4;
+  const L=mbTiles(t=>t.b||(t.z&&t.lv>0)),W2=[];let tot=0;for(const a of L){const d=Math.hypot(a[0]+.5-s.x,a[1]+.5-s.y);if(d>6.5)continue;const w=(a[2].b=='gov'?3:1)/(d+2);W2.push([a,w]);tot+=w}
+  if(W2.length){s.am--;let r=Math.random()*tot,p=W2[0][0];for(const q of W2){r-=q[1];if(r<=0){p=q[0];break}}MB.pr.push({x1:s.x,y1:s.y-.3,x2:p[0]+.5,y2:p[1]+.5,t:0,T:.9+Math.random()*.3,tx:p[0],ty:p[1]})}}
  for(let i=MB.pr.length-1;i>=0;i--){const p=MB.pr[i];p.t+=dt;if(p.t<p.T)continue;MB.pr.splice(i,1);burst((p.tx+.5)*T,(p.ty+.5)*T,'#ff9a3a',12);MB.fx.push({ex:1,x1:p.tx+.5,y1:p.ty+.5,t:.5,l:.5});
-  for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const t=at(p.tx+dx,p.ty+dy);if(!t)continue;if(t.b=='gov'){g.hp-=(dx||dy)?6:16+(c.wave|0)*2;continue}if(!(t.b||(t.z&&t.lv>0)))continue;if(Math.random()<((dx||dy)?.3:.9))mbKill(p.tx+dx,p.ty+dy)}}
+  for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const t=at(p.tx+dx,p.ty+dy);if(!t)continue;if(t.b=='gov'){g.hp-=(dx||dy)?6:16+(c.wave|0)*2;continue}if(!(t.b||(t.z&&t.lv>0)))continue;mbDmg(p.tx+dx,p.ty+dy,(dx||dy)?10:30)}}
  if(MB.t-MB.alt>=1||!MB.al){MB.alt=MB.t;MB.al=mbTiles(t=>MBAR[t.b])}
  for(const[x,y,t]of MB.al){if(!MBAR[t.b])continue;const A=MBAR[t.b],key=x+','+y,cx=x+.5,cy=y+.5;MB.ar[key]=(MB.ar[key]===undefined?Math.random():MB.ar[key])-dt;if(MB.ar[key]>0)continue;
   const sh=MB.sh.filter(s=>s.hp>0&&Math.hypot(s.x-cx,s.y-cy)<=A.r),un=MB.u.filter(u=>u.s!='p'&&Math.hypot(u.x-cx,u.y-cy)<=A.r),pool=A.sh?(sh.length?sh:un):(un.length?un:sh);
