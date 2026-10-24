@@ -1006,9 +1006,20 @@ ART.vent=(x,y)=>{R('#7a828b',x+15,y+12,6,19);R('#5d6269',x+12,y+28,12,4);R('#9aa
 ART.upg=(x,y)=>{R('#d9a441',x+4,y+17,20,13);P('#8a5a2b',x+2,y+17,x+14,y+8,x+26,y+17);R('#5a3a1b',x+11,y+23,6,7);P('#2e8b57',x+29,y+3,x+35,y+11,x+23,y+11);R('#2e8b57',x+26.5,y+11,5,10)};
 ART.mov=(x,y)=>{R('#d9a441',x+2,y+19,12,11);P('#8a5a2b',x+1,y+19,x+8,y+12,x+15,y+19);ctx.globalAlpha=.45;R('#d9a441',x+22,y+19,12,11);P('#8a5a2b',x+21,y+19,x+28,y+12,x+35,y+19);ctx.globalAlpha=1;R('#d9622b',x+10,y+6,12,3);P('#d9622b',x+21,y+2,x+28,y+7.5,x+21,y+13)};
 const pkc=()=>1-.15*Math.min(3,(S.pk||{}).cheap|0),mvCost=k=>Math.max(10,Math.round(D[k].c*.3*pkc()*cmk(k)));
+/* 改築のまとめ操作：最大まで／同じ種類をまとめて（安い段階から順に、資金の範囲で） */
+const upgCap=k=>UNL.has(k)||S.cleared?6:3,upgCost=(k,g)=>{const d=D[k],ul=UNL.has(k)||!!S.cleared;return Math.round(d.c*(ul?(g==1?.8:1.5*Math.pow(1.4,g-2)):(g==1?.8:1.5))*pkc()*cmk(k))};
+function upgBulk(items,dry){let money=S.money,tot=0,n=0;const lv=new Map(items.map(o=>[o,gr(o.t)]));
+ for(;;){let best=null,bc=1e18;for(const o of items){const g=lv.get(o);if(g>=upgCap(o.t.b))continue;const c=upgCost(o.t.b,g);if(c<bc){bc=c;best=o}}if(!best||bc>money)break;money-=bc;tot+=bc;n++;lv.set(best,lv.get(best)+1)}
+ if(!dry&&n){for(const o of items){const g=lv.get(o);if(g>gr(o.t)){o.t.bl=g;burst(o.x*T+T/2,o.y*T+T/2,'#ffd24a',8)}}S.money-=tot;sfx('build');xp(Math.min(20,3*n));log('改築：'+n+'段階分、$'+fmt(tot)+'を使いました')}
+ return{n,tot}}
+function upgExtra(x,y,t){const k=t.b,r=[],one=[{t,x,y}],a=upgBulk(one,true);
+ if(a.n>1)r.push(['最大まで改築（'+a.n+'段階・$'+fmt(a.tot)+'）',()=>{if(t.b==k)upgBulk(one,false)}]);
+ const all=[];for(let j=0;j<H;j++)for(let i=0;i<W;i++){const q=at(i,j);if(q&&q.b==k)all.push({t:q,x:i,y:j})}
+ if(all.length>1){const b=upgBulk(all,true);if(b.n>0)r.push(['同じ種類'+all.length+'件をまとめて改築（'+b.n+'段階・$'+fmt(b.tot)+'）',()=>{upgBulk(all,false)}])}
+ return r}
 function upgTap(x,y,t){const k=t.b,d=k&&D[k];if(!d||k=='wall')return say('改築できる建物をタップしてください');const g=gr(t);const ul=UNL.has(k)||!!S.cleared;if(g>=3&&!ul)return say(d.n+'は、Lv3が上限です。人口10万人に到達すると、Lv4以降に改築できます');
  const cc=Math.round(d.c*(ul?(g==1?.8:1.5*Math.pow(1.4,g-2)):(g==1?.8:1.5))*pkc()*cmk(k)),E=WTR.has(k)?[1+.8*(g-1),1+.8*g]:ul?[1+.5*(g-1),1+.5*g]:[1,1.5,2],U=ul||WTR.has(k)?[1+.3*(g-1),1+.3*g]:[1,1.3,1.6],ei=ul||WTR.has(k)?0:g-1;
- modal(`${d.n}　Lv${g} → Lv${g+1}`,`費用　$${fmt(cc)}\n効果　×${E[ei]} → ×${E[ei+1]}\n維持費　×${U[ei]} → ×${U[ei+1]}`+(d.seat?`\n定員　${fmt(d.seat*(1+.5*(g-1)))}人 → ${fmt(d.seat*(1+.5*g))}人`:'')+(g==2&&d.r?'\n効果範囲が1マス広がります':''),[[`$${fmt(cc)}で改築する`,()=>{if(t.b!=k)return;if(S.money<cc)return say('資金が足りません！');S.money-=cc;t.bl=g+1;sfx('build');burst(x*T+T/2,y*T+T/2,'#ffd24a',14);fx(x*T+T/2,y*T,'-$'+cc,'#ffd24a');xp(3);log(`${d.n}をLv${g+1}に改築した`)}],['やめる']])}
+ const XB=upgExtra(x,y,t);modal(`${d.n}　Lv${g} → Lv${g+1}`,`費用　$${fmt(cc)}\n効果　×${E[ei]} → ×${E[ei+1]}\n維持費　×${U[ei]} → ×${U[ei+1]}`+(d.seat?`\n定員　${fmt(d.seat*(1+.5*(g-1)))}人 → ${fmt(d.seat*(1+.5*g))}人`:'')+(g==2&&d.r?'\n効果範囲が1マス広がります':''),[[`$${fmt(cc)}で改築する`,()=>{if(t.b!=k)return;if(S.money<cc)return say('資金が足りません！');S.money-=cc;t.bl=g+1;sfx('build');burst(x*T+T/2,y*T+T/2,'#ffd24a',14);fx(x*T+T/2,y*T,'-$'+cc,'#ffd24a');xp(3);log(`${d.n}をLv${g+1}に改築した`)}],...XB,['やめる']])}
 function movTap(x,y,t){
  if(t.b){if(MV&&MV.x==x&&MV.y==y){MV=null;$('info').textContent='移設をやめました';return}if(D[t.b]&&t.b!='wall'){MV={x,y};sfx('tick');$('info').textContent=`${D[t.b].n}を選びました。移設先の空き地をタップしてください（費用 $${fmt(mvCost(t.b))}）。やめるときは、同じ建物をもう一度タップします`;return}return say('その建物は移設できません')}
  if(!MV)return say('先に、移設する建物をタップしてください');
