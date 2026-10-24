@@ -1739,7 +1739,7 @@ function invDraw(){const I=S.inv,A=INVA;if(!I&&!A)return;const now=aT(),path=I?I
  if(A&&!A.won&&t>1700){for(let q=0;q<3;q++)O('rgba(60,60,60,.5)',lx+(q-1)*12+Math.sin(now/300+q)*3,ly-((now/40+q*20)%46),6+q,.5)}
 }
 function tick(){
- if(S.over||S.modal)return;S.m++;const PR=prs();recalcWater();polStep();recalcTraffic();S.peak=Math.max(S.peak|0,S.pop);milChk();fireStep();{const TR=Math.floor(PR);if(TR>(S.tier|0)){S.tier=TR;if(TR>=1){sfx('warn');log('人口が'+fmt(100*Math.pow(10,TR))+'人を超えた。国家規模の拡大で、行政負担・外敵と火山の脅威が増していく。')}}}
+ if(S.over||S.modal)return;S.m++;{let bad=null;for(const row of S.g)for(const q of row)if(q.b&&!D[q.b]){bad=q.b;q.b=null;q.bl=0;q.fp=null}if(bad)log('未知の建物「'+bad+'」を撤去しました（時間が止まる原因を取り除きました）')}const PR=prs();recalcWater();polStep();recalcTraffic();S.peak=Math.max(S.peak|0,S.pop);milChk();fireStep();{const TR=Math.floor(PR);if(TR>(S.tier|0)){S.tier=TR;if(TR>=1){sfx('warn');log('人口が'+fmt(100*Math.pow(10,TR))+'人を超えた。国家規模の拡大で、行政負担・外敵と火山の脅威が増していく。')}}}
  const A=tiles().map((t,i)=>({t,x:i%W,y:Math.floor(i/W)})),Z=A.filter(o=>o.t.z&&o.t.lv>0&&!o.t.ab),N=k=>A.filter(o=>o.t.b==k).reduce((s,o)=>s+gm(o.t),0);
  A.forEach(o=>{if(o.t.lava>0){o.t.lava--;if(o.t.lava==0)o.t.ash=1}});
  const AG={hp:0,fm:0,cp:0,ml:0,rl:0,mo:0,ang:0,fd:0,tr:0,pwr:0,rvd:0};A.forEach(o=>{const d=o.t.b&&D[o.t.b];if(d)for(const k in AG)if(d[k])AG[k]+=d[k]*gm(o.t)});
@@ -2190,7 +2190,7 @@ function rivalElect(){const r=rivalOf();if(S.m>0&&S.m%36==0&&r.sw==null)r.sw=Mat
 /* ===== 貿易・電力の貯蔵と輸出入（手動設定） ===== */
 function TR(){return S.tr||(S.tr={food:{m:0,a:30},goods:{m:0,a:30},power:{m:0,a:20}})}
 function tcapT(){let p=0;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=S.g[y][x];if(t.b=='port')p+=gm(t);else if(t.b=='navy')p+=1.5*gm(t)}return p*(40+S.pop*.15)}
-function powStore(){let s=0;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=S.g[y][x],b=t.b;if(!b)continue;const o=b=='pw'?12:(D[b].pwr||0);if(o)s+=o*gm(t)*2}return s}
+function powStore(){let s=0;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=S.g[y][x],b=t.b;if(!b)continue;const o=b=='pw'?12:((D[b]&&D[b].pwr)||0);if(o)s+=o*gm(t)*2}return s}
 function powTrade(cap,dem){
  const r=TR().power,k=Math.sqrt(cm()),tp=S.tp||1,pc=50+dem*.5,sc=powStore(),want=Math.max(0,r.a);
  let st=Math.min(S.bat||0,sc),imp=0,exp=0,ch=0,dis=0;
