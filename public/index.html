@@ -416,9 +416,10 @@ subway:{n:'地下鉄駅',c:600,up:12,pop:1500,tr:30,r:4,lv:4,d:'渋滞を大幅�
 monu:{n:'大統領記念塔',c:6000,up:80,pop:10000,max:1,post:1,hp:8,ml:8,rl:4,d:'【10万人到達後】支持率+8・軍+8・教会+4。島のシンボル（1つだけ）'},
 space:{n:'宇宙港',fp:[3,3],c:12000,up:150,pop:20000,max:1,post:1,mo:8000,cp:8,d:'【3×3マスの平地が必要】【10万人到達後】収益$8000/月（要電力）・資本家+8（1つだけ）'},
 sun:{n:'人工太陽',c:9000,up:100,pop:15000,max:1,post:1,pwr:4000,ang:-3,d:'【10万人到達後】電力+4000・火山の怒り-3/月（1つだけ）'},
-land:{n:'埋め立て',c:4500,pop:5000,ter:1,d:'【高額】陸に隣接した海マスを陸地にする。道路・橋・建物のない海のみ'},
-dig:{n:'掘削',c:3600,pop:5000,ter:1,d:'【高額】何もない平地を海に変える（海に隣接する場所のみ）。資源マスは失われる'},
-raze:{n:'山の破壊',c:5400,pop:5000,ter:1,d:'【高額】山を平地にする。火口は壊せない。山に隣接する採掘場・温泉・観測所が機能を失う場合は実行できない'},
+land:{n:'埋め立て',c:4500,pop:5000,ter:1,d:'【高額】陸に隣接した海マスを陸地にする。道路・橋・建物のない海のみ　【ドラッグ】PCは押したまま、スマホは長押ししてなぞると連続で実行できます'},
+dig:{n:'掘削',c:3600,pop:5000,ter:1,d:'【高額】何もない平地を海に変える（海に隣接する場所のみ）。資源マスは失われる　【ドラッグ】PCは押したまま、スマホは長押ししてなぞると連続で実行できます'},
+raze:{n:'山の破壊',c:5400,pop:5000,ter:1,d:'【高額】山を平地にする。火口は壊せない。山に隣接する採掘場・温泉・観測所が機能を失う場合は実行できない　【ドラッグ】PCは押したまま、スマホは長押ししてなぞると連続で実行できます'},
+mount:{n:'山の造成',c:5400,pop:5000,ter:1,d:'【高額】何もない平地を山にする（資源マスは不可）。山に隣接すると採掘場・温泉・観測所などが建てられる　【ドラッグ】PCは押したまま、スマホは長押ししてなぞると連続で実行できます'},
 none:{n:'選択なし',c:0,none:1,d:'何も建てず、ドラッグで画面を動かせます'},bull:{n:'撤去',c:0,d:'道路・区画・建物を撤去（返金なし）'},upg:{n:'改築',c:0,note:'建物を選択',d:'建物をタップしてグレードアップ（Lv3まで。人口10万人到達後は上限なし、費用は上がり続けます）。効果が大きくなる代わりに、維持費も増える'},mov:{n:'移設',c:0,note:'建物を選択',d:'移したい建物をタップし、次に空き地をタップして移す。費用は建設費の30%で、グレードは引き継ぐ'},ins:{n:'調べる',c:0,d:'建物や区画をタップすると、居住者・収支・問題点を確認できます'}};
 const ZC={r:'#4a90d9',q:'#3fb0a8',h:'#e0546e',l:'#e67ab0',a:'#d4b02a',c:'#a35cc9',i:'#8a6d4b'},DN={r:'住宅',a:'農地',c:'商業',i:'工房'},F={farm:'農民',cap:'資本家',mil:'軍',rel:'教会'};
 /* ===== 管理者モード：URLに ?admin を付けると有効（?admin=0 で無効）。メニューに「管理者モード」が出る ===== */
@@ -438,6 +439,8 @@ function admMenu(){const on=v=>v?'ON':'OFF',N=(t,k,u)=>[t+'を入力（現在 '+
  ['時間を進める（月数を入力）',()=>admInput('時間を進める','進める月数を入力してください（1〜120）','12',false,s=>{const n=Math.min(120,Math.floor(+s));if(s&&n>0){admUse();for(let i=0;i<n&&!S.modal&&!S.over;i++)tick();hud();draw()}if(!S.modal&&!S.over)admMenu()})],
  ['全建造物を解禁：'+on(S.admUnl),A(()=>{S.admUnl=!S.admUnl;tools()})],
  ['建設費を無料に：'+on(S.admFree),A(()=>{S.admFree=!S.admFree})],
+ ['ゲームオーバーなし：'+on(S.admNoOver),A(()=>{S.admNoOver=!S.admNoOver})],
+ ['防衛力を入力（現在 '+invDef()+'）',()=>admInput('防衛力','新しい防衛力を入力してください（施設・兵士・軍の合計がこの値になるよう調整します）',String(invDef()),false,s=>{if(s!=null&&s!==''&&isFinite(+s)){admUse();S.admDef=(S.admDef|0)+(Math.round(+s)-invDef());log('防衛力を'+invDef()+'にしました')}admMenu()})],
  ['すべての値を編集（'+admFlat().length+'項目）',()=>admList(0)],
  ['管理者モードを無効にする',()=>{ADMOK=false;try{localStorage.removeItem(KEY+'_adm')}catch(e){}log('管理者モードを無効にしました（メニューから消えます）')}],
  ['閉じる']])}
@@ -831,6 +834,7 @@ function drawIll(px,py,tm,ab,sick){
   O('#5fa82a',px+28,py+8,8);R('#fff',px+27,py+3.5,2,9);R('#fff',px+23.5,py+7,9,2)}}
 function drawWarn(px,py){O('#c0392b',px+29,py+7,7);ctx.fillStyle='#fff';ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',px+29,py+7.5)}
 function terEdit(x,y,t,d){
+ if(pd){const kk=x+','+y;if(window._tlk==kk)return;window._tlk=kk}else window._tlk=null;
  if(x<1||y<1||x>=W-1||y>=H-1)return say('島の端のマスは変えられません');
  if(t.lava>0)return say('溶岩が冷えるまで待ちましょう');
  if(d.pop&&PM()<d.pop)return say('人口'+d.pop+'人から実行できます');
@@ -838,12 +842,13 @@ function terEdit(x,y,t,d){
  if(t.r||t.b||t.z)return say('道路・区画・建物を先に撤去してください');
  if(k=='land'){if(t.t!='s')return say('埋め立てできるのは海のマスだけです');if(!land)return say('陸地に隣接した海だけ埋め立てできます')}
  else if(k=='dig'){if(t.t!='g')return say('掘削できるのは平地だけです');if(!sea)return say('海に隣接した平地だけ掘削できます');if(t.ore||t.spa||t.fish)return say('資源のあるマスは掘削できません')}
+ else if(k=='mount'){if(t.t!='g')return say('山にできるのは平地だけです');if(t.ore||t.spa||t.fish)return say('資源のあるマスは山にできません')}
  else if(k=='raze'){if(t.t=='v')return say('火口は壊せません');if(t.t!='m')return say('壊せるのは山だけです');
   for(const[a,b]of NB){const n=at(x+a,y+b);if(n&&n.b&&D[n.b].geo&&!NB.some(([i,j])=>{if(a+i==0&&b+j==0)return false;const m=at(x+a+i,y+b+j);return m&&(m.t=='m'||m.t=='v')}))return say(D[n.b].n+'が山に隣接できなくなるため壊せません')}}
  const cc=Math.round(d.c*(1-.15*Math.min(3,(S.pk||{}).cheap|0))*cmk(k));if(S.money<cc)return say('資金が足りません！');
  S.money-=cc;sfx('build');burst(x*T+T/2,y*T+T/2,k=='land'?'#9ad1ff':'#cfc3a0',14);fx(x*T+T/2,y*T,'-$'+fmt(cc),'#ffd24a');xp(4);
- t.t=k=='dig'?'s':'g';delete t.fert;delete t.wet;delete t.dune;delete t.ash;delete t.ore;delete t.spa;delete t.fish;
- log(k=='land'?'海を埋め立てた':k=='dig'?'土地を掘削して海にした':'山を切り崩して平地にした')}
+ t.t=k=='dig'?'s':k=='mount'?'m':'g';delete t.fert;delete t.wet;delete t.dune;delete t.ash;delete t.ore;delete t.spa;delete t.fish;
+ log(k=='land'?'海を埋め立てた':k=='dig'?'土地を掘削して海にした':k=='mount'?'平地に山を造成した':'山を切り崩して平地にした')}
 function lvv(x,y){let v=50;for(const k of['clinic'])if(covered(k,x,y))v+=8;for(const k of LVK)if(covered(k,x,y))v+=D[k].lv;const pk=covered('park',x,y);if(pk)v+=18;
  const d=Math.max(Math.abs(x-CX),Math.abs(y-CY));if(d<=4)v-=(5-d)*5;
  let p=0;for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const t=at(x+i,y+j);if(t&&t.z=='i'&&t.lv>0)p++}v-=Math.min(3,p)*(pk?4:8);
@@ -915,6 +920,7 @@ navy(x,y){R('#5a6068',x+3,y+22,30,6);P('#7a828b',x+5,y+22,x+8,y+14,x+31,y+14);R(
 outfall(x,y){R('#7a828b',x+6,y+14,18,14);P('#6b5a3a',x+4,y+14,x+15,y+7,x+26,y+14);R('#4a4a4a',x+11,y+19,5,9);R('#6b7d2a',x+24,y+24,10,3);O('#8a9a3a',x+31,y+29,3);O('#8a9a3a',x+27,y+32,2)},
 land(x,y){R('#4a90d9',x+3,y+20,30,12);R('#6fb36a',x+3,y+8,30,12);R('#8a6d4b',x+3,y+20,30,2);P('#ffd24a',x+18,y+26,x+24,y+30,x+12,y+30)},
 dig(x,y){R('#6fb36a',x+3,y+8,30,12);R('#4a90d9',x+9,y+14,18,14);R('#fff',x+12,y+18,8,1.5);P('#c0392b',x+18,y+30,x+24,y+25,x+12,y+25)},
+mount(x,y){R('#6fb36a',x+3,y+26,30,6);P('#8a8378',x+3,y+28,x+18,y+5,x+33,y+28);P('#a49d90',x+18,y+5,x+24,y+16,x+13,y+16);P('#ffd24a',x+28,y+4,x+30,y+9,x+34,y+9);R('#4a90d9',x+0,y+0,0,0)},
 raze(x,y){P('#8a8378',x+3,y+32,x+16,y+6,x+33,y+32);P('#a49d90',x+16,y+6,x+22,y+17,x+12,y+17);R('#c0392b',x+15,y+14,3,14);R('#c0392b',x+9,y+20,15,3)},
 wplus(x,y){R('#555',x+3,y+27,30,4);R('#dfe8dc',x+6,y+14,24,14);R('#8fb88a',x+6,y+12,24,3);R('#2e8b57',x+9,y+17,6,8);R('#2e8b57',x+21,y+17,6,8);R('#4fd08a',x+16,y+18,4,10);O('#fff',x+18,y+10,3);ctx.strokeStyle='#2e8b57';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(x+18,y+10,6,0,7);ctx.stroke()},
 waste(x,y){R('#6f7d6c',x+9,y+14,18,17);R('#8fa08b',x+9,y+14,18,2);R('#566453',x+7,y+10,22,4);R('#566453',x+15,y+7,6,4);for(let i=0;i<3;i++)R('#566453',x+13+i*5,y+18,1.5,10);P('#4caf50',x+18,y+20,x+21,y+25,x+15,y+25)},
@@ -1180,7 +1186,7 @@ const CT=[['road','交通',['lane','road','treeway','avenue','art','hwy','ich','
 ['hosp','公共',['clinic','hosp','pstation','fire','school','hs','vocat','univ','lib','theater','museum','cem','crem','conf','lab'],'公共：医療・治安（警察署・消防署）・教育・文化・墓地・研究など、住民の暮らしを支える施設'],
 ['port','産業',['farmc','fish','mkt','mine','spa','whs','proc','logi','port','bank','hotel','themepark','casino','airport'],'産業：農業・漁業・市場・資源・物流・金融・観光でお金や食料を稼ぐ施設'],
 ['fire','防災軍事',['eew','shelter','retro','tower','wall','obs','vent','dsc','guard','barracks','academy','fort','battery','missile','navy','hq'],'防災軍事：地震対策（速報局・避難所・耐震補強）、溶岩・噴火への備え、軍・防衛の施設'],
-['palace','名所',['palace','statue','monu','radio','temple','shrine','arena','stadium','space','sun','park','megapark','fount','tree','lookout','garden','lighthouse'],'名所：宮殿・像・神殿などの象徴と、公園・噴水・庭園などの景観']],MT=['upg','mov','land','dig','raze','bull','ins'];let ct=0;
+['palace','名所',['palace','statue','monu','radio','temple','shrine','arena','stadium','space','sun','park','megapark','fount','tree','lookout','garden','lighthouse'],'名所：宮殿・像・神殿などの象徴と、公園・噴水・庭園などの景観']],MT=['upg','mov','land','dig','raze','mount','bull','ins'];let ct=0;
 
 const VWI={fire:['消防','緑＝消防署の範囲内／橙＝範囲外の住宅・商業区・工房（火災で焼けやすい）。青の枠＝消防署'],lv:['地価','緑＝地価が高い／赤＝低い（住宅・商業区）'],water:['水道','緑＝水が届いている／赤＝水不足の住宅'],pol:['水質汚濁','赤い海＝汚濁域／赤い住宅＝病気・廃墟（取水場は汚濁域の外へ）'],med:['医療','緑＝診療所・病院の範囲内／赤＝範囲外の住宅'],edu:['教育','緑＝小中学校がある／赤＝小中学校が1校もない'],waste:['ごみ','緑＝処理が間に合っている／赤＝処理能力が不足している住宅'],noise:['騒音','緑＝静か／橙＝やや騒がしい／赤＝騒がしい住宅（道路・工房・空港などが近い）。紫の枠＝騒音源'],air:['大気汚染','緑＝きれい／橙＝やや汚れている／赤＝汚染がひどい住宅（工房・地熱発電所・ごみ処理場が近い）。紫の枠＝汚染源。公園の範囲内では軽くなります'],crime:['治安','緑＝警察署の範囲内／橙＝範囲外／赤＝犯罪が発生中。青の枠＝警察署（人口300以上で治安が満足度に影響）']};
 function setView(v){VIEW=v;VCm.clear();VCt=0;if(v)TOV=false;$('info').textContent=v?'情報ビュー【'+VWI[v][0]+'】'+VWI[v][1]+'　色で状況を確認できます。詳しく見たいときは「調べる」を押してタップしてください':'情報ビューを解除しました';draw();tools()}
@@ -1354,7 +1360,7 @@ function zoomAt(px,py,f){const nz=Math.min(3,Math.max(.35,cam.z*f)),k=nz/cam.z;c
 function homeCam(){const hx=S&&S.home?S.home.x+.5:17.5,hy=S&&S.home?S.home.y+.5:14.5;cam.z=Math.min(1.4,Math.max(.6,VW/(16*T)));cam.x=VW/2-hx*T*cam.z;cam.y=VH*.45-hy*T*cam.z;clampCam()}
 const PS=new Map();let pan=false,gst=null,tdown=null,LPT=0;
 var QI=false;const vIns=()=>QI||S.sel=='ins';const isBp=()=>{const d=D[S.sel];return !!d&&!d.road&&!d.ter&&!d.z&&!MT.includes(S.sel)&&S.sel!='none'};
-const isPt=()=>!vIns()&&(D[S.sel].z||S.sel=='bull'||isBp());const isRd=()=>!vIns()&&D[S.sel].road&&S.sel!='bull'&&S.sel!='ich';
+const isPt=()=>!vIns()&&(D[S.sel].z||S.sel=='bull'||isBp()||!!D[S.sel].ter);const isRd=()=>!vIns()&&D[S.sel].road&&S.sel!='bull'&&S.sel!='ich';
 cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId)}catch(_){}PS.set(e.pointerId,{x:e.clientX,y:e.clientY});clearTimeout(LPT);
  if(PS.size>=2){pd=false;if(tdown&&tdown.mode=='rdrag')roadCancel();tdown=null;const[a,b]=[...PS.values()];gst={d:Math.hypot(a.x-b.x,a.y-b.y)||1,mx:(a.x+b.x)/2,my:(a.y+b.y)/2};return}
  const pm=pan||e.button==1||e.button==2||e.shiftKey,rd=isRd(),HINT='ドラッグして終点へ。指を離すと道路を敷設します';
@@ -1702,7 +1708,7 @@ function SR(){return S.sr!=null?S.sr:(S.ed.draft?.1:S.ed.volunteer?.03:0)}
 function soldiers(){return Math.floor(S.pop*SR())}
 function SOLC(){const n=soldiers();return n?n*(.25+S.tax*.04*.8)+20:0}
 function setSR(){const f=v=>{S.sr=Math.max(0,Math.min(.4,v));hud();$('info').textContent='兵の割合：'+Math.round(S.sr*100)+'%（兵士'+soldiers()+'人）'},o=[0,.02,.05,.1,.2,.3].map(v=>[Math.round(v*100)+'%（兵士'+Math.floor(S.pop*v)+'人）',()=>f(v)]);o.push(['数値を入力',()=>{const v=parseFloat(prompt('兵の割合（0〜40%）',Math.round(SR()*100)));if(!isNaN(v))f(v/100)}]);o.push(['やめる',()=>{}]);modal('兵の割合',`現在 ${Math.round(SR()*100)}%（兵士${soldiers()}人）\n\n割合を上げると、防衛力（兵士1人あたり+0.15）と軍の支持が上がります。\n代わりに、兵士の給与と税収減で費用がかかり、満足度・農民・教会の支持が下がります。\n士官学校があると兵士の戦力が上がります。`,o)}
-function invDef(I){let d=S.f.mil*.5+(S.ed.martial?12:0)+(S.ed.police?5:0)+(I?I.boost|0:0);const WT={barracks:14,guard:6,hq:20,arena:3,battery:30,academy:30,fort:55,missile:80,navy:70};let ac=0;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=S.g[y][x],b=t.b,w=WT[b];if(!w)continue;if(b=='academy')ac++;let m=1;if(b=='battery'&&I&&Math.hypot(x-I.lx,y-I.ly)>10)m=.7;if(b=='missile'&&I&&Math.hypot(x-I.lx,y-I.ly)>10)m=.5;d+=w*m*gm(t)*bEff('mil')}d+=soldiers()*.15*(1+.25*ac);return Math.round(d)}
+function invDef(I){let d=S.f.mil*.5+(S.ed.martial?12:0)+(S.ed.police?5:0)+(I?I.boost|0:0);const WT={barracks:14,guard:6,hq:20,arena:3,battery:30,academy:30,fort:55,missile:80,navy:70};let ac=0;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=S.g[y][x],b=t.b,w=WT[b];if(!w)continue;if(b=='academy')ac++;let m=1;if(b=='battery'&&I&&Math.hypot(x-I.lx,y-I.ly)>10)m=.7;if(b=='missile'&&I&&Math.hypot(x-I.lx,y-I.ly)>10)m=.5;d+=w*m*gm(t)*bEff('mil')}d+=soldiers()*.15*(1+.25*ac);d+=(S.admDef|0);return Math.round(d)}
 function invSpawn(){
  const P=3,sea=(x,y)=>x<0||y<0||x>=W||y>=H?true:S.g[y][x].t=='s',kk=(x,y)=>(y+P)*200+(x+P),par=new Map(),q=[];
  for(let y=-P;y<H+P;y++)for(let x=-P;x<W+P;x++)if(x==-P||y==-P||x==W+P-1||y==H+P-1){par.set(kk(x,y),null);q.push([x,y])}
@@ -1901,7 +1907,7 @@ try{if(S.pop>=40&&res.length){
  if(!tutOn()&&!S.modal&&S.m>3&&S.m-(S.lastEv??-99)>=30&&Math.random()<.12){const ph=S.pop<300?0:S.pop<5000?1:2,L=EV.filter(v=>(!v.ph||v.ph.includes(ph))&&(!v.w||v.w())&&v.t!=S.lastEvT);if(L.length){const e=L[Math.floor(Math.random()*L.length)];S.lastEv=S.m;S.lastEvT=e.t;modal(e.t,e.p,e.o)}}
  if(!tutOn())petition();if(!tutOn()&&!S.modal)majorEvents();
 }
-function end(t,p){if(tutOn()){if(t=='国家破産')S.money=0;if(t=='敵軍の占領')S.lostI=0;log('チュートリアル中のため、ゲームオーバーは免除されました');return}S.over=true;if(S.daily)ach('daily');sfx('lose');try{localStorage.removeItem(KEY)}catch(e){}
+function end(t,p){if(tutOn()||S.admNoOver){if(t=='国家破産')S.money=0;if(t=='敵軍の占領')S.lostI=0;if(t=='無人島化')S.pop=Math.max(S.pop,20);log(S.admNoOver?'管理者設定のため、ゲームオーバーは無効です（'+t+'）':'チュートリアル中のため、ゲームオーバーは免除されました');return}S.over=true;if(S.daily)ach('daily');sfx('lose');try{localStorage.removeItem(KEY)}catch(e){}
  const pk=Math.max(S.peak|0,S.pop),sc=Math.round((Math.max(0,NWV()/2)+pk*5+S.m*2)*2*(1+.25*Object.values(S.ch||{}).filter(Boolean).length));let best=0;try{best=+localStorage.getItem(KEY+'_best')||0;if(sc>best)localStorage.setItem(KEY+'_best',sc)}catch(e){}
  const gain=Math.round(sc/40),LG=leg();LG.pts=(LG.pts|0)+gain;try{localStorage.setItem(KEY+'_leg',JSON.stringify(LG))}catch(e){}
  if(S.adm)p+='\n\n※管理者モードを使用した島です';p+=`\n\n最大人口 ${fmt(pk)}\nスコア ${sc}${sc>best?'（自己ベスト更新！）':'（自己ベスト '+best+'）'} ／ ランク ${rkOf(sc)} ／ 威信+${gain}`;
