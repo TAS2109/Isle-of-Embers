@@ -471,7 +471,7 @@ function svDispatch(type,tx,ty){if(!S||SV.length>=28||typeof TLc==='undefined')r
  const src=accN(tx,ty);if(src<0)return null;const st=new Map();
  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=G[y][x];if(t.b&&ks.includes(t.b)){const n=accN(x,y);if(n>=0&&!st.has(n))st.set(n,[x,y])}}
  if(!st.size)return null;
- const dist=new Float32Array(M).fill(Infinity),par=new Int32Array(M).fill(-1),h={k:[],v:[]};dist[src]=0;hpush(h,0,src);let hit=-1;
+ const dist=new Float64Array(M).fill(Infinity),par=new Int32Array(M).fill(-1),h={k:[],v:[]};dist[src]=0;hpush(h,0,src);let hit=-1;
  while(h.k.length){const[d,i]=hpop(h);if(d>dist[i])continue;if(st.has(i)){hit=i;break}const x=i%W,y=(i/W)|0;
   for(const[a,b]of NB){const nx=x+a,ny=y+b;if(nx<0||ny<0||nx>=W||ny>=H)continue;const j=ny*W+nx,r=G[ny][nx].r|0;if(!r)continue;const nd=d+(1/(RSPD[r]||1))*(1+1.5*cl(((TLc&&TLc[j])||0)-.8,0,2));if(nd<dist[j]){dist[j]=nd;par[j]=i;hpush(h,nd,j)}}}
  if(hit<0)return null;const p=[];for(let i=hit;i!=-1;i=par[i])p.push(i);
@@ -505,7 +505,7 @@ var LD=null,LPC=new Map();
 const LCOL=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#34495e'],LTY={bus:{n:'バス',ic:'🚌',r:3,u:.12,cap:600,run:2.5,fix:6,v:12,fare:1,sc:25,lc:8,spd:48},tram:{n:'路面電車',ic:'🚊',r:3,u:.16,cap:1000,run:3.5,fix:10,v:10,fare:1.5,sc:60,lc:22,spd:58},subway:{n:'地下鉄',ic:'🚇',r:4,u:.2,cap:2400,run:6,fix:18,v:8,fare:2,sc:150,lc:45,spd:90},brt:{n:'BRT（急行バス）',ic:'🚍',r:3,u:.16,cap:1500,run:4,fix:14,v:9,fare:1.5,sc:55,lc:14,spd:70},rail:{n:'鉄道',ic:'🚆',r:4,u:.24,cap:3200,run:7,fix:22,v:10,fare:2.5,sc:200,lc:30,spd:110},mono:{n:'モノレール',ic:'🚝',r:3,u:.2,cap:1600,run:5,fix:14,v:9,fare:2,sc:110,lc:32,spd:85},ferry:{n:'フェリー',ic:'⛴️',r:3,u:.1,cap:700,run:2,fix:8,v:14,fare:2,sc:70,lc:6,spd:35},cable:{n:'ロープウェイ',ic:'🚡',r:2,u:.08,cap:420,run:2.5,fix:6,v:8,fare:2.5,sc:50,lc:14,spd:30}};
 function lnSeg(ty,a,b,fl){if(ty=='rail'||ty=='mono')return trkPath(ty,a,b);if(ty=='subway'){const bx=b%W,by=b/W|0,p=[a];let x=a%W,y=a/W|0;const gx=()=>{while(x!=bx){x+=Math.sign(bx-x);p.push(y*W+x)}},gy=()=>{while(y!=by){y+=Math.sign(by-y);p.push(y*W+x)}};if(fl){gy();gx()}else{gx();gy()}return p}
  if(ty=='cable'){const ax=a%W,ay=a/W|0,bx=b%W,by=b/W|0,n=Math.max(Math.abs(bx-ax),Math.abs(by-ay)),p=[];for(let i=0;i<=n;i++)p.push(Math.round(ay+(by-ay)*i/(n||1))*W+Math.round(ax+(bx-ax)*i/(n||1)));return p}
- const M2=W*H,dist=new Float32Array(M2).fill(Infinity),par=new Int32Array(M2).fill(-1),h={k:[],v:[]};dist[a]=0;hpush(h,0,a);
+ const M2=W*H,dist=new Float64Array(M2).fill(Infinity),par=new Int32Array(M2).fill(-1),h={k:[],v:[]};dist[a]=0;hpush(h,0,a);
  while(h.k.length){const[d,i]=hpop(h);if(d>dist[i])continue;if(i==b)break;const x=i%W,y=(i/W)|0;for(const[dx,dy]of NB){const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=W||ny>=H)continue;const q=S.g[ny][nx],r=q.r|0,j=ny*W+nx;
   if(ty=='ferry'){if(j!=b&&q.t!='s')continue}else{if(!r||r==3||r==7)continue;if((ty=='brt'||ty=='tram')&&r!=2&&r!=6)continue;if(ty=='bus'&&r==4)continue}
   const nd=d+(ty=='ferry'?1:1/(RSPD[r]||1));if(nd<dist[j]){dist[j]=nd;par[j]=i;hpush(h,nd,j)}}}
@@ -605,7 +605,7 @@ function ldTap(p){const t=at(p.x,p.y);if(!t)return;const ty=LD.type;let n=p.y*W+
  else if(ty=='mono'){const e=(S.trk||{})[n];if(!e||e.k!=ty)return say('駅は敷設した線路の上に置きます')}
  else if(t.t!='g')return say(LTY[ty].n+'の駅は平地に置きます');
  const last=LD.stops[LD.stops.length-1];
- if(last!=null){if(last==n)return;if(Math.max(Math.abs(last%W-n%W),Math.abs((last/W|0)-(n/W|0)))<2)return say('停留所は2マス以上離してください');const seg=lnSeg(ty,last,n);if(!seg)return say(ty=='ferry'?'その乗り場へは、海でつながっていません':(ty=='rail'||ty=='mono')?'その駅へは線路がつながっていません':'その停留所へは道路がつながっていません');
+ if(last!=null){if(last==n)return;if(Math.max(Math.abs(last%W-n%W),Math.abs((last/W|0)-(n/W|0)))<2)return say('停留所は2マス以上離してください');const seg=lnSeg(ty,last,n);if(!seg)return say(ty=='ferry'?'その乗り場へは、海でつながっていません':(ty=='rail'||ty=='mono')?'その駅へは線路がつながっていません':ty=='tram'?'その駅へは、大通り・幹線道路だけではつながっていません（路面電車は大通り以上の道路しか走れません）':ty=='brt'?'その停留所へは、大通り・幹線道路だけではつながっていません':'その停留所へは道路がつながっていません（高速道路・インターチェンジは通れません）');
   
   if(ty=='cable'&&seg.length-1>12)return say('ロープウェイは1区間12マスまでです');
   LD.path.push(...seg.slice(1))}else LD.path=[n];
@@ -785,7 +785,7 @@ function recalcTraffic(){TD=0;TLAST=Date.now();const G=S.g,M=W*H,rdv=new Uint8Ar
  // 1回の計算内で、渋滞を反映した経路割当を数回繰り返して平均する（MSA）。入力が同じなら必ず同じ結果になる。
  const scl=1/(1+tu*bEff('transit')/(rdsum*.9+4)),capK=new Float32Array(M),KIT=3,avg=new Float32Array(M),cost=new Float32Array(M);
  for(let i=0;i<M;i++)if(rdv[i])capK[i]=RCAP[rdv[i]]*TKF*bEff('road');
- const dist=new Float32Array(M),par=new Int32Array(M),routes=[];let unmet=0,totC=0,totS=0,totF=0,totSc=0,okC=0,okS=0;
+ const dist=new Float64Array(M),par=new Int32Array(M),routes=[];let unmet=0,totC=0,totS=0,totF=0,totSc=0,okC=0,okS=0;
  for(let it=0;it<KIT;it++){
   for(let i=0;i<M;i++)if(rdv[i])cost[i]=(1/RSPD[rdv[i]])*(1+1.5*cl(avg[i]*scl/capK[i]-.8,0,2));
   const load=new Float32Array(M),first=it==0;
