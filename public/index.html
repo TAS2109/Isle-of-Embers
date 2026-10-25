@@ -320,6 +320,15 @@ body.fs #mini .st b{font-size:13px}
 <style id="capcss">
 #bcam{font-size:15px!important;line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}#bcam small{font-size:9px;line-height:1}#ctl.sm #bcam small{font-size:8px}
 body.mm #top,body.mm #dock,body.mm #mini,body.mm #toast,body.mm #ctl{display:none!important}
+
+.st.cal{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:8px;flex-wrap:nowrap!important;white-space:nowrap}
+#hud .st.cal{grid-column:1/-1}
+#mini{flex-wrap:wrap}#mini .st.cal{order:-1}
+.cal .yr{font-size:12px}.cal .yr b{display:inline!important;font-size:14px!important}
+.cal .el{font-weight:800;padding:2px 10px;border-radius:999px;background:var(--ac);color:#fff;font-size:12.5px}
+.cal .el b{display:inline!important;font-size:17px!important;margin:0 2px;color:#fff}
+.cal .el.w{background:#d9822b}.cal .el.d{background:var(--bad);animation:elp .9s infinite alternate}
+@keyframes elp{to{filter:brightness(1.3);transform:scale(1.05)}}
 #cap{position:absolute;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:7;display:none;gap:6px;padding:5px 8px;background:color-mix(in srgb,var(--card) 90%,transparent);border:1px solid var(--bd);border-radius:999px;box-shadow:0 2px 10px rgba(0,0,0,.35);transition:opacity .4s}
 #cap.on,body.mm #cap{display:flex}
 #cap.dim{opacity:.25}
@@ -401,8 +410,8 @@ solar:{n:'太陽光',c:140,up:3,pop:10,pwr:5,d:'電力+5。火山の怒りは上
 wind:{n:'風力発電',c:120,up:2,pop:10,pwr:4,r:2,lv:-3,d:'電力+4。周囲の地価-3'},
 farmc:{n:'農業センター',c:130,up:3,pop:12,max:4,fd:8,fm:2,d:'食料+8・農民+2（最大4）'},
 fish:{n:'漁港',c:110,up:2,pop:8,port:1,max:4,fd:9,d:'海に隣接して建設。食料+9（最大4）'},
-mine:{n:'採掘場',c:240,up:7,pop:30,geo:1,max:3,mo:140,hp:-1,ang:.8,r:3,lv:-12,d:'山に隣接。収益$140。公害が出て火山の怒りが上がる（最大3）'},
-spa:{n:'温泉リゾート',c:230,up:6,pop:35,geo:1,max:3,mo:80,hp:2,r:3,lv:6,d:'山に隣接。収益$80・支持率+2（最大3）'},
+mine:{n:'採掘場',c:240,up:7,pop:30,max:3,mo:140,hp:-1,ang:.8,r:3,lv:-12,d:'鉱脈のマスにだけ建てられる。収益$140。公害が出て火山の怒りが上がる（最大3）'},
+spa:{n:'温泉リゾート',c:230,up:6,pop:35,max:3,mo:80,hp:2,r:3,lv:6,d:'温泉のマスにだけ建てられる。収益$80・支持率+2（最大3）'},
 bank:{n:'銀行',c:280,up:8,pop:45,max:3,mo:110,cp:4,d:'収益$110・資本家+4（最大3）'},
 hotel:{n:'ホテル',c:200,up:6,pop:35,mo:90,r:3,lv:4,d:'収益$90・地価+4'},
 themepark:{n:'遊園地',fp:[3,3],c:380,up:12,pop:55,max:2,mo:130,hp:2,r:6,lv:5,d:'【3×3マスの平地が必要】収益$130・支持率+2（最大2）'},
@@ -452,8 +461,8 @@ space:{n:'宇宙港',fp:[3,3],c:12000,up:150,pop:20000,max:1,post:1,mo:8000,cp:8
 sun:{n:'人工太陽',c:9000,up:100,pop:15000,max:1,post:1,pwr:4000,ang:-3,d:'【10万人到達後】電力+4000・火山の怒り-3/月（1つだけ）'},
 land:{n:'埋め立て',c:4500,pop:5000,ter:1,d:'【高額】陸に隣接した海マスを陸地にする。道路・橋・建物のない海のみ　【ドラッグ】PCは押したまま、スマホは長押ししてなぞると連続で実行できます'},
 dig:{n:'掘削',c:3600,pop:5000,ter:1,d:'【高額】何もない平地を海に変える（海に隣接する場所のみ）。資源マスは失われる　【ドラッグ】PCは押したまま、スマホは長押ししてなぞると連続で実行できます'},
-raze:{n:'山の破壊',c:5400,pop:5000,ter:1,d:'【高額】山を平地にする。火口は壊せない。山に隣接する採掘場・温泉・観測所が機能を失う場合は実行できない　【ドラッグ】PCは押したまま、スマホは長押ししてなぞると連続で実行できます'},
-mount:{n:'山の造成',c:5400,pop:5000,ter:1,d:'【高額】何もない平地を山にする（資源マスは不可）。山に隣接すると採掘場・温泉・観測所などが建てられる　【ドラッグ】PCは押したまま、スマホは長押ししてなぞると連続で実行できます'},
+raze:{n:'山の破壊',c:5400,pop:5000,ter:1,d:'【高額】山を平地にする。火口は壊せない。山に隣接する観測所などが機能を失う場合は実行できない　【ドラッグ】PCは押したまま、スマホは長押ししてなぞると連続で実行できます'},
+mount:{n:'山の造成',c:5400,pop:5000,ter:1,d:'【高額】何もない平地を山にする（資源マスは不可）。山に隣接すると観測所などが建てられる　【ドラッグ】PCは押したまま、スマホは長押ししてなぞると連続で実行できます'},
 none:{n:'選択なし',c:0,none:1,d:'何も建てず、ドラッグで画面を動かせます'},bull:{n:'撤去',c:0,d:'道路・区画・建物を撤去（返金なし）'},upg:{n:'改築',c:0,note:'建物を選択',d:'建物をタップしてグレードアップ（Lv3まで。人口10万人到達後は上限なし、費用は上がり続けます）。効果が大きくなる代わりに、維持費も増える'},mov:{n:'移設',c:0,note:'建物を選択',d:'移したい建物をタップし、次に空き地をタップして移す。費用は建設費の30%で、グレードは引き継ぐ'},rep:{n:'修繕',c:0,note:'傷んだ建物を選択',d:'襲撃で減った耐久値は、自然には戻りません。耐久バーが出ている建物をタップして修繕します。費用は傷み具合に応じて決まり、ゲームが進むほど高くなります（通常の施設＜軍事施設＜中央政府の順に高額）'},ins:{n:'調べる',c:0,d:'建物や区画をタップすると、居住者・収支・問題点を確認できます'}};
 const ZC={r:'#4a90d9',q:'#3fb0a8',h:'#e0546e',l:'#e67ab0',a:'#d4b02a',c:'#a35cc9',i:'#8a6d4b'},DN={r:'住宅',a:'農地',c:'商業',i:'工房'},F={farm:'農民',cap:'資本家',mil:'軍',rel:'教会'};
 /* ===== 管理者モード：URLに ?admin を付けると有効（?admin=0 で無効）。メニューに「管理者モード」が出る ===== */
@@ -928,16 +937,21 @@ function genMap(){const R=RNG,N4=[[1,0],[-1,0],[0,1],[0,-1]],SC=NW/40;W=NW;H=NH;
   let fb=0;const nf=Math.round((3+Math.floor(R()*3))*SC);for(let k=0;k<nf;k++){const c3=big.filter(([x,y])=>g[y][x].t=='g'&&!nearStart(x,y,-1));if(!c3.length)break;const[fx,fy]=c3[Math.floor(R()*c3.length)];for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const t=g[fy+j]&&g[fy+j][fx+i];if(t&&t.t=='g'&&Math.hypot(i,j)<=1.6)t.fert=1}fb++}
   for(let j=-1;j<=2;j++)for(let i=-1;i<=5;i++){g[oy+j][ox+i].t='g'}
   const free=([x,y])=>g[y][x].t=='g'&&!g[y][x].fert&&!g[y][x].ore&&!g[y][x].spa&&!g[y][x].fish&&!nearStart(x,y,0),pick=a=>a[Math.floor(R()*a.length)];
-  let no=0,ns=0,nfs=0,nw=0,nd=0;
+  let no=0,ns=0,nfs=0,nw=0,nd=0,nsc=0;
   {const k2=Math.floor(R()*3*SC);for(let k=0;k<k2;k++){const c=big.filter(free);if(!c.length)break;const[ax,ay]=pick(c);for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const t=g[ay+j]&&g[ay+j][ax+i];if(t&&t.t=='g'&&!t.fert&&!t.ore&&!t.spa&&!t.fish&&!t.dune&&!nearStart(ax+i,ay+j,0)&&Math.hypot(i,j)<=1.5+R()*.8){t.wet=1;nw++}}}}
   {const k2=Math.floor(R()*3*SC);for(let k=0;k<k2;k++){const c=big.filter(free);if(!c.length)break;const[ax,ay]=pick(c);for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){const t=g[ay+j]&&g[ay+j][ax+i];if(t&&t.t=='g'&&!t.fert&&!t.ore&&!t.spa&&!t.fish&&!t.wet&&!nearStart(ax+i,ay+j,0)&&Math.hypot(i,j)<=1.5+R()*.8){t.dune=1;nd++}}}}
 
-  {const k2=Math.floor(R()*4*SC);for(let k=0;k<k2;k++){const c=big.filter(free);if(!c.length)break;const[ax,ay]=pick(c);for(const[i,j]of[[0,0],...N4.filter(()=>R()<.45)]){const t=g[ay+j]&&g[ay+j][ax+i];if(t&&t.t=='g'&&!t.fert){t.ore=1;no++}}}}
-  {const k2=Math.floor(R()*3*SC);for(let k=0;k<k2;k++){const c=big.filter(([x,y])=>free([x,y])&&N4.some(([i,j])=>g[y+j]&&g[y+j][x+i]&&(g[y+j][x+i].t=='m'||g[y+j][x+i].t=='v')));if(!c.length)break;const[ax,ay]=pick(c);g[ay][ax].spa=1;ns++}}
+  {const k2=Math.floor(R()*8*SC);for(let k=0;k<k2;k++){const c=big.filter(free);if(!c.length)break;const[ax,ay]=pick(c);for(const[i,j]of[[0,0],...N4.filter(()=>R()<.45)]){const t=g[ay+j]&&g[ay+j][ax+i];if(t&&t.t=='g'&&!t.fert){t.ore=1;no++}}}}
+  {const nc=R()<.5?1:2;let fx=0,fy=0;for(let k=0;k<nc;k++){const c=big.filter(([x,y])=>free([x,y])&&N4.some(([i,j])=>g[y+j]&&g[y+j][x+i]&&(g[y+j][x+i].t=='m'||g[y+j][x+i].t=='v'))&&(k==0||Math.hypot(x-fx,y-fy)>=8));if(!c.length)break;const[ax,ay]=pick(c);if(k==0){fx=ax;fy=ay}
+   const tgt=Math.round((4+Math.floor(R()*3))*Math.max(1,Math.sqrt(SC))),cl2=[[ax,ay]];g[ay][ax].spa=1;let tr2=0;
+   while(cl2.length<tgt&&tr2++<80){const[bx,by]=cl2[Math.floor(R()*cl2.length)],[i,j]=pick(N4),u=bx+i,v=by+j;if(g[v]&&g[v][u]&&free([u,v])){g[v][u].spa=1;cl2.push([u,v])}}
+   ns+=cl2.length;nsc++}}
   {const k2=Math.floor(R()*5*SC);for(let k=0;k<k2;k++){const c=big.filter(([x,y])=>free([x,y])&&N4.some(([i,j])=>g[y+j]&&g[y+j][x+i]&&g[y+j][x+i].t=='s'));if(!c.length)break;const[ax,ay]=pick(c);g[ay][ax].fish=1;nfs++}}
   const dx=cx-(ox+2),dy=cy-oy,dir=Math.abs(dx)>=Math.abs(dy)?(dx>0?'東':'西'):(dy>0?'南':'北');
-  const nm=['炎','灰','黒','紅','翠','嵐','金','霧','雷','蒼'][Math.floor(R()*10)]+(nl>1||shape=='chain'?'諸島':shape=='ring'||shape=='atoll'||shape=='lagoon'?'環礁':R()<.5?'の島':'島');
-  const lines=['地形：'+({ring:'中央に内海を抱く環状島',crescent:'湾を抱える三日月型の島',chain:'連なる群島（道路で橋を架けて結べます）',cross:'十字に伸びた細長い島',twin:'二つの島が並ぶ地形（道路で橋を架けて結べます）',ypad:'三方向に腕を伸ばしたY字型の島',dumbbell:'中央がくびれたひょうたん型の島（くびれ部分は交通の要所）',lagoon:'細い水路で外海とつながる、内海を抱いた潟湖の島',comb:'櫛の歯のように半島が突き出した島（入り江が多く、海に面した土地が豊富）',scatter:'大きな主島と小さな島々が点在する地形（道路で橋を架けて結べます）',long:'東西に細長く伸びた島',atoll:'環状に連なる島々。環の内側は穏やかな内海です'}[shape]||(nl==1?'一つの大きな島':nl==2?'二つの島が並ぶ地形（道路で橋を架けて結べます）':'三つの島が点在する諸島（道路で橋を架けて結べます）')),'火山は拠点の'+dir+'側にあります',lakes?'内陸に湖が'+lakes+'つあります':'内陸に湖はありません',fb?'肥沃な土地が'+fb+'か所あります（黄緑の斑点）：農地の食料が50%増えます':'',no?'鉱脈が'+no+'か所あります：工房を置くと収益が増えます':'',ns?'温泉が'+ns+'か所あります：区画を置くと観光収入が入ります':'',nfs?'好漁場が'+nfs+'か所あります：農地を置くと食料が増えます':'',nw?'湿地が'+nw+'マス：農地の食料が増えます':'',nd?'砂丘が'+nd+'マス：商業の収益が増えます（農地には不向きです）':''].filter(Boolean);
+  const kc=keep.length;let en=0;{const sea=land.map(q=>q.map(()=>false)),st2=[];for(let y=0;y<H;y++)for(let x=0;x<W;x++)if((x==0||y==0||x==W-1||y==H-1)&&!land[y][x]&&!sea[y][x]){sea[y][x]=true;st2.push([x,y])}while(st2.length){const[a,b]=st2.pop();for(const[i,j]of N4){const u=a+i,v=b+j;if(land[v]&&land[v][u]===false&&!sea[v][u]){sea[v][u]=true;st2.push([u,v])}}}for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(!land[y][x]&&!sea[y][x])en++}
+  let ds=null;{const RT='中央に内海を抱く環状島';if(kc>=2){if(!(shape=='chain'||shape=='normal'||shape=='twin'||(shape=='scatter'&&kc>=3)||(shape=='atoll'&&kc>=3)))ds=kc==2?'二つの島が並ぶ地形（道路で橋を架けて結べます）':kc+'つの島が点在する諸島（道路で橋を架けて結べます）'}else{if(shape=='chain'||shape=='scatter'||shape=='twin')ds='一つの大きな島';else if(shape=='ring'&&en<6)ds='一つの大きな島';else if(shape=='atoll')ds=en>=6?RT:'一つの大きな島';else if((shape=='lagoon'||shape=='crescent')&&en>=6)ds=RT}}
+  const nm=['炎','灰','黒','紅','翠','嵐','金','霧','雷','蒼'][Math.floor(R()*10)]+(kc>1?'諸島':kc==1&&en>=6&&(shape=='ring'||shape=='atoll'||shape=='lagoon'||shape=='crescent')?'環礁':R()<.5?'の島':'島');
+  const lines=['地形：'+(ds||{ring:'中央に内海を抱く環状島',crescent:'湾を抱える三日月型の島',chain:'連なる群島（道路で橋を架けて結べます）',cross:'十字に伸びた細長い島',twin:'二つの島が並ぶ地形（道路で橋を架けて結べます）',ypad:'三方向に腕を伸ばしたY字型の島',dumbbell:'中央がくびれたひょうたん型の島（くびれ部分は交通の要所）',lagoon:'細い水路で外海とつながる、内海を抱いた潟湖の島',comb:'櫛の歯のように半島が突き出した島（入り江が多く、海に面した土地が豊富）',scatter:'大きな主島と小さな島々が点在する地形（道路で橋を架けて結べます）',long:'東西に細長く伸びた島',atoll:'環状に連なる島々。環の内側は穏やかな内海です'}[shape]||(kc==1?'一つの大きな島':kc==2?'二つの島が並ぶ地形（道路で橋を架けて結べます）':kc+'つの島が点在する諸島（道路で橋を架けて結べます）')),'火山は拠点の'+dir+'側にあります',lakes?'内陸に湖が'+lakes+'つあります':'内陸に湖はありません',fb?'肥沃な土地が'+fb+'か所あります（黄緑の斑点）：農地の食料が50%増えます':'',no?'鉱脈が'+no+'か所あります：採掘場はこの上にだけ建てられます（工房区を置くと収益も増えます）':'',ns?'温泉が'+ns+'マス、'+nsc+'か所にまとまっています：温泉リゾートはこの上にだけ建てられます（温泉街として開発できます）':'',nfs?'好漁場が'+nfs+'か所あります：農地を置くと食料が増えます':'',nw?'湿地が'+nw+'マス：農地の食料が増えます':'',nd?'砂丘が'+nd+'マス：商業の収益が増えます（農地には不向きです）':''].filter(Boolean);
   return{g,cx,cy,ox,oy,info:{name:nm,lines}}}
  return null}
 const BOON=[{n:'裕福な前政権',d:'国庫+$300',f:()=>{S.money+=300}},{n:'軍の後ろ盾',d:'軍+15',f:()=>{S.f.mil+=15}},{n:'豊かな海',d:'食料+40',f:()=>{S.food+=40}},{n:'敬虔な島民',d:'教会+15',f:()=>{S.f.rel+=15}},{n:'商人の支援',d:'資本家+15',f:()=>{S.f.cap+=15}},{n:'人気の前任者',d:'支持率+8',f:()=>{S.hap+=8}},{n:'眠れる火山',d:'火山の怒り-15・上昇が緩やか',f:()=>{S.anger=Math.max(0,S.anger-15);S.vk=(S.vk||1)*.8}}];
@@ -949,7 +963,7 @@ function randStart(MP){const R=RNG,j=(v,a)=>v+Math.round((R()*2-1)*a);
  const p=PAST[Math.floor(R()*PAST.length)];p.f();S.past=['前職：'+p.n+'（'+p.d+'）'];const cl2=CLI[Math.floor(R()*CLI.length)];S.cfd=cl2.fd;S.cin=cl2.cin;S.vk=cl2.vk;S.past.unshift('気候：'+cl2.n+'（'+cl2.d+'）');
  const z=[['c','商業'],['i','工房'],['r','住宅'],['a','農地'],null][Math.floor(R()*5)];
  if(z){const t=S.g[MP.oy+2][MP.ox+1+Math.floor(R()*3)];if(t&&t.t=='g'&&!t.z){t.z=z[0];t.lv=1;S.past.push('初期ボーナス：'+z[1]+'区が1つ、あらかじめ整備されています')}}}
-function applySc(){const b=BOON[Math.floor(RNG()*BOON.length)],e=BANE[Math.floor(RNG()*BANE.length)];b.f();e.f();for(const k in S.f)S.f[k]=cl(S.f[k],0,100);S.sc=['追い風：'+b.n+'（'+b.d+'）','逆風：'+e.n+'（'+e.d+'）']}
+function applySc(){const up=RNG()<.5,L=up?BOON:BANE,o=L[Math.floor(RNG()*L.length)];o.f();for(const k in S.f)S.f[k]=cl(S.f[k],0,100);S.sc=[(up?'追い風：':'逆風：')+o.n+'（'+o.d+'）']}
 function showIsland(){const I=S.isl;if(!I)return modal('島の特徴','この島の情報はありません',[['閉じる']]);modal(I.name,I.lines.filter(Boolean).join('\n')+'\n\n【就任時の状況】\n'+(S.sc||[]).join('\n'),[['閉じる']])}
 function fresh(daily){
  RNG=daily?mulb(seedOf(daily)):Math.random;
@@ -1228,7 +1242,10 @@ function draw0(){
    if(t.t=='v'){P('#4a3a35',px+1,py+33,px+12,py+8,px+24,py+8,px+35,py+33);R(S.anger>=60?'#ff7a1a':'#c0451e',px+12,py+6,12,4);if(S.anger>=50)O('#999',px+18+Math.sin(tm*2)*3,py+1,5,.5)}}
   if(t.fert&&t.t=='g'){ctx.globalAlpha=.4;R('#c6f06a',px+2,py+2,T-4,T-4);ctx.globalAlpha=.6;for(let q=0;q<4;q++)O('#7fb83a',px+7+(q%2)*18,py+8+(q>>1)*18,2);ctx.globalAlpha=1}
   if(t.wet&&t.t=='g'){ctx.globalAlpha=.45;R('#3f9fa0',px+1,py+1,T-2,T-2);ctx.globalAlpha=.7;ctx.strokeStyle='#d8f0c0';ctx.lineWidth=1.5;for(let q=0;q<3;q++){ctx.beginPath();ctx.moveTo(px+9+q*10,py+30);ctx.lineTo(px+9+q*10,py+16-q%2*3);ctx.stroke()}ctx.globalAlpha=1}
-  if(t.dune&&t.t=='g'){ctx.globalAlpha=.55;R('#e3cf8e',px+1,py+1,T-2,T-2);ctx.globalAlpha=.5;ctx.strokeStyle='#b99a4c';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(px+4,py+24);ctx.quadraticCurveTo(px+14,py+14,px+22,py+22);ctx.quadraticCurveTo(px+28,py+27,px+33,py+20);ctx.stroke();ctx.globalAlpha=1}
+  if(t.dune&&t.t=='g'){const vv=(x*7+y*13)%3,o0=(x*5+y*3)%4;R('#ecd596',px,py,T+.6,T+.6);ctx.globalAlpha=.55;R('#f8ebbd',px,py,T+.6,T*.4);ctx.globalAlpha=.35;R('#d2b06a',px,py+T*.72,T+.6,T*.3);ctx.globalAlpha=1;
+   for(let q=0;q<3;q++){const oy=py+7+q*11+((vv+q)%3)*2;ctx.lineCap='round';ctx.strokeStyle='rgba(166,122,48,.55)';ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(px-1,oy+5);ctx.quadraticCurveTo(px+T*.3,oy-4+o0,px+T*.56,oy+1);ctx.quadraticCurveTo(px+T*.8,oy+6,px+T+1,oy-1);ctx.stroke();ctx.strokeStyle='rgba(255,246,208,.85)';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(px-1,oy+2);ctx.quadraticCurveTo(px+T*.3,oy-7+o0,px+T*.56,oy-2);ctx.quadraticCurveTo(px+T*.8,oy+3,px+T+1,oy-4);ctx.stroke()}
+   ctx.fillStyle='rgba(120,88,36,.45)';for(let q=0;q<3;q++)ctx.fillRect(px+4+((x*3+y*5+q*11)%26),py+4+((x*7+y*3+q*13)%26),1.6,1.6);
+   if((x*5+y*11)%9==0){R('#4f8a3a',px+22,py+12,3,11);R('#4f8a3a',px+17,py+15,3,2);R('#4f8a3a',px+17,py+12,2,5);R('#4f8a3a',px+26,py+14,2,2);R('#4f8a3a',px+26,py+12,2,6)}else if((x*3+y*7)%11==0){E('#a89a7a',px+9,py+26,4,2.4);E('#8f8266',px+24,py+10,2.6,1.6)}ctx.lineCap='butt'}
   if(t.ore||t.spa||t.fish){if(t.ore){P('#7fd8ff',px+10,py+3,px+16,py+9,px+10,py+17,px+4,py+9);P('#d9f4ff',px+10,py+3,px+13,py+9,px+10,py+9,px+7,py+9)}else if(t.spa){E('#6fcfe0',px+10,py+12,8,4);O('rgba(255,255,255,.8)',px+7,py+6,2);O('rgba(255,255,255,.65)',px+12,py+3,2.4)}else{E('#4a90d9',px+9,py+10,6,3.6);P('#4a90d9',px+14,py+10,px+19,py+5,px+19,py+15);O('#fff',px+6,py+9,1)}}
   if(t.ash&&!t.z&&!t.r&&!t.b&&t.lava<=0){ctx.globalAlpha=.25;R('#2b2b2b',px,py,T,T);ctx.globalAlpha=1}
   if(t.z){ctx.globalAlpha=.3;R(ZC[t.z],px,py,T,T);ctx.globalAlpha=1;
@@ -1290,7 +1307,7 @@ function hud(){qui();satSync();
  $('dem').innerHTML=['r','a','c','i'].map(k=>{const v=Math.round(((S.dem||{})[k]||0)*100);return `<div class="${v>=15?'hi':''}">${DN[k]}需要 ${v}%<i><b style="width:${v}%;background:${ZC[k]}"></b></i></div>`}).join('');$('xp').innerHTML=`国力Lv${S.lv|0} ${S.xp|0}/${lvN(S.lv|0)} ｜ 統治難度${prs().toFixed(1)} ｜ 建設費×${cm().toFixed(1)} ｜ 黒字${S.streak|0}月 ｜ 渋滞${Math.round((S.cg||0)*100)}% ｜ 地価${Math.round(S.lvA||50)} ｜ 水道${Math.round((S.wc??1)*100)}% ｜ ごみ${Math.round((S.gc??1)*100)}%<i><s style="width:${cl((S.xp|0)/lvN(S.lv|0))*100}%"></s></i>`;
  const col=S.hap>=50?'var(--ok)':'var(--bad)',ac=S.anger>=60?'var(--bad)':'inherit';
  $('hud').innerHTML=`<div class="st">国庫<b>$${fmt(S.money)}</b></div><div class="st">人口<b>${fmt(S.pop)}</b><small>食料${fmt(S.food)}</small></div><div class="st" style="pointer-events:auto;cursor:pointer" onclick="showSat()">支持率<b style="color:${col}">${Math.round(S.hap)}%</b><small style="color:${(S.sat??50)>=50?'var(--ok)':'var(--bad)'}">満足${Math.round(S.sat??50)}</small></div><div class="st">火山<b style="color:${ac}">${Math.round(S.anger)}%</b><small>${S.warn?'噴火まで'+S.warn.n+'か月！':'怒り'+fv(S.ar||0)+'/月'}</small></div>`;
- $('sub').textContent=`${S.isl?S.isl.name+' ｜ ':''}${ttl()} ｜ ${Math.floor(S.m/12)+1}年${S.m%12+1}月 ｜ 選挙まで${36-S.m%36}か月${S.resc?' ｜ 救済目標'+S.resc.g.filter(x=>x.done).length+'/'+S.resc.g.length:''}`;
+ {const ml=36-S.m%36,yy=Math.floor(S.m/12)+1,m2=S.m%12+1;$('hud').insertAdjacentHTML('beforeend','<div class="st cal"><span class="yr"><b>'+yy+'年目</b> '+m2+'月</span><span class="el '+(ml<=3?'d':ml<=6?'w':'')+'">🗳選挙まで<b>'+ml+'</b>か月</span></div>')}$('sub').textContent=`${S.isl?S.isl.name+' ｜ ':''}${ttl()} ｜ ${Math.floor(S.m/12)+1}年${S.m%12+1}月 ｜ 選挙まで${36-S.m%36}か月${S.resc?' ｜ 救済目標'+S.resc.g.filter(x=>x.done).length+'/'+S.resc.g.length:''}`;
  const t2=$('tools2');[...t2.children].forEach(c=>{if(!c.classList.contains('mnb'))c.remove()});const mnb=t2.querySelector('.mnb');
  const mk=(l,f,on)=>{const b=document.createElement('button');b.textContent=l;if(on)b.className='on';b.onclick=f;mnb?t2.insertBefore(b,mnb):t2.appendChild(b)};
  [['停止',0],['1x',1],['2x',2],['4x',4]].forEach(([l,v])=>mk(l,()=>{S.spd=v;hud()},S.spd==v));
@@ -1414,7 +1431,7 @@ function movTap(x,y,t){
  if(t.t!='g')return say('そこには移設できません');
  if(t.lava>0)return say('溶岩が冷えるまで待ちましょう');
  if(t.r||t.z)return say('道路や区画がある場所には移設できません');
- if(d.geo&&!NB.some(([a,b])=>{const n=at(x+a,y+b);return n&&(n.t=='m'||n.t=='v')}))return say(d.n+'は、山または火口に隣接する場所にしか移せません');
+ if(k=='mine'&&!t.ore)return say('採掘場は、鉱脈のあるマスにしか移せません');if(k=='spa'&&!t.spa)return say('温泉リゾートは、温泉のあるマスにしか移せません');if(d.geo&&!NB.some(([a,b])=>{const n=at(x+a,y+b);return n&&(n.t=='m'||n.t=='v')}))return say(d.n+'は、山または火口に隣接する場所にしか移せません');
  if(d.port&&!NB.some(([a,b])=>{const n=at(x+a,y+b);return n&&n.t=='s'}))return say(d.n+'は、海に隣接する場所にしか移せません');
  if(k=='gov'&&MB)return say('戦闘中は中央政府を移設できません');
  const cc=mvCost(k);if(S.money<cc)return say('資金が足りません！');
@@ -1640,7 +1657,7 @@ function apply(x,y){TD=1;
  if(t.r||t.b||(t.z&&(t.lv>0||t.z==d.z)))return;
  if(!d.road&&!d.z&&t.z)return say('区画の上には建てられません。先に区画を撤去してください');
  if(d.road&&t.z&&t.lv>0)return;
- if(d.geo&&!NB.some(([a,b])=>{const n=at(x+a,y+b);return n&&(n.t=='m'||n.t=='v')}))return say(d.n+'は、山または火口に隣接する場所にしか建てられません');
+ if(S.sel=='mine'&&!t.ore)return say('採掘場は、鉱脈のあるマス（水色の結晶）にしか建てられません');if(S.sel=='spa'&&!t.spa)return say('温泉リゾートは、温泉のあるマス（湯気のマーク）にしか建てられません');if(d.geo&&!NB.some(([a,b])=>{const n=at(x+a,y+b);return n&&(n.t=='m'||n.t=='v')}))return say(d.n+'は、山または火口に隣接する場所にしか建てられません');
  if(d.port&&!NB.some(([a,b])=>{const n=at(x+a,y+b);return n&&n.t=='s'}))return say(d.n+'は、海に隣接する場所にしか建てられません');
  if((d.one&&tiles().some(q=>q.b==S.sel))||(d.max&&tiles().filter(q=>q.b==S.sel).length>=d.max))return say('これ以上は建てられません');
  if(d.post&&!S.cleared&&!S.admUnl)return say('人口10万人に到達すると建設できます');if(d.pop&&PM()<d.pop)return say('人口'+d.pop+'人から建設できます');const cc=S.admFree?0:Math.round((d.c+(t.t=='s'?30:0))*(1-.15*Math.min(3,(S.pk||{}).cheap|0))*cm());if(S.money<cc)return say('資金が足りません！');
@@ -2493,6 +2510,16 @@ function tstat(x,y){const t=at(x,y);if(!t)return null;
   if(up&&!d.seat&&!R.rev.length&&!R.eff.length)R.prob.push(['warn','維持費だけがかかっています']);
   if(!R.cost.length&&!R.rev.length)R.rev.push(['直接の収支',0])}
  else if(t.r){R.title=['','道路','大通り','高速道路','小道','並木道','幹線道路','インターチェンジ'][t.r];R.sub='座標 ('+x+','+y+')';const u=(RUP[t.r]??.5)*1.3*Math.sqrt(cm());R.cost.push(['維持費',u*bFac('road')]);const ra=TL[y*W+x]||0;R.eff.push(['交通量','容量の'+Math.round(ra*100)+'%']);R.pop.push(['居住者','なし']);if(ra>1.3)R.prob.push(['bad','渋滞しています。大通りなどへの格上げを検討しましょう'])}
+else if(t.t=='s'||t.t=='g'||t.t=='m'||t.t=='v'){const it=[];
+  if(t.t=='s')it.push(['海','陸の外側に広がる海。港は海に隣接する陸地に建てます。道路は橋として架けられます']);
+  else if(t.t=='v')it.push(['火口（火山）','火山の怒り'+Math.round(S.anger)+'%。高まると噴火して溶岩が周囲を覆います。建物は建てられません']);
+  else if(t.t=='m')it.push(['山地','建物は建てられません。山や火口に隣接する場所にだけ建てられる施設（観測所など）があります']);
+  else{if(t.lava>0)it.push(['溶岩','冷えるまで何も建てられません']);if(t.ash&&t.lava<=0)it.push(['火山灰','噴火の灰が積もっています']);
+   if(t.fert)it.push(['肥沃な大地','農地の食料が50%増えます']);if(t.wet)it.push(['湿地','農地の食料が増えます']);
+   if(t.dune)it.push(['砂丘','商業区の収益が増えます（農地には不向きです）']);if(t.ore)it.push(['鉱脈','採掘場を建てられます。工房区を置くと鉱石の収入も入ります']);
+   if(t.spa)it.push(['温泉','温泉リゾートを建てられます。区画を置くと観光収入が入ります']);if(t.fish)it.push(['好漁場','農地を置くと食料が増えます']);
+   if(!it.length)it.push(['平地','特別な資源のない平地です。区画や建物を建てられます']);R.pop.push(['地価',Math.round(lvv(x,y))+'（高いほど成長・税収に有利）'])}
+  R.title=it.map(q=>q[0]).join('・');R.sub='座標 ('+x+','+y+')　何も建っていません';it.forEach(q=>R.eff.push(q))}
  else return null;
  return R}
 /* ===== 島全体の状態（調べるモード） ===== */
