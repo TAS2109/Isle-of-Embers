@@ -521,7 +521,7 @@ function svModal(){const n=S.svn||{},f=S.svf||{},p=k=>n[k]?Math.round(f[k]/n[k]*
  modal('緊急・サービス車両','出動回数（到着の速さ）\n消防車 '+(n.fire|0)+'回（'+p('fire')+'）\nパトカー '+(n.police|0)+'回（'+p('police')+'）\n救急車 '+(n.amb|0)+'回（'+p('amb')+'）\nごみ収集車 '+(n.garb|0)+'回\n\n現在走行中 '+SV.length+'台\n\n到着の速さは、署や病院から現場までの道のり（渋滞を含む）で決まります。到着が遅いと、消火・検挙・感染者の回復の成功率が下がります。\n緊急車両は渋滞の影響を受けにくく、ごみ収集車は渋滞に巻き込まれます。\n\n'+(ad.join('\n')||'緊急対応は順調です。'),[['閉じる']])}
 
 var LD=null,LPC=new Map();
-const LCOL=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#34495e'],LTY={bus:{n:'バス',ic:'🚌',r:3,u:.12,cap:600,run:2.5,fix:6,v:12,fare:1,sc:25,lc:8,spd:48},tram:{n:'路面電車',ic:'🚊',r:3,u:.16,cap:1000,run:3.5,fix:10,v:10,fare:1.5,sc:60,lc:22,spd:58},subway:{n:'地下鉄',ic:'🚇',r:4,u:.2,cap:2400,run:6,fix:18,v:8,fare:2,sc:150,lc:45,spd:90},brt:{n:'BRT（急行バス）',ic:'🚍',r:3,u:.16,cap:1500,run:4,fix:14,v:9,fare:1.5,sc:55,lc:14,spd:70},rail:{n:'鉄道',ic:'🚆',r:4,u:.24,cap:3200,run:7,fix:22,v:10,fare:2.5,sc:200,lc:30,spd:110},mono:{n:'モノレール',ic:'🚝',r:3,u:.2,cap:1600,run:5,fix:14,v:9,fare:2,sc:110,lc:32,spd:85},ferry:{n:'フェリー',ic:'⛴️',r:3,u:.1,cap:700,run:2,fix:8,v:14,fare:2,sc:70,lc:6,spd:35},cable:{n:'ロープウェイ',ic:'🚡',r:2,u:.08,cap:420,run:2.5,fix:6,v:8,fare:2.5,sc:50,lc:14,spd:30}};
+const LCOL=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#34495e'],LTY={bus:{n:'バス',ic:'🚌',r:3,u:.12,cap:150,run:2.5,fix:6,v:12,fare:1,sc:25,lc:8,spd:48},tram:{n:'路面電車',ic:'🚊',r:3,u:.16,cap:260,run:3.5,fix:10,v:10,fare:1.5,sc:60,lc:22,spd:58},subway:{n:'地下鉄',ic:'🚇',r:4,u:.2,cap:700,run:6,fix:18,v:8,fare:2,sc:150,lc:45,spd:90},brt:{n:'BRT（急行バス）',ic:'🚍',r:3,u:.16,cap:260,run:4,fix:14,v:9,fare:1.5,sc:55,lc:14,spd:70},rail:{n:'鉄道',ic:'🚆',r:4,u:.24,cap:900,run:7,fix:22,v:10,fare:2.5,sc:200,lc:30,spd:110},mono:{n:'モノレール',ic:'🚝',r:3,u:.2,cap:400,run:5,fix:14,v:9,fare:2,sc:110,lc:32,spd:85},ferry:{n:'フェリー',ic:'⛴️',r:3,u:.1,cap:200,run:2,fix:8,v:14,fare:2,sc:70,lc:6,spd:35},cable:{n:'ロープウェイ',ic:'🚡',r:2,u:.08,cap:90,run:2.5,fix:6,v:8,fare:2.5,sc:50,lc:14,spd:30}};
 function lnSeg(ty,a,b,fl){if(ty=='rail'||ty=='mono')return trkPath(ty,a,b);if(ty=='subway'){const bx=b%W,by=b/W|0,p=[a];let x=a%W,y=a/W|0;const gx=()=>{while(x!=bx){x+=Math.sign(bx-x);p.push(y*W+x)}},gy=()=>{while(y!=by){y+=Math.sign(by-y);p.push(y*W+x)}};if(fl){gy();gx()}else{gx();gy()}return p}
  if(ty=='cable'){const ax=a%W,ay=a/W|0,bx=b%W,by=b/W|0,n=Math.max(Math.abs(bx-ax),Math.abs(by-ay)),p=[];for(let i=0;i<=n;i++)p.push(Math.round(ay+(by-ay)*i/(n||1))*W+Math.round(ax+(bx-ax)*i/(n||1)));return p}
  const M2=W*H,dist=new Float64Array(M2).fill(Infinity),par=new Int32Array(M2).fill(-1),h={k:[],v:[]};dist[a]=0;hpush(h,0,a);
@@ -551,14 +551,27 @@ function trkBar(){if(!TM)return rtPanel('trbar',null);
   +'<div class="rtb"><button class="'+(TM.er?'':'go')+'" onclick="TM.er=0;trkBar()">敷設</button><button class="'+(TM.er?'cx':'')+'" onclick="TM.er=1;trkBar()">撤去</button>'
   +(TM.k=='rail'?'<button onclick="TM.x=TM.x==1?2:1;trkBar()">交差：'+(TM.x==1?'踏切':'立体交差')+'</button>':'<span></span>')+'</div>'
   +'<div class="rtb" style="grid-template-columns:1fr"><button class="go" onclick="TM=null;trkBar();tools();draw()">完了</button></div>')}
+function railTile(px,py,m,x){const h=T/2,cx=px+h,cy=py+h,A=[[cx,py],[px+T,cy],[cx,py+T],[px,cy]],dr=[0,1,2,3].filter(i=>m>>i&1);
+ ctx.save();ctx.beginPath();ctx.rect(px,py,T,T);ctx.clip();ctx.lineCap='butt';ctx.lineJoin='round';
+ const path=()=>{ctx.beginPath();
+  if(dr.length==2&&(dr[1]-dr[0])%2==1){const a=A[dr[0]],b=A[dr[1]];ctx.moveTo(a[0],a[1]);ctx.quadraticCurveTo(cx,cy,b[0],b[1])}
+  else if(dr.length==2){ctx.moveTo(A[dr[0]][0],A[dr[0]][1]);ctx.lineTo(A[dr[1]][0],A[dr[1]][1])}
+  else if(dr.length<2){const i=dr.length?dr[0]:1;ctx.moveTo(A[i][0],A[i][1]);ctx.lineTo(A[(i+2)%4][0],A[(i+2)%4][1])}
+  else for(const i of dr){ctx.moveTo(A[i][0],A[i][1]);ctx.lineTo(cx,cy)}};
+ const st=(c,w,dash)=>{ctx.strokeStyle=c;ctx.lineWidth=w;ctx.setLineDash(dash||[]);path();ctx.stroke()};
+ if(x==2){st('#6f7f8f',17);st('#a9b8c6',15)}else if(x==1){st('#3a3a3e',17);st('#f1c40f',16.5,[3.5,3.5]);st('#6a6a70',15)}else{st('#6e6759',16);st('#a29a85',14.4)}
+ st('#5a4632',11.6,[1.8,4.4]);
+ st('#2f3237',8.6);st('#d5d9de',7.2);
+ if(x==1)st('#6a6a70',4.8);else st('#a29a85',4.8);
+ st('#5a4632',4.8,[1.8,4.4]);
+ ctx.setLineDash([]);ctx.restore()}
 function trkFx(only){const T2=S.trk;if(!T2)return;ctx.save();ctx.lineCap='butt';
- for(const s2 in T2){const n=+s2,e=T2[n];if(only&&e.k!=only)continue;const x=(n%W+.5)*T,y=((n/W|0)+.5)*T,mono=e.k=='mono',sg=[];
-  for(const[dx,dy]of NB){const f=T2[n+dy*W+dx];if(f&&f.k==e.k&&(dx>=0||dy!=0||true))sg.push([dx,dy])}
+ for(const s2 in T2){const n=+s2,e=T2[n];if(only&&e.k!=only)continue;const px=(n%W)*T,py=(n/W|0)*T,x=px+T/2,y=py+T/2,mono=e.k=='mono';
+  if(!mono){let m=0;[[0,-1,1],[1,0,2],[0,1,4],[-1,0,8]].forEach(([dx,dy,b])=>{const f=T2[n+dy*W+dx];if(f&&f.k==e.k)m|=b;else{const q=S.g[(n/W|0)+dy]&&S.g[(n/W|0)+dy][(n%W)+dx];if(q&&q.b=='railstn'&&e.k=='rail')m|=b}});railTile(px,py,m,e.x|0);continue}
+  const sg=[];for(const[dx,dy]of NB){const f=T2[n+dy*W+dx];if(f&&f.k==e.k)sg.push([dx,dy])}
   const arms=sg.length?sg:[[1,0],[-1,0]];
-  for(const[dx,dy]of arms){const ex=x+dx*T/2,ey=y+dy*T/2;ctx.globalAlpha=.92;
-   ctx.strokeStyle=mono?'#7d5cc0':e.x==2?'#8fa3b5':'#4a4a4a';ctx.lineWidth=mono?T*.32:T*.5;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();
-   if(!mono){ctx.strokeStyle=e.x==1?'#f1c40f':'#e0e0e0';ctx.lineWidth=Math.max(1,T*.1);if(e.x==1)ctx.setLineDash([T*.12,T*.12]);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke();ctx.setLineDash([])}}
-  if(mono){ctx.globalAlpha=1;O('#d8ccf0',x,y,T*.14,1)}}
+  for(const[dx,dy]of arms){const ex=x+dx*T/2,ey=y+dy*T/2;ctx.globalAlpha=.92;ctx.strokeStyle='#7d5cc0';ctx.lineWidth=T*.32;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke()}
+  ctx.globalAlpha=1;O('#d8ccf0',x,y,T*.14,1)}
  ctx.restore()}
 
 // ===== 交通タブの項目（停留所・駅・線路） =====
@@ -1228,8 +1241,8 @@ function tramBed(px,py,m){const h=T/2,cx=px+h,cy=py+h,A=[[cx,py],[px+T,cy],[cx,p
   else if(dr.length<2){const i=dr.length?dr[0]:1,a=A[i],b=A[(i+2)%4];ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1])}
   else for(const i of dr){ctx.moveTo(A[i][0],A[i][1]);ctx.lineTo(cx,cy)}};
  const st=(c,w,dash)=>{ctx.strokeStyle=c;ctx.lineWidth=w;ctx.setLineDash(dash||[]);path();ctx.stroke()};
- st('#575a60',12.6);st('#b9bcbf',11);st('rgba(60,62,68,.22)',11,[1.1,4.9]);
- st('#4d5056',7.4);st('#e6eaee',6);st('#b9bcbf',3.9);st('rgba(60,62,68,.2)',3.9,[1.1,4.9]);
+ st('#575a60',11);st('#b9bcbf',9.6);st('rgba(60,62,68,.22)',9.6,[1.1,4.9]);
+ st('#4d5056',6.8);st('#e6eaee',5.6);st('#b9bcbf',3.4);st('rgba(60,62,68,.2)',3.4,[1.1,4.9]);
  ctx.setLineDash([]);
  if(dr.length==1){const a=A[dr[0]],dx=cx-a[0],dy=cy-a[1];ctx.save();ctx.translate(cx,cy);ctx.rotate(Math.atan2(dy,dx));R('#5a5d63',13.6,-4.8,3,9.6);R('#c0392b',14,-4.4,2.2,8.8);R('#f1c40f',14,-1.2,2.2,2.4);ctx.restore()}
  ctx.restore()}
