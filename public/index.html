@@ -317,9 +317,27 @@ body.fs #mini .st b{font-size:13px}
 .rtp .rtb .cx{background:#b04a3a;color:#fff;border-color:#b04a3a}
 .rtp small{opacity:.85;display:block;margin-top:2px}
 </style>
+<style id="capcss">
+#bcam{font-size:15px!important;line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}#bcam small{font-size:9px;line-height:1}#ctl.sm #bcam small{font-size:8px}
+body.mm #top,body.mm #dock,body.mm #mini,body.mm #toast,body.mm #ctl{display:none!important}
+#cap{position:absolute;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:7;display:none;gap:6px;padding:5px 8px;background:color-mix(in srgb,var(--card) 90%,transparent);border:1px solid var(--bd);border-radius:999px;box-shadow:0 2px 10px rgba(0,0,0,.35);transition:opacity .4s}
+#cap.on,body.mm #cap{display:flex}
+#cap.dim{opacity:.25}
+#cap button{width:52px;height:44px;border-radius:22px;padding:0;font-size:17px;line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+#cap small{font-size:9px;line-height:1}
+#cap button.rec{background:var(--bad);border-color:var(--bad);color:#fff;width:auto;min-width:68px;padding:0 10px}
+#cap.dim:has(.rec){opacity:.5}
+#capflash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:8}
+#capflash.go{animation:capf .25s ease-out}@keyframes capf{0%{opacity:.85}100%{opacity:0}}
+#capmsg{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:8;background:rgba(0,0,0,.78);color:#fff;font-size:12px;padding:5px 10px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .3s;white-space:nowrap}#capmsg.show{opacity:1}
+#capsheet{position:fixed;inset:0;z-index:12;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.65)}#capsheet.on{display:flex}
+#capsheet>div{background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:14px;padding:12px;max-width:560px;width:100%}
+#cpv img,#cpv video{display:block;width:100%;max-height:55vh;object-fit:contain;border-radius:8px;background:#000}
+#cpt{font-size:12.5px;margin:8px 0}#cpb{display:flex;gap:8px;flex-wrap:wrap}#cpb button{flex:1;min-height:42px}
+</style>
 </head><body>
 <div id="top"><div id="hud"></div><div id="sub"></div><div id="dem"></div><div id="xp" class="fb"></div><div id="quest"></div></div>
-<div id="stage"><canvas id="c"></canvas><div id="toast"></div><div id="ctl"><button id="bz1">＋</button><button id="bz2">－</button><button id="bpan" aria-label="画面移動（ON/OFF）"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2l3.5 4.5h-2.5v4.5h4.5v-2.5L22 12l-4.5 3.5V13H13v4.5h2.5L12 22l-3.5-4.5H11V13H6.5v2.5L2 12l4.5-3.5V11H11V6.5H8.5z"/></svg><small>移動</small></button><button id="bdel">撤去</button><button id="bqi" aria-label="タップで調べる（ON/OFF）">🔍<small>調べる</small></button><button id="bundo" aria-label="一つ前の操作を取り消す" disabled>↩<small>戻る</small></button><button id="bfs" aria-label="マップを広げる">⤢</button></div></div>
+<div id="stage"><canvas id="c"></canvas><div id="toast"></div><div id="ctl"><button id="bz1">＋</button><button id="bz2">－</button><button id="bpan" aria-label="画面移動（ON/OFF）"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2l3.5 4.5h-2.5v4.5h4.5v-2.5L22 12l-4.5 3.5V13H13v4.5h2.5L12 22l-3.5-4.5H11V13H6.5v2.5L2 12l4.5-3.5V11H11V6.5H8.5z"/></svg><small>移動</small></button><button id="bdel">撤去</button><button id="bqi" aria-label="タップで調べる（ON/OFF）">🔍<small>調べる</small></button><button id="bundo" aria-label="一つ前の操作を取り消す" disabled>↩<small>戻る</small></button><button id="bcam" aria-label="撮影（写真・動画）">📷<small>撮影</small></button><button id="bfs" aria-label="マップを広げる">⤢</button></div></div>
 <div id="log" hidden></div>
 <div id="dock"><div id="d1"><div class="row" id="tools2"></div><button id="bmin" aria-label="パネルの開閉">▼</button></div><div id="modes"></div><div id="tabs" class="row"></div><div id="tools"></div><div id="info" title="タップで全文表示"></div></div>
 <div id="title"><canvas id="tcv"></canvas><div id="tbox"><div class="tsub">火山島の街づくり</div><h1>Isle of Embers</h1><div class="tjp">炎の島　―　終身大統領</div><div id="tbtns"><button id="tCont">続きから</button><button id="tNew">はじめから</button><button id="tDaily">デイリー島で始める（1日1回）</button><button id="tLoad">セーブデータ</button></div><small id="tInfo"></small><small id="tNote" style="display:block;margin-top:8px;max-width:340px;font-size:11px;line-height:1.5;color:#ffe9c9;opacity:.85">セーブはこのブラウザの中だけに保存されます。ブラウザのデータを消したり、別の端末・別のブラウザで開いたりすると引き継げません。大切な島は「セーブデータ」から書き出せます。</small></div></div>
@@ -1215,17 +1233,17 @@ function draw0(){
   if(t.ash&&!t.z&&!t.r&&!t.b&&t.lava<=0){ctx.globalAlpha=.25;R('#2b2b2b',px,py,T,T);ctx.globalAlpha=1}
   if(t.z){ctx.globalAlpha=.3;R(ZC[t.z],px,py,T,T);ctx.globalAlpha=1;
    if(t.lv==0){ctx.strokeStyle=ZC[t.z];ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.strokeRect(px+3,py+3,T-6,T-6);ctx.setLineDash([]);if(!conn(x,y)){ctx.strokeStyle='#c0392b';ctx.beginPath();ctx.moveTo(px+8,py+8);ctx.lineTo(px+T-8,py+T-8);ctx.moveTo(px+T-8,py+8);ctx.lineTo(px+8,py+T-8);ctx.stroke()}}
-   else{_SK=t.sk||null;zone(t.z,t.lv,px,py);_SK=null;if(t.ab||t.sick)drawIll(px,py,tm,t.ab,t.sick);if(NFM()==0&&!t.ab&&isR(t.z)&&S.pop>=25&&!wOK(x,y)){O('rgba(192,57,43,.88)',px+27,py+9,8);P('#fff',px+27,py+3.5,px+30.5,py+9,px+23.5,py+9);O('#fff',px+27,py+10,3.4)}}}
+   else{_SK=t.sk||null;zone(t.z,t.lv,px,py);_SK=null;if(t.ab||t.sick)drawIll(px,py,tm,t.ab,t.sick);if(NFM()==0&&!MM&&!t.ab&&isR(t.z)&&S.pop>=25&&!wOK(x,y)){O('rgba(192,57,43,.88)',px+27,py+9,8);P('#fff',px+27,py+3.5,px+30.5,py+9,px+23.5,py+9);O('#fff',px+27,py+10,3.4)}}}
   if(t.r){roadDraw(x,y,t,px,py);trafOv(x,y,px,py,tm)}
-  if(t.b&&!(t.fp&&D[t.b]&&D[t.b].fp)){bld(t.b,px,py);if(t.b=='intake'&&nearPoll(x,y,1))drawWarn(px,py);if(gr(t)>1){O('#ffd24a',px+29,py+7,7);ctx.fillStyle='#5a3a00';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(gr(t),px+29,py+7.5)}}
+  if(t.b&&!(t.fp&&D[t.b]&&D[t.b].fp)){bld(t.b,px,py);if(t.b=='intake'&&!MM&&nearPoll(x,y,1))drawWarn(px,py);if(gr(t)>1){O('#ffd24a',px+29,py+7,7);ctx.fillStyle='#5a3a00';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(gr(t),px+29,py+7.5)}}
   if(VIEW)viewOv(x,y,t,px,py);
   if(t.lava>0){ctx.globalAlpha=.9;R(`hsl(${12+Math.sin(tm*3+x)*6},90%,52%)`,px,py,T,T);R('#7a2a10',px+8,py+10,10,6);ctx.globalAlpha=1}
-  if(S.warn&&S.warn.p.has(x+','+y)){R('rgba(255,110,0,.5)',px,py,T,T);ctx.fillStyle='#fff';ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',px+T/2,py+T/2)}}catch(e){ctx.globalAlpha=1;ctx.setLineDash([]);dErr(e)}}
- try{fpFix();fpDraw(VX0,VX1,VY0,VY1)}catch(e){dErr(e)};try{notifPass(VX0,VX1,VY0,VY1,tm)}catch(e){dErr(e)};try{roadPrev()}catch(e){dErr(e)};if(MV){ctx.strokeStyle='#ffd24a';ctx.lineWidth=3;ctx.setLineDash([5,4]);ctx.strokeRect(MV.x*T+2,MV.y*T+2,T-4,T-4);ctx.setLineDash([])}insDraw();if(hv){const k=D[S.sel];ctx.strokeStyle='#fff';ctx.lineWidth=2;if(k.fp&&S.sel!='none'){const f=fpCells(hv.x,hv.y,k),c=f.ok?'#4ee06f':'#ee4a40';ctx.globalAlpha=.28;R(c,f.ox*T,f.oy*T,k.fp[0]*T,k.fp[1]*T);ctx.globalAlpha=1;ctx.strokeStyle=c;ctx.lineWidth=3;ctx.strokeRect(f.ox*T+2,f.oy*T+2,k.fp[0]*T-4,k.fp[1]*T-4);ctx.strokeStyle='#fff';ctx.lineWidth=2}
+  if(!MM&&S.warn&&S.warn.p.has(x+','+y)){R('rgba(255,110,0,.5)',px,py,T,T);ctx.fillStyle='#fff';ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',px+T/2,py+T/2)}}catch(e){ctx.globalAlpha=1;ctx.setLineDash([]);dErr(e)}}
+ try{fpFix();fpDraw(VX0,VX1,VY0,VY1)}catch(e){dErr(e)};if(!MM){try{notifPass(VX0,VX1,VY0,VY1,tm)}catch(e){dErr(e)};try{roadPrev()}catch(e){dErr(e)}};if(MV&&!MM){ctx.strokeStyle='#ffd24a';ctx.lineWidth=3;ctx.setLineDash([5,4]);ctx.strokeRect(MV.x*T+2,MV.y*T+2,T-4,T-4);ctx.setLineDash([])}if(!MM)insDraw();if(hv&&!MM){const k=D[S.sel];ctx.strokeStyle='#fff';ctx.lineWidth=2;if(k.fp&&S.sel!='none'){const f=fpCells(hv.x,hv.y,k),c=f.ok?'#4ee06f':'#ee4a40';ctx.globalAlpha=.28;R(c,f.ox*T,f.oy*T,k.fp[0]*T,k.fp[1]*T);ctx.globalAlpha=1;ctx.strokeStyle=c;ctx.lineWidth=3;ctx.strokeRect(f.ox*T+2,f.oy*T+2,k.fp[0]*T-4,k.fp[1]*T-4);ctx.strokeStyle='#fff';ctx.lineWidth=2}
  if(k.r)ctx.strokeRect((hv.x-k.r)*T,(hv.y-k.r)*T,(2*k.r+1)*T,(2*k.r+1)*T);ctx.lineWidth=3;ctx.strokeRect(hv.x*T+2,hv.y*T+2,T-4,T-4)}
  if(GP&&aT()<GP.e){const p=.5+.5*Math.sin(aT()/120),cx=GP.x*T+T/2,cy=GP.y*T+T/2;O('#ffd24a',cx,cy,14+p*4,.35);O('#ffd24a',cx,cy,9);{const sp=[];for(let q=0;q<10;q++){const r=(q%2?3.6:8.4),a=-Math.PI/2+q*Math.PI/5;sp.push(cx+Math.cos(a)*r,cy+Math.sin(a)*r)}P('#7a4a00',...sp)}}else{if(GP)gc=0;GP=null}
  if(LVV)for(let y=VY0;y<=VY1;y++)for(let x=VX0;x<=VX1;x++){const t=S.g[y][x];if(t.t!='g'&&t.t!='v')continue;ctx.globalAlpha=.4;R(`hsl(${lvv(x,y)*1.2},80%,45%)`,x*T,y*T,T,T);ctx.globalAlpha=1}
- try{lineFx(VX0,VX1,VY0,VY1)}catch(e){dErr(e)}carsFx(VX0,VX1,VY0,VY1);try{svFx(VX0,VX1,VY0,VY1)}catch(e){dErr(e)}invDraw();try{mbDraw()}catch(e){dErr(e)}peopleFx();fxDraw();paradeFx();try{qkDraw()}catch(e){dErr(e)}ctx.restore();try{mbHud()}catch(e){dErr(e)}try{qkEdge()}catch(e){dErr(e)}
+ try{lineFx(VX0,VX1,VY0,VY1)}catch(e){dErr(e)}carsFx(VX0,VX1,VY0,VY1);try{svFx(VX0,VX1,VY0,VY1)}catch(e){dErr(e)}invDraw();try{mbDraw()}catch(e){dErr(e)}peopleFx();fxDraw();paradeFx();try{qkDraw()}catch(e){dErr(e)}ctx.restore();if(!MM)try{mbHud()}catch(e){dErr(e)}try{qkEdge()}catch(e){dErr(e)}
  {const ph=(aT()%100000)/100000,a=.4*Math.max(0,Math.sin(ph*Math.PI*2)),m=S.m%12,sc=m==11||m<2?'rgba(190,220,255,.1)':m>=8&&m<=10?'rgba(255,150,40,.08)':m>=5&&m<=7?'rgba(255,230,120,.05)':'rgba(255,170,200,.05)';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle=sc;ctx.fillRect(0,0,VW,VH);if(a>.01){ctx.fillStyle='rgba(8,16,60,'+a+')';ctx.fillRect(0,0,VW,VH)}}
 }
 /* 高速道路の立体交差：高速マス(r=3)に ov=下をくぐる一般道の種別 を持たせる */
@@ -1672,11 +1690,11 @@ function clampCam(){const mw=W*T*cam.z,mh=H*T*cam.z;cam.x=Math.min(VW*.6,Math.ma
 function zoomAt(px,py,f){const nz=Math.min(3,Math.max(.35,cam.z*f)),k=nz/cam.z;cam.x=px-(px-cam.x)*k;cam.y=py-(py-cam.y)*k;cam.z=nz}
 function homeCam(){const hx=S&&S.home?S.home.x+.5:17.5,hy=S&&S.home?S.home.y+.5:14.5;cam.z=Math.min(1.4,Math.max(.6,VW/(16*T)));cam.x=VW/2-hx*T*cam.z;cam.y=VH*.45-hy*T*cam.z;clampCam()}
 const PS=new Map();let pan=false,gst=null,tdown=null,LPT=0;
-var QI=false;const vIns=()=>QI||S.sel=='ins';const isBp=()=>{const d=D[S.sel];return !!d&&!d.road&&!d.ter&&!d.z&&!MT.includes(S.sel)&&S.sel!='none'};
+var QI=false;var MM=false;const vIns=()=>QI||S.sel=='ins';const isBp=()=>{const d=D[S.sel];return !!d&&!d.road&&!d.ter&&!d.z&&!MT.includes(S.sel)&&S.sel!='none'};
 const isPt=()=>!vIns()&&!LD&&(!!TM||D[S.sel].z||S.sel=='bull'||isBp()||!!D[S.sel].ter);const isRd=()=>!vIns()&&!LD&&!TM&&D[S.sel].road&&S.sel!='bull'&&S.sel!='ich';
 cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId)}catch(_){}PS.set(e.pointerId,{x:e.clientX,y:e.clientY});clearTimeout(LPT);
  if(PS.size>=2){pd=false;if(tdown&&tdown.mode=='rdrag')roadCancel();tdown=null;const[a,b]=[...PS.values()];gst={d:Math.hypot(a.x-b.x,a.y-b.y)||1,mx:(a.x+b.x)/2,my:(a.y+b.y)/2};return}
- const pm=pan||e.button==1||e.button==2||e.shiftKey,rd=isRd(),HINT='ドラッグして終点へ。指を離すと道路を敷設します';
+ const pm=MM||pan||e.button==1||e.button==2||e.shiftKey,rd=isRd(),HINT='ドラッグして終点へ。指を離すと道路を敷設します';
  if(pm||(!isPt()&&!rd)){tdown={x:e.clientX,y:e.clientY,moved:pm,mode:pm?'pan':'tap',e};return}
  if(rd&&e.pointerType=='mouse'){tdown={x:e.clientX,y:e.clientY,moved:false,mode:'mrd',e};return}
  if(e.pointerType!='mouse'){tdown={x:e.clientX,y:e.clientY,moved:false,mode:'tap',e};LPT=setTimeout(()=>{if(tdown&&!tdown.moved&&tdown.mode=='tap'&&PS.size==1){try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}
@@ -2764,7 +2782,94 @@ function majorEvents(){
 function showSafety(){const dz=S.dz?DZT[S.dz.k]:null;
  modal('治安・感染症の状況','【治安】\n犯罪指数 '+(S.crL?S.crL.toFixed(2):'-')+'（1.0が標準）\n未解決の現場 '+(S.crAct|0)+'か所\n警察署のカバー率 '+Math.round((S.pcv||0)*100)+'%\n発生 '+(S.cn|0)+'件／検挙 '+(S.arr|0)+'件\n'+(S.crk>0?'取り締まり強化中（あと'+S.crk+'か月）\n':'')+'\n【感染症】\n'+(dz?dz.n+'が流行中\n感染率 '+Math.round((S.infF||0)*100)+'%\n隔離措置 '+(S.qua?'ON':'OFF')+'\n':'流行はありません\n')+(S.vax>0?'予防接種の効果 あと'+S.vax+'か月\n':'')+'これまでの流行 '+(S.dzN|0)+'回\n\n警察署（範囲6）は治安を、診療所・病院は感染の拡大と回復を左右します。ごみ・遺体の処理や水質の悪化は、感染症の発生率を上げます。',[['閉じる']])}
 
-</script><style id="finfix">
+</script><script id="capjs">
+(function(){
+ const g=id=>document.getElementById(id),stage=g('stage'),body=document.body,MAXSEC=60;
+ let rec=null,tick=0,dimT=0,wasFs=false,lastURL=null,msgT=0;
+ const bar=document.createElement('div');bar.id='cap';
+ bar.innerHTML='<button id="cShot" aria-label="スクリーンショット">📷<small>写真</small></button><button id="cRec" aria-label="動画を録画">⏺<small>録画</small></button><button id="cMode" aria-label="全画面マップモードにする">🗺<small>マップ</small></button><button id="cX" aria-label="撮影バーを閉じる">✕<small>閉じる</small></button>';
+ stage.appendChild(bar);
+ const flash=document.createElement('div');flash.id='capflash';stage.appendChild(flash);
+ const note=document.createElement('div');note.id='capmsg';stage.appendChild(note);
+ const sheet=document.createElement('div');sheet.id='capsheet';
+ sheet.innerHTML='<div><div id="cpv"></div><p id="cpt"></p><div id="cpb"><button id="cpSave">保存</button><button id="cpShare">共有</button><button id="cpClose">閉じる</button></div></div>';
+ body.appendChild(sheet);
+ const msg=t=>{note.textContent=t;note.classList.add('show');clearTimeout(msgT);msgT=setTimeout(()=>note.classList.remove('show'),2600)};
+ const ts=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds())};
+ function wake(){bar.classList.remove('dim');clearTimeout(dimT);if(MM||rec)dimT=setTimeout(()=>bar.classList.add('dim'),3500)}
+ function showBar(on){bar.classList.toggle('on',on);wake()}
+
+ // ===== モード切替 =====
+ function setMM(on){
+  if(!!on===!!MM)return;
+  stopRec();
+  const fsb=g('bfs');
+  if(on){wasFs=body.classList.contains('fs');body.classList.add('fs','mm');MM=true;showBar(true)}
+  else{body.classList.remove('mm');MM=false;if(!wasFs)body.classList.remove('fs')}
+  fsb.textContent=body.classList.contains('fs')?'⤡':'⤢';
+  const m=g('cMode');m.innerHTML=MM?'🎮<small>プレイ</small>':'🗺<small>マップ</small>';
+  m.setAttribute('aria-label',MM?'プレイ画面モードに戻す':'全画面マップモードにする');
+  g('cX').style.display=MM?'none':'';
+  requestAnimationFrame(()=>{try{fit();clampCam()}catch(e){}});
+  wake();
+  if(MM)msg('全画面マップモード：通知マークを消しました（地図の移動・拡大のみ）');
+ }
+
+ // ===== スクリーンショット =====
+ function shot(){
+  try{draw()}catch(e){}
+  flash.classList.remove('go');void flash.offsetWidth;flash.classList.add('go');
+  try{cv.toBlob(b=>{if(!b){msg('撮影に失敗しました');return}openSheet(b,'png','image/png')},'image/png')}catch(e){msg('撮影に失敗しました')}
+ }
+
+ // ===== 動画 =====
+ function pickMime(){const c=['video/mp4;codecs=avc1.42E01E','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];for(const m of c){try{if(MediaRecorder.isTypeSupported(m))return m}catch(e){}}return ''}
+ function recUI(s){const b=g('cRec');if(s==null){b.classList.remove('rec');b.innerHTML='⏺<small>録画</small>';b.setAttribute('aria-label','動画を録画');return}
+  const m=Math.floor(s/60),r=Math.floor(s%60);b.classList.add('rec');b.innerHTML='⏹<small>'+m+':'+String(r).padStart(2,'0')+'</small>';b.setAttribute('aria-label','録画を停止')}
+ function startRec(){
+  if(rec)return;
+  if(!cv.captureStream||!window.MediaRecorder){msg('このブラウザは動画の録画に対応していません');return}
+  const mime=pickMime(),chunks=[];let st,r;
+  try{st=cv.captureStream(30);r=new MediaRecorder(st,mime?{mimeType:mime,videoBitsPerSecond:8e6}:{videoBitsPerSecond:8e6})}catch(e){msg('録画を開始できませんでした');return}
+  r.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+  r.onstop=()=>{clearInterval(tick);try{st.getTracks().forEach(t=>t.stop())}catch(e){}rec=null;recUI(null);wake();
+   const type=(mime||'video/webm').split(';')[0],b=new Blob(chunks,{type});
+   if(b.size>0)openSheet(b,type.indexOf('mp4')>=0?'mp4':'webm',type);else msg('録画データが空でした')};
+  rec=r;r.start(1000);const t0=Date.now();recUI(0);wake();
+  tick=setInterval(()=>{const s=(Date.now()-t0)/1000;recUI(s);if(s>=MAXSEC){msg('最大'+MAXSEC+'秒で自動停止しました');stopRec()}},250);
+ }
+ function stopRec(){if(rec&&rec.state!='inactive'){try{rec.stop()}catch(e){}}}
+
+ // ===== 保存・共有シート =====
+ function openSheet(b,ext,type){
+  closeSheet();
+  const url=URL.createObjectURL(b),name='isle-of-embers_'+ts()+'.'+ext,isV=type.indexOf('video')==0;lastURL=url;
+  const pv=g('cpv'),el=document.createElement(isV?'video':'img');pv.innerHTML='';el.src=url;
+  if(isV){el.controls=true;el.muted=true;el.loop=true;el.autoplay=true;el.playsInline=true;try{el.play()}catch(e){}}
+  pv.appendChild(el);
+  g('cpt').textContent=(isV?'動画':'写真')+'を撮影しました（'+(b.size/1048576).toFixed(1)+'MB・'+ext.toUpperCase()+'）';
+  let file=null;try{file=new File([b],name,{type})}catch(e){}
+  let can=false;try{can=!!(file&&navigator.share&&navigator.canShare&&navigator.canShare({files:[file]}))}catch(e){}
+  g('cpShare').style.display=can?'':'none';
+  g('cpSave').onclick=()=>{const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()};
+  g('cpShare').onclick=()=>{navigator.share({files:[file],title:'Isle of Embers'}).catch(()=>{})};
+  sheet.classList.add('on');
+ }
+ function closeSheet(){sheet.classList.remove('on');g('cpv').innerHTML='';if(lastURL){const u=lastURL;lastURL=null;setTimeout(()=>URL.revokeObjectURL(u),800)}}
+
+ // ===== ボタン =====
+ g('bcam').onclick=()=>{if(!MM)showBar(!bar.classList.contains('on'))};
+ g('cShot').onclick=shot;
+ g('cRec').onclick=()=>{rec?stopRec():startRec()};
+ g('cMode').onclick=()=>setMM(!MM);
+ g('cX').onclick=()=>{stopRec();showBar(false)};
+ g('cpClose').onclick=closeSheet;
+ bar.addEventListener('pointerdown',wake);cv.addEventListener('pointerdown',wake);
+ document.addEventListener('keydown',e=>{if(e.key!='Escape')return;if(sheet.classList.contains('on'))closeSheet();else if(MM)setMM(false)});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)stopRec()});
+})();
+</script>
+<style id="finfix">
 /* 財政パネル：ボタンを小さく・見た目を整える */
 #dock.sat:not(.min) #tabs button{min-height:30px!important;font-size:10.5px!important;flex-direction:row!important;gap:3px!important;padding:2px 3px!important}
 #dock.sat:not(.min) #tabs button .ti{width:16px!important;height:16px!important}
