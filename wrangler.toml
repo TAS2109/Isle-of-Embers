@@ -4,5 +4,5 @@ compatibility_date = "2024-11-01"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "honoo-rank"
+database_name = "rank-db"
 database_id = "74fab362-8b84-4098-bd5c-bedbce181d02"
