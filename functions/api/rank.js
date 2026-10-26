@@ -1,21 +1,29 @@
+// Isle of Embers ランキングAPI（Cloudflare Pages Functions + D1）
+// 置き場所: リポジトリ直下の functions/api/rank.js
+// 必要な設定: D1データベースをバインディング名「DB」で紐づける
+
 const BAD = ['http', 'www', '@', '.com', '.jp'];
 const J = (o, s = 200) =>
   new Response(JSON.stringify(o), { status: s, headers: { 'Content-Type': 'application/json' } });
 
+// 一覧を返す  例: /api/rank?sort=score  /api/rank?daily=2026-10-26&sort=assets
 export async function onRequestGet({ request, env }) {
   const u = new URL(request.url);
-  const sort = u.searchParams.get('sort') === 'assets' ? 'assets' : 'score';
+  // 並べ替え：pop（最大人口）／score／assets（総資産）／years（継続年）。省略時は最大人口
+  const sort = ['pop', 'score', 'assets', 'years'].includes(u.searchParams.get('sort')) ? u.searchParams.get('sort') : 'pop';
   const daily = u.searchParams.get('daily');
   const q = daily
-    ? env.DB.prepare(`SELECT name,score,assets,years,pop FROM ranks WHERE daily=? ORDER BY ${sort} DESC LIMIT 100`).bind(daily)
-    : env.DB.prepare(`SELECT name,score,assets,years,pop FROM ranks ORDER BY ${sort} DESC LIMIT 100`);
+    ? env.DB.prepare(`SELECT name,score,assets,years,pop FROM ranks WHERE daily=? ORDER BY ${sort} DESC, score DESC, created ASC LIMIT 100`).bind(daily)
+    : env.DB.prepare(`SELECT name,score,assets,years,pop FROM ranks ORDER BY ${sort} DESC, score DESC, created ASC LIMIT 100`);
   const { results } = await q.all();
   return J(results);
 }
 
+// 記録する
 export async function onRequestPost({ request, env }) {
   let b;
   try { b = await request.json(); } catch { return J({ error: 'bad json' }, 400); }
+
   const name = String(b.name || '').trim().slice(0, 12);
   const n = (v) => Math.max(0, Math.floor(Number(v) || 0));
   const score = n(b.score), assets = n(b.assets), years = n(b.years), pop = n(b.pop);
@@ -23,9 +31,10 @@ export async function onRequestPost({ request, env }) {
 
   if (!name || BAD.some((w) => name.toLowerCase().includes(w))) return J({ error: 'name' }, 400);
   if (b.adm) return J({ error: 'admin' }, 400);
-  if (score > 10000000 || pop > 2000000 || years > 1000 || assets > 1e12) return J({ error: 'range' }, 400);
+  // 上限値は仮です。実際の最高スコアに合わせて調整してください
+  if (score > 100000 || pop > 2000000 || years > 500 || assets > 1e12) return J({ error: 'range' }, 400);
 
-  // 同じ接続元からの連続投稿を制限（1分に3件まで）
+  // 簡易の連投制限（同じ接続元は1分に3件まで）
   const ip = request.headers.get('CF-Connecting-IP') || '';
   const now = Date.now();
   const key = ip + '|' + Math.floor(now / 60000);
@@ -37,8 +46,8 @@ export async function onRequestPost({ request, env }) {
   await env.DB.prepare('INSERT INTO ranks (name,score,assets,years,pop,daily,created) VALUES (?,?,?,?,?,?,?)')
     .bind(name, score, assets, years, pop, daily, now).run();
 
-  const col = daily ? 'daily=?' : '1=1';
-  const bind = daily ? [score, daily] : [score];
-  const r = await env.DB.prepare(`SELECT COUNT(*)+1 AS rank FROM ranks WHERE score>? AND ${col}`).bind(...bind).first();
+  const r = daily
+    ? await env.DB.prepare('SELECT COUNT(*)+1 AS rank FROM ranks WHERE score>? AND daily=?').bind(score, daily).first()
+    : await env.DB.prepare('SELECT COUNT(*)+1 AS rank FROM ranks WHERE score>?').bind(score).first();
   return J({ rank: r.rank <= 100 ? r.rank : 0 });
 }
