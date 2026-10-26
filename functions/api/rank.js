@@ -23,7 +23,7 @@ export async function onRequestPost({ request, env }) {
 
   if (!name || BAD.some((w) => name.toLowerCase().includes(w))) return J({ error: 'name' }, 400);
   if (b.adm) return J({ error: 'admin' }, 400);
-  if (score > 100000 || pop > 2000000 || years > 500 || assets > 1e12) return J({ error: 'range' }, 400);
+  if (score > 10000000 || pop > 2000000 || years > 1000 || assets > 1e12) return J({ error: 'range' }, 400);
 
   // 同じ接続元からの連続投稿を制限（1分に3件まで）
   const ip = request.headers.get('CF-Connecting-IP') || '';
