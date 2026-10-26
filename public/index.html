@@ -418,7 +418,7 @@ park:{n:'公園',c:60,up:1,r:3,d:'範囲3。地価+18・工房の公害を半減
 depot:{n:'バス車庫',c:120,up:6,pop:25,d:'1マスの施設。渋滞を緩和（道路約10本分）。バス路線に必要'},
 busstop:{n:'バス停留所',c:15,up:0,d:'道路・並木道・大通り・幹線道路の上に置く（小道・高速道路は不可）。バス路線の停留所になります（路面電車駅とは同じマスに置けません）'},
 tramstn:{n:'路面電車駅',c:60,up:0,d:'大通り・幹線道路の上に置く（高速道路は不可）。路面電車路線の駅になります（バス停留所とは同じマスに置けません）'},
-railstn:{n:'鉄道駅',c:200,up:5,d:'1マスの施設。線路の途中や端に建て、鉄道路線の駅にします。国際線の線路につながった駅（道路にも面していると効果大）から、移民と観光客が訪れます'},
+railstn:{n:'鉄道駅',c:200,up:5,d:'1マスの施設。線路は左右か上下の一方向だけにつながり、線路の途中に建てれば通過駅として使えます（向きは自動で決まり、「調べる」から変更できます）。線路の途中や端に建て、鉄道路線の駅にします。国際線の線路につながった駅（道路にも面していると効果大）から、移民と観光客が訪れます'},
 ferrystn:{n:'フェリー乗り場',c:150,up:3,port:1,pop:400,d:'海に隣接して建てる1マスの施設。フェリー路線の乗り場になります（2か所以上で路線を引けます）'},
 track:{n:'線路',c:20,up:0,d:'1マスずつ敷く（地上鉄道）。道路と交差する所は踏切になり、「改築」で立体交差⇔踏切を切り替えられます'},
 tram:{n:'路面電車',c:90,up:3,tr:6,d:'渋滞を緩和（道路約6本分）'},
@@ -611,7 +611,10 @@ function lnSeg(ty,a,b,fl,pen){if(ty=='rail'||ty=='mono')return trkPath(ty,a,b);i
 // ===== 線路の敷設（鉄道・モノレール） =====
 var TM=null;
 const TKC={rail:{n:'鉄道の線路',c:20,cx:30,ov:80},mono:{n:'モノレール軌道',c:45}};
-function trkPath(k,a,b){if(a==b)return[a];const T2=S.trk||{},par=new Map([[a,-1]]),q=[a];for(let h=0;h<q.length;h++){const i=q[h];if(i==b)break;const x=i%W,y=i/W|0;for(const[dx,dy]of NB){const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=W||ny>=H)continue;const j=ny*W+nx,e=T2[j],st=k=='rail'&&S.g[ny][nx].b=='railstn';if((!e||e.k!=k)&&!st||par.has(j))continue;par.set(j,i);q.push(j)}}if(!par.has(b))return null;const p=[];for(let i=b;i!=-1;i=par.get(i))p.push(i);return p.reverse()}
+function stDirOK(t,dx,dy){const o=t.so|0;return o?dx==0:dy==0}
+function stAuto(x,y){let h=0,v=0;for(const[dx,dy]of NB){const e=(S.trk||{})[(y+dy)*W+x+dx];if(e&&e.k=='rail'){if(dx)h=1;else v=1}}return(v&&!h)?1:0}
+function stRot(){const t=S.g[INS.y][INS.x];if(!t||t.b!='railstn')return;const n=INS.y*W+INS.x;if(lnUsed(n))return say('この駅は路線で使われているため、向きを変えられません');t.so=(t.so|0)?0:1;draw();panelFor($('tools').scrollTop)}
+function trkPath(k,a,b){if(a==b)return[a];const T2=S.trk||{},par=new Map([[a,-1]]),q=[a];for(let h=0;h<q.length;h++){const i=q[h];if(i==b)break;const x=i%W,y=i/W|0;for(const[dx,dy]of NB){const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=W||ny>=H)continue;const j=ny*W+nx,e=T2[j],st=k=='rail'&&S.g[ny][nx].b=='railstn';if((!e||e.k!=k)&&!st||par.has(j))continue;if(k=='rail'&&((S.g[y][x].b=='railstn'&&!stDirOK(S.g[y][x],dx,dy))||(st&&!stDirOK(S.g[ny][nx],dx,dy))))continue;par.set(j,i);q.push(j)}}if(!par.has(b))return null;const p=[];for(let i=b;i!=-1;i=par.get(i))p.push(i);return p.reverse()}
 function trkStart(k){LD=null;ldBar();S.sel='none';roadCancel();S.trk=S.trk||{};TM={k,x:1,er:0};S.modal=false;try{closeModal()}catch(e){}trkBar();$('info').textContent=TKC[k].n+'：タップで1マス、長押ししてドラッグでまとめて敷設できます'}
 function trkTap(p){const t=at(p.x,p.y);if(!t)return;const n=p.y*W+p.x,e=S.trk[n],c=TKC[TM.k];
  if(TM.er){if(!e)return;if((S.lines||[]).some(l=>l.trk&&l.path.includes(n)))return say('この線路は路線で使われています（先に路線を廃止してください）');const k=TKC[e.k],v=e.k=='mono'?k.c:(e.x==2?k.ov:e.x==1?k.cx:k.c);S.money+=Math.round(.5*M(v));delete S.trk[n];sfx('tick');trkBar();return}
@@ -645,7 +648,7 @@ function railTile(px,py,m,x){const h=T/2,cx=px+h,cy=py+h,A=[[cx,py],[px+T,cy],[c
  ctx.setLineDash([]);ctx.restore()}
 function trkFx(only){const T2=S.trk;if(!T2)return;ctx.save();ctx.lineCap='butt';
  for(const s2 in T2){const n=+s2,e=T2[n];if(only&&e.k!=only)continue;const px=(n%W)*T,py=(n/W|0)*T,x=px+T/2,y=py+T/2,mono=e.k=='mono';
-  if(!mono){let m=0;[[0,-1,1],[1,0,2],[0,1,4],[-1,0,8]].forEach(([dx,dy,b])=>{const f=T2[n+dy*W+dx];if(f&&f.k==e.k)m|=b;else{const q=S.g[(n/W|0)+dy]&&S.g[(n/W|0)+dy][(n%W)+dx];if(q&&q.b=='railstn'&&e.k=='rail')m|=b}});{const gx=n%W,gy=n/W|0;if(gy==0)m|=1;if(gx==W-1)m|=2;if(gy==H-1)m|=4;if(gx==0)m|=8;if(S.g[gy][gx].t=='s'){ctx.fillStyle='#6e7279';const w=T*.5,o=(T-w)/2;ctx.fillRect(px+o,py+o,w,w);if(m&1)ctx.fillRect(px+o,py,w,o);if(m&2)ctx.fillRect(px+o+w,py+o,o,w);if(m&4)ctx.fillRect(px+o,py+o+w,w,o);if(m&8)ctx.fillRect(px,py+o,o,w)}if(gx==0||gy==0||gx==W-1||gy==H-1){const bo=bdDir(n),mm=bo[0]?10:5;for(let k=1;k<=3;k++)railTile(px+bo[0]*T*k,py+bo[1]*T*k,mm,0)}}railTile(px,py,m,e.x|0);continue}
+  if(!mono){let m=0;[[0,-1,1],[1,0,2],[0,1,4],[-1,0,8]].forEach(([dx,dy,b])=>{const f=T2[n+dy*W+dx];if(f&&f.k==e.k)m|=b;else{const q=S.g[(n/W|0)+dy]&&S.g[(n/W|0)+dy][(n%W)+dx];if(q&&q.b=='railstn'&&e.k=='rail'&&stDirOK(q,dx,dy))m|=b}});{const gx=n%W,gy=n/W|0;if(gy==0)m|=1;if(gx==W-1)m|=2;if(gy==H-1)m|=4;if(gx==0)m|=8;if(S.g[gy][gx].t=='s'){ctx.fillStyle='#6e7279';const w=T*.5,o=(T-w)/2;ctx.fillRect(px+o,py+o,w,w);if(m&1)ctx.fillRect(px+o,py,w,o);if(m&2)ctx.fillRect(px+o+w,py+o,o,w);if(m&4)ctx.fillRect(px+o,py+o+w,w,o);if(m&8)ctx.fillRect(px,py+o,o,w)}if(gx==0||gy==0||gx==W-1||gy==H-1){const bo=bdDir(n),mm=bo[0]?10:5;for(let k=1;k<=3;k++)railTile(px+bo[0]*T*k,py+bo[1]*T*k,mm,0)}}railTile(px,py,m,e.x|0);continue}
   const sg=[];for(const[dx,dy]of NB){const f=T2[n+dy*W+dx];if(f&&f.k==e.k)sg.push([dx,dy])}
   const arms=sg.length?sg:[[1,0],[-1,0]];
   for(const[dx,dy]of arms){const ex=x+dx*T/2,ey=y+dy*T/2;ctx.globalAlpha=.92;ctx.strokeStyle='#7d5cc0';ctx.lineWidth=T*.32;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(ex,ey);ctx.stroke()}
@@ -656,7 +659,7 @@ function trkFx(only){const T2=S.trk;if(!T2)return;ctx.save();ctx.lineCap='butt';
 var ART2={};
 const STN={bus:'バス停留所',tram:'路面電車駅',subway:'地下鉄駅',rail:'鉄道駅',ferry:'フェリー乗り場'};
 function stCount(ty){return tiles().filter(q=>ty=='bus'?q.ps=='bus':ty=='tram'?q.ps=='tram':ty=='subway'?q.b=='subway':ty=='ferry'?q.b=='ferrystn':q.b=='railstn').length}
-ART2.railstn=(x,y)=>{R('#c9c2b0',x+4,y+14,28,16);P('#b03a2e',x+2,y+14,x+18,y+5,x+34,y+14);R('#6b5f4a',x+14,y+20,8,10);R('#4a4f57',x+2,y+30,32,3);R('#e8e8e8',x+7,y+18,5,5);R('#e8e8e8',x+24,y+18,5,5)};
+ART2.railstn=(x,y)=>{const v=ctx.canvas===cv?((S.g[(y/T)|0]||[])[(x/T)|0]||{}).so|0:0;ctx.save();if(v){ctx.translate(x+T/2,y+T/2);ctx.rotate(Math.PI/2);ctx.translate(-x-T/2,-y-T/2)}railTile(x,y,10,0);R('#cfc8b6',x+1,y+1,34,7);R('#cfc8b6',x+1,y+28,34,7);R('#e8c33a',x+1,y+8,34,1);R('#e8c33a',x+1,y+26.8,34,1);R('#b03a2e',x+8,y+2,20,4.5);R('#b03a2e',x+8,y+29.5,20,4.5);ctx.restore()};
 ART2.ferrystn=(x,y)=>{R('#7a5a3a',x+3,y+24,30,5);R('#5a3f26',x+7,y+29,3,5);R('#5a3f26',x+26,y+29,3,5);R('#f2f2f0',x+9,y+14,18,8);R('#2a6fd6',x+9,y+20,18,3);P('#d8d8d4',x+6,y+20,x+9,y+14,x+9,y+20);R('#c0392b',x+16,y+8,4,6);R('#fff',x+13,y+16,3,3);R('#fff',x+20,y+16,3,3)}; ART2.busstop=(x,y)=>{R('#6b6f78',x+17,y+14,2,18);R('#2a6fd6',x+9,y+5,18,11);R('#fff',x+12,y+8,12,2);R('#fff',x+12,y+12,8,2)};
 ART2.tramstn=(x,y)=>{R('#5d6168',x+2,y+23,32,11);R('#b9bcbf',x+2,y+26,32,5);R('#e6eaee',x+2,y+27,32,1.1);R('#e6eaee',x+2,y+29.6,32,1.1);R('#d8dadd',x+3,y+17,30,6);R('#f0c53a',x+3,y+22,30,1.3);R('#2e8b57',x+6,y+5,24,10);R('#63c48f',x+6,y+5,24,2);R('#6b6f78',x+8,y+15,1.4,3);R('#6b6f78',x+26.6,y+15,1.4,3);R('rgba(255,255,255,.6)',x+10,y+9,16,1.4)}
 ART2.track=(x,y)=>{for(let i=0;i<4;i++)R('#8a7d62',x+5+i*8,y+5,4,26);R('#9aa0a6',x+2,y+9,32,3);R('#9aa0a6',x+2,y+24,32,3)};
@@ -1386,7 +1389,8 @@ function tramBed(px,py,m){const h=T/2,cx=px+h,cy=py+h,A=[[cx,py],[px+T,cy],[cx,p
  if(dr.length==1){const a=A[dr[0]],dx=cx-a[0],dy=cy-a[1];ctx.save();ctx.translate(cx,cy);ctx.rotate(Math.atan2(dy,dx));R('#5a5d63',13.6,-4.8,3,9.6);R('#c0392b',14,-4.4,2.2,8.8);R('#f1c40f',14,-1.2,2.2,2.4);ctx.restore()}
  ctx.restore()}
 /* ---- 高速道路：ジャンクション(JCT)・インターチェンジ(IC)・通行料 ---- */
-const isJct=(x,y)=>{const t=at(x,y);if(!t||t.r!=3||t.ov||!t.jct)return false;let n=0;for(const[a,b]of NB){const q=at(x+a,y+b);if(q&&q.r==3)n++}return n>=3};
+function jctN(x,y){let n=0,o=0;for(const[a,b]of NB){const nx=x+a,ny=y+b;if(nx<0||ny<0||nx>=W||ny>=H){o++;continue}const q=at(nx,ny);if(q&&q.r==3)n++}return n>=2?n+o:n}
+const isJct=(x,y)=>{const t=at(x,y);if(!t||t.r!=3||t.ov||!t.jct)return false;return jctN(x,y)>=3};
 var ICL=[];
 function hwScan(){const ics=[],id=new Map();let jct=0,cn=0;
  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const q=S.g[y][x];if(q.r==3&&isJct(x,y))jct++;if(q.r==7&&conn(x,y))ics.push([x,y])}
@@ -1401,7 +1405,7 @@ function icBonus(x,y){let b=0;for(const[a,c]of ICL){const d=Math.abs(a-x)+Math.a
 function hwCnt(x,y){let h=0,v=0;for(const[da,db]of NB){const q=at(x+da,y+db);if(q&&isHW(q)){if(da)h++;else v++}}return[h,v]}
 function hwOk(x,y,a,b){const t=at(x,y);if(!t||t.jct)return 1;const[h,v]=hwCnt(x,y);if(h+v<3)return 1;return(a?h:v)>=2?1:0}
 function jctPlace(x,y,t,d){if(t.r!=3||t.ov)return say('ジャンクションは、高速道路のマスの上に置きます');if(t.jct)return say('すでにジャンクションです');
- let n=0;for(const[a,b]of NB){const q=at(x+a,y+b);if(q&&q.r==3)n++}if(n<3)return say('ジャンクションは、高速道路が3方向以上に分かれる地点に置いてください');
+ const n=jctN(x,y);if(n<3)return say('ジャンクションは、高速道路が3方向以上に分かれる地点に置いてください');
  const cc=S.admFree?0:Math.round(d.c*(1-.15*Math.min(3,(S.pk||{}).cheap|0))*cm());if(S.money<cc)return say('資金が足りません！');
  S.money-=cc;t.jct=1;sfx('build');burst(x*T+T/2,y*T+T/2,'#9ad1ff',10);fx(x*T+T/2,y*T,'-$'+cc,'#ffd24a');xp(3);log('ジャンクションを設置した。高速道路どうしがつながった')}
 try{ART.jct=(x,y)=>{R('#34384a',x+2,y+11,32,14);R('#34384a',x+11,y+2,14,32);R('#c9ccd6',x+2,y+11,32,1.2);R('#c9ccd6',x+2,y+23.8,32,1.2);ctx.save();ctx.strokeStyle='rgba(255,255,255,.75)';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(x+2,y+18);ctx.lineTo(x+34,y+18);ctx.moveTo(x+18,y+2);ctx.lineTo(x+18,y+34);ctx.stroke();ctx.restore();O('#2e9a50',x+18,y+18,7);O('#fff',x+18,y+18,5.4);O('#2e9a50',x+18,y+18,4.6)}}catch(e){}
@@ -1489,7 +1493,7 @@ function satPanel(st){const t=$('tools'),I=S.satI;$('info').textContent='住民�
  t.scrollTop=st|0}
 
 const SLN=3,slK=i=>KEY+'_slot'+i;
-function fixS(){try{govFix()}catch(e){console.error(e)}delete S.sr;if(!S.icm){S.icm=1;try{for(let y=0;y<H;y++)for(let x=0;x<W;x++){const q=S.g[y][x];if(q.r==3&&NB.some(([a,b])=>{const n=S.g[y+b]&&S.g[y+b][x+a];return n&&n.r&&n.r!=3&&n.r!=7})){let bk=0;const ax=hax(x,y);if(ax){const cs=ax=='v'?[[1,0],[-1,0]]:[[0,1],[0,-1]];for(const[a,b]of cs){const n=S.g[y+b]&&S.g[y+b][x+a];if(n&&n.r&&n.r!=3&&n.r!=7&&RK[n.r]>RK[bk])bk=n.r}const al=ax=='v'?[[0,1],[0,-1]]:[[1,0],[-1,0]];if(al.some(([a,b])=>{const n=S.g[y+b]&&S.g[y+b][x+a];return n&&n.r&&n.r!=3&&n.r!=7}))bk=0}if(bk)q.ov=bk;else q.r=7}}}catch(e){}}
+function fixS(){try{govFix()}catch(e){console.error(e)}delete S.sr;try{for(let y=0;y<H;y++)for(let x=0;x<W;x++){const q=S.g[y][x];if(q.b=='railstn'&&q.so==null)q.so=stAuto(x,y)}}catch(e){console.error(e)}if(!S.icm){S.icm=1;try{for(let y=0;y<H;y++)for(let x=0;x<W;x++){const q=S.g[y][x];if(q.r==3&&NB.some(([a,b])=>{const n=S.g[y+b]&&S.g[y+b][x+a];return n&&n.r&&n.r!=3&&n.r!=7})){let bk=0;const ax=hax(x,y);if(ax){const cs=ax=='v'?[[1,0],[-1,0]]:[[0,1],[0,-1]];for(const[a,b]of cs){const n=S.g[y+b]&&S.g[y+b][x+a];if(n&&n.r&&n.r!=3&&n.r!=7&&RK[n.r]>RK[bk])bk=n.r}const al=ax=='v'?[[0,1],[0,-1]]:[[1,0],[-1,0]];if(al.some(([a,b])=>{const n=S.g[y+b]&&S.g[y+b][x+a];return n&&n.r&&n.r!=3&&n.r!=7}))bk=0}if(bk)q.ov=bk;else q.r=7}}}catch(e){}}
  try{for(let y=0;y<H;y++)for(let x=0;x<W;x++){const q=S.g[y][x];if(q.ov&&q.r!=3)q.ov=0;if(q.z&&(q.b||q.r)){q.z=null;q.lv=0;q.ab=0;q.sick=0}}}catch(e){}if(S.warn&&!(S.warn.p instanceof Set)){const p=S.warn.p;S.warn.p=Array.isArray(p)?new Set(p):eruptPath()}S.modal=false;S.spd=S.spd==null?1:S.spd;S.ed=S.ed||{};if(!D[S.sel])S.sel='road';if(S.cx!=null){CX=S.cx;CY=S.cy}}
 function slInfo(i){try{const j=localStorage.getItem(slK(i));return j?JSON.parse(j):null}catch(e){return null}}
 function saveSlot(i){if(S.over)return;try{const d=new Date(),pd2=n=>String(n).padStart(2,'0');localStorage.setItem(slK(i),JSON.stringify({t:(d.getMonth()+1)+'/'+d.getDate()+' '+pd2(d.getHours())+':'+pd2(d.getMinutes()),y:Math.floor(S.m/12)+1,mo:S.m%12+1,pop:Math.round(S.pop),money:Math.round(S.money),data:ser()}));sfx('quest');log('スロット'+i+'にセーブしました')}catch(e){sfx('err');log('セーブに失敗しました（保存容量が足りない可能性があります）')}}
@@ -1636,7 +1640,7 @@ function movTap(x,y,t){
  if(d.port&&!NB.some(([a,b])=>{const n=at(x+a,y+b);return n&&n.t=='s'}))return say(d.n+'は、海に隣接する場所にしか移せません');
  if(k=='gov'&&MB)return say('戦闘中は中央政府を移設できません');
  const cc=mvCost(k);if(S.money<cc)return say('資金が足りません！');
- S.money-=cc;if(k=='gov'){S.gov.x=x;S.gov.y=y}t.b=k;t.bl=gr(s);if(s.hf!=null){t.hf=s.hf;delete s.hf}if(s.lf!=null){t.lf=s.lf;delete s.lf}s.b=null;s.bl=0;burst(MV.x*T+T/2,MV.y*T+T/2,'#cfcfcf',8);burst(x*T+T/2,y*T+T/2,'#ffd24a',10);fx(x*T+T/2,y*T,'-$'+cc,'#ffd24a');sfx('build');xp(1);log(`${d.n}を移設した（$${cc}）`);MV=null;$('info').textContent=`${d.n}を移設しました。続けて別の建物を選べます`}
+ S.money-=cc;if(k=='gov'){S.gov.x=x;S.gov.y=y}t.b=k;t.bl=gr(s);if(s.so!=null){t.so=s.so;delete s.so}if(s.hf!=null){t.hf=s.hf;delete s.hf}if(s.lf!=null){t.lf=s.lf;delete s.lf}s.b=null;s.bl=0;burst(MV.x*T+T/2,MV.y*T+T/2,'#cfcfcf',8);burst(x*T+T/2,y*T+T/2,'#ffd24a',10);fx(x*T+T/2,y*T,'-$'+cc,'#ffd24a');sfx('build');xp(1);log(`${d.n}を移設した（$${cc}）`);MV=null;$('info').textContent=`${d.n}を移設しました。続けて別の建物を選べます`}
 /* ===== 軍事：中央政府と実戦（敵艦隊の上陸・砲撃／反乱軍） ===== */
 var MB=null,MBAR={battery:{r:8,d:9,c:2.2,sh:1},missile:{r:10,d:30,c:3.6,sh:1},navy:{r:11,d:16,c:2.2,sh:1},fort:{r:7,d:9,c:2,sh:0}},MBMIL=['barracks','guard','hq','academy','fort'];
 function govHp(l){return[400,700,1100,1700,2600][l-1]||2600}
@@ -1920,7 +1924,7 @@ function apply(x,y){TD=1;
  if((d.one&&tiles().some(q=>q.b==S.sel))||(d.max&&tiles().filter(q=>q.b==S.sel).length>=d.max))return say('これ以上は建てられません');
  if(d.post&&!S.cleared&&!S.admUnl)return say('人口10万人に到達すると建設できます');if(d.pop&&PM()<d.pop)return say('人口'+d.pop+'人から建設できます');const cc=S.admFree?0:Math.round((d.c+(t.t=='s'?30:0))*(1-.15*Math.min(3,(S.pk||{}).cheap|0))*cmk(S.sel));if(S.money<cc)return say('資金が足りません！');
  S.money-=cc;sfx(d.road?'tick':'build');if(!d.road){burst(x*T+T/2,y*T+T/2,'#ffd24a',8);fx(x*T+T/2,y*T,'-$'+cc,'#ffd24a');xp(2)}
- if(d.road){t.r=d.road;t.ov=0;if(t.z&&!(t.lv>0)){t.z=null;t.lv=0}}else if(d.z){t.z=d.z;t.lv=0;t.sk=SUBZ[S.sel]?S.sel:null}else{t.b=S.sel;t.bl=1}}
+ if(d.road){t.r=d.road;t.ov=0;if(t.z&&!(t.lv>0)){t.z=null;t.lv=0}}else if(d.z){t.z=d.z;t.lv=0;t.sk=SUBZ[S.sel]?S.sel:null}else{t.b=S.sel;t.bl=1;if(S.sel=='railstn')t.so=stAuto(x,y)}}
 function act(e){const p=pos(e);fpMap(p);if(TM&&!S.modal){const k=p.y*W+p.x;if(pd){if(TMl===k)return;TMl=k}else TMl=-1;if(at(p.x,p.y)){trkTap(p);draw();hud()}return}if(LD&&!S.modal){if(at(p.x,p.y))ldTap(p);return}hv=at(p.x,p.y)?p:null;if(TOV){const tt=tileTraf(p.x,p.y);if(tt)$('info').textContent=tt}nfTap(p);
  if(GP&&!S.modal&&!S.over&&p.x==GP.x&&p.y==GP.y&&aT()<GP.e){gold();GP=null;checkQ();draw();hud();return}
 if(ct==7||ct==9||ct==10||ct==12)return;
@@ -2949,7 +2953,7 @@ function insPanel(st){const t=$('tools');$('info').textContent='調べたい建�
  if(R.eff.length)h+='<div class="sh2">効果</div>'+R.eff.map(r=>`<div class="sr"><span>${r[0]}</span><b style="font-size:12.5px">${r[1]}</b></div>`).join('');
  h+=`<div class="sh2" style="color:${R.prob.length?'var(--bad)':'var(--ok)'}">問題点（${R.prob.length}）</div>`+(R.prob.length?R.prob.map(p=>`<div class="pb ${p[0]=='bad'?'':'w'}">${p[1]}</div>`).join(''):'<div class="pb g">いまのところ、大きな問題はありません。</div>');
  if(R.growth)h+=`<div class="sf" style="margin-top:4px">${R.growth}</div>`;
- if(R.t.b&&R.t.b!='wall')h+='<div style="margin-top:6px"><button class="act" onclick="insUpg()">改築する</button></div>';h+=islStat();
+ if(R.t.b=='railstn')h+=`<div style="margin-top:6px"><button class="act" onclick="stRot()">向きを変える（現在：${(R.t.so|0)?'縦':'横'}）</button></div>`;if(R.t.b&&R.t.b!='wall')h+='<div style="margin-top:6px"><button class="act" onclick="insUpg()">改築する</button></div>';h+=islStat();
  t.innerHTML=h;t.scrollTop=st|0}
 
 
@@ -3024,7 +3028,7 @@ function tradeUI(){const R=TR(),pt=S.pt||{},td=S.trd||{},E=tradeEst(),tp=E.tp,k=
 function foreignInit(MP){const g=(x,y)=>S.g[y]&&S.g[y][x],N4=[[1,0],[-1,0],[0,1],[0,-1]],hx=MP?MP.ox+2:S.home.x,hy=MP?MP.oy+1:S.home.y;let ok=false;
  const fr=(x,y)=>{const t=g(x,y);return t&&t.t=='g'&&!t.r&&!t.z&&!t.b&&!(t.lava>0)&&t.pt==null&&!t.ps&&!(S.trk&&S.trk[y*W+x])};
  const co=(x,y)=>N4.find(([a,b])=>{const w=g(x+a,y+b);return w&&w.t=='s'});
- const place=(sx,sy,p,dir)=>{S.trk=S.trk||{};for(const n of p)S.trk[n]={k:'rail',x:0};g(sx,sy).b='railstn';const e=p.length?p[0]:sy*W+sx;S.fl={n:e,dx:dir[0],dy:dir[1]};ok=true};
+ const place=(sx,sy,p,dir)=>{S.trk=S.trk||{};for(const n of p)S.trk[n]={k:'rail',x:0};g(sx,sy).b='railstn';g(sx,sy).so=p.length?((p[p.length-1]%W!=sx)?0:1):(dir[0]?0:1);const e=p.length?p[0]:sy*W+sx;S.fl={n:e,dx:dir[0],dy:dir[1]};ok=true};
  const cand=[];for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(fr(x,y)){const ra=N4.some(([a,b])=>{const t=g(x+a,y+b);return t&&t.r&&t.r!=3&&t.r!=7})?0:1e4;cand.push([x,y,(x-hx)*(x-hx)+(y-hy)*(y-hy)+ra])}
  cand.sort((a,b)=>a[2]-b[2]);
  for(const[sx,sy]of cand){if(ok)break;const s0=sy*W+sx,par=new Map([[s0,-1]]),q=[s0];let end=-1,dir=co(sx,sy);if(dir)end=s0;
