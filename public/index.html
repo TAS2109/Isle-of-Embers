@@ -1,6 +1,6 @@
 <!--
 ==============================================================
- Isle of Embers  /  バージョン: 1.21
+ Isle of Embers  /  バージョン: 1.22
 ==============================================================
 【重要】このファイルを更新（修正・変更）したときは、必ずこのバージョン番号を変更すること。
         （下の GAME_VERSION の値と、この上の「バージョン: ○.○○」の両方を書き換える）
@@ -18,7 +18,7 @@
   1.10 … 線路と道路の交差方式（踏切／立体交差）を選択可能に・渋滞マークの判定を見直し・飛行機の出現数と進入方向を修正
   1.11 … プレイ中でもメニューの「ランキング」から現在の島を登録できるように
   1.20 … 下部パネルのスマホ表示を調整・踏切を標準化・人工地震行動を追加
-  1.21 … 人工地震の価格の改定
+  1.21 … 人工地震の価格の改定\n  1.22 … 人工地震の価格を再調整・M8以上の威力を強化
 ==============================================================
 -->
 <!DOCTYPE html>
@@ -45,7 +45,7 @@
 <meta name="twitter:title" content="Isle of Embers">
 <meta name="twitter:description" content="火山の島の大統領になって国を育てる街づくりゲーム。毎日変わるデイリー島に挑戦しよう。">
 <meta name="twitter:image" content="https://honoo-no-shima.pages.dev/ogp.png">
-<title>Isle of Embers</title><!-- version 1.20 -->
+<title>Isle of Embers</title><!-- version 1.22 -->
 <style>
 html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;touch-action:manipulation}
 *,*::before,*::after{touch-action:manipulation}
@@ -404,7 +404,7 @@ body.mm #top,body.mm #dock,body.mm #mini,body.mm #toast,body.mm #ctl{display:non
 var NFC=new Map(),NFT=0,NFCOL={water:'#2f7fd0',drain:'#a8581c',power:'#d49a00',road:'#6b7079',garbage:'#4f8a3a',jam:'#d9622b',fire:'#d63a2a',police:'#2f5d9e',health:'#2e8b57',virus:'#7a9a1f',crime:'#a3266b'},
 NFTX={water:'上水道が来ていません（取水場・井戸・浄水場を増やす）',drain:'排水ができていません（排水場・下水処理場を増やす）',power:'電力が足りません（発電所を増やす・予算を上げる）',road:'道路につながっていません',garbage:'ごみ処理が追いついていません（ごみ処理場を増設・改築）',jam:'道路が渋滞しています（大通り・高速道路・公共交通へ）',fire:'消防署の範囲外です（火災の危険）',police:'警察署の範囲外です（治安）',health:'診療所・病院の範囲外です',virus:'病気：感染者が出ています（診療所・病院を増やす・隔離措置・予防接種）',crime:'犯罪が発生しました（警察署を近くに建てる・取り締まり強化）'};
 
-const GAME_VERSION='1.20';/* ←更新したら必ず変更（ファイル先頭の説明を参照） */
+const GAME_VERSION='1.22';/* ←更新したら必ず変更（ファイル先頭の説明を参照） */
 let MV=null,lastCt=0,lastB='road',CX=23,CY=11;let W=40,H=28;const NW=64,NH=45,T=36,cv=document.getElementById('c'),$=i=>document.getElementById(i),KEY='ember_dictator';let ctx=cv.getContext('2d');
 const D={
 road:{n:'道路',c:5,road:1,d:'建物は道路に面していないと機能しません'},
@@ -1650,10 +1650,20 @@ function menuAct(){const cd=(l,c)=>Math.max(0,c-(S.m-(l??-99))),o=[],$$=k=>'$'+f
 
 /* ---- 人工地震（ゲーム内イベント） ---- */
 let AQ={mag:5.0};
+// M9.0の基本費用を従来設定のおよそ半額に調整。M6.0は$20,000を維持。
+function aqCost(m){
+ const rate=m<6?1.15:2.2;
+ return Math.round(M(20000*Math.pow(10,(m-6)/rate)));
+}
+function updateAQ(v){
+ AQ.mag=+v;
+ const val=document.getElementById('aqval'),cost=document.getElementById('aqcost');
+ if(val)val.textContent='M'+AQ.mag.toFixed(1);
+ if(cost)cost.textContent='$'+fmt(aqCost(AQ.mag));
+}
 function artificialQuakeSetup(){
  if(S.pop<10000)return say('人口1万人から実行できます');
-  const cst=m=>Math.round(M(20000*Math.pow(10,(m-6)/(m<6?1.15:1.8))))
- modalH('人工地震を起こす',`<div style="text-align:left"><p>マグニチュードを選び、続いてマップ上の震源をタップします。</p><label>マグニチュード：<b id="aqval">M5.0</b></label><input id="aqmag" type="range" min="5" max="9" step=".1" value="5" style="width:100%" oninput="AQ.mag=+this.value;document.getElementById('aqval').textContent='M'+AQ.mag.toFixed(1);document.getElementById('aqcost').textContent='$'+fmt(Math.round(M(20000*Math.pow(10,(AQ.mag-6)/(AQ.mag<6?1.15:1.8)))))"><p>費用：<b id="aqcost">$${fmt(cst(5))}</b></p><small>規模が大きいほど費用は急増します。発生後は通常の地震と同じ被害判定が行われます。</small></div>`,[['震源を指定する',()=>{const mag=AQ.mag,cost=cst(mag);if(S.money<cost)return say('資金が足りません（$'+fmt(cost)+'）');window.AQpending={mag,cost};S.sel='none';$('info').textContent='人工地震：震源にしたい場所をマップ上でタップしてください';log('人工地震の震源を指定してください。中止はメニューを開いてください')}],['やめる']]);
+ modalH('人工地震を起こす',`<div style="text-align:left"><p>マグニチュードを選び、続いてマップ上の震源をタップします。</p><label>マグニチュード：<b id="aqval">M5.0</b></label><input id="aqmag" type="range" min="5" max="9" step=".1" value="5" style="width:100%" oninput="updateAQ(this.value)"><p>費用：<b id="aqcost">$${fmt(aqCost(5))}</b></p><small>規模が大きいほど費用が増えます。M8以上の人工地震は影響範囲・被害が大幅に強化されます。</small></div>`,[['震源を指定する',()=>{const mag=AQ.mag,cost=aqCost(mag);if(S.money<cost)return say('資金が足りません（$'+fmt(cost)+'）');window.AQpending={mag,cost};S.sel='none';$('info').textContent='人工地震：震源にしたい場所をマップ上でタップしてください';log('人工地震の震源を指定してください。中止はメニューを開いてください')}],['やめる']]);
 }
 function artificialQuakeAt(x,y){
  const a=window.AQpending;if(!a)return false;
@@ -2475,8 +2485,8 @@ function qkEdge(){const q=QKE;if(!q||performance.now()>q.t1)return;
  ctx.rotate(ang);ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(9,0);ctx.lineTo(-4,-7);ctx.lineTo(-4,7);ctx.closePath();ctx.fill();ctx.rotate(-ang);
  ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.textBaseline='top';ctx.lineJoin='round';ctx.lineWidth=3;ctx.strokeStyle='rgba(120,0,0,.9)';ctx.strokeText('震源',0,18);ctx.fillStyle='#fff';ctx.fillText('震源',0,18);ctx.restore()}
 function earthquakeAt(ex,ey,M,artificial=false){const g=[];for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=S.g[y][x];if(t.t=='g'&&(t.r||t.z||t.b))g.push([x,y])}
- if(!g.length)return;const Rr=Math.round(2+(M-5)*2),ew=tiles().some(t=>t.b=='eew');let lost=0;const QK=(S.ed.fund?.5:1)*(covered('shelter',ex,ey)?.8:1);
- for(let y=ey-Rr;y<=ey+Rr;y++)for(let x=ex-Rr;x<=ex+Rr;x++){const t=at(x,y);if(!t||!(t.r||t.z||t.b))continue;const d=Math.hypot(x-ex,y-ey);if(d>Rr)continue;if(Math.random()<(covered('eew',x,y)?.05:.28)*(S.ed.seismic?.5:1)*(S.ed.drill?.75:1)*(covered('retro',x,y)?.5:1)*(covered('shelter',x,y)?.75:1)*(1-d/(Rr+1))){t.r=0;t.ov=0;t.z=null;t.lv=0;t.b=null;lost++}}
+ if(!g.length)return;const baseR=Math.round(2+(M-5)*2),Rr=Math.ceil(baseR*(artificial&&M>=8?1.7:1)),ew=tiles().some(t=>t.b=='eew');let lost=0;const QK=(S.ed.fund?.5:1)*(covered('shelter',ex,ey)?.8:1),damageBoost=artificial&&M>=8?1.7:1;
+ for(let y=ey-Rr;y<=ey+Rr;y++)for(let x=ex-Rr;x<=ex+Rr;x++){const t=at(x,y);if(!t||!(t.r||t.z||t.b))continue;const d=Math.hypot(x-ex,y-ey);if(d>Rr)continue;if(Math.random()<Math.min(1,(covered('eew',x,y)?.05:.28)*damageBoost*(S.ed.seismic?.5:1)*(S.ed.drill?.75:1)*(covered('retro',x,y)?.5:1)*(covered('shelter',x,y)?.75:1)*(1-d/(Rr+1)))){t.r=0;t.ov=0;t.z=null;t.lv=0;t.b=null;lost++}}
  sfx('erupt');shk=aT()+1200;QKE={x:ex,y:ey,M:M,r:Rr,t0:performance.now(),t1:performance.now()+10000};S.pop=Math.max(2,S.pop-Math.floor(S.pop*lost/Math.max(8,g.length)*QK));S.hap=cl(S.hap-Math.min(12,lost/2*QK),0,100);
  log((ew?'緊急地震速報！ ':'')+(artificial?'人工地震：':'')+'M'+M.toFixed(1)+'の地震が発生（震源は赤い印で約10秒表示）。'+lost+'マスが被害を受けた。'+(ew?'':'地震速報局・耐震補強センター・避難所や、耐震基準・防災訓練・震災復興基金で被害を抑えられる。'))}
 function quake(){const g=[];for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=S.g[y][x];if(t.t=='g'&&(t.r||t.z||t.b))g.push([x,y])}
